@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minecraft Plugin Watermark & User Info Sanitizer - SpigotMC, BuiltByBit, Polymart</title>
-    <meta name="description" content="Trình quét và khử sạch watermark thông tin user, buyer ID, phone-home và console banners cho Minecraft Plugin. 100% Client-side, bảo mật tuyệt đối.">
+    <meta name="description" content="Trình quét và khử sạch watermark thông tin user, buyer ID, phone-home và console banners cho Minecraft Plugin. 100% Client-side, chuẩn MUTF-8 chống lỗi file tuyệt đối.">
     <script src="jszip.min.js"></script>
     <style>
         :root {
@@ -14,9 +14,6 @@
             --border-glow: rgba(59, 130, 246, 0.3);
             --primary: #3b82f6;
             --primary-glow: #60a5fa;
-            --spigot: #f97316;
-            --bbb: #a855f7;
-            --poly: #06b6d4;
             --danger: #ef4444;
             --warning: #f59e0b;
             --success: #10b981;
@@ -88,7 +85,7 @@
         .subtitle {
             color: var(--text-muted);
             font-size: clamp(14px, 2.5vw, 16px);
-            max-width: 680px;
+            max-width: 700px;
             margin: 0 auto;
             line-height: 1.6;
         }
@@ -367,7 +364,7 @@
 <div class="container">
     <header>
         <div class="hero-badge">
-            <span></span> Hoạt động 100% Client-Side • Chạy Vĩnh Viễn Không Cần Server
+            <span></span> Chuẩn Java MUTF-8 Chống Lỗi • 100% Client-Side • Chạy Vĩnh Viễn
         </div>
         <h1 class="logo-title">Minecraft Plugin Watermark Sanitizer</h1>
         <p class="subtitle">
@@ -378,7 +375,7 @@
             <span class="tag-pill tag-spigot">🟠 SpigotMC User ID</span>
             <span class="tag-pill tag-bbb">🟣 BuiltByBit / MC-Market</span>
             <span class="tag-pill tag-poly">🔵 Polymart Token</span>
-            <span class="tag-pill tag-security">🛡️ 100% Riêng Tư (In-Browser)</span>
+            <span class="tag-pill tag-security">🛡️ Chuẩn MUTF-8 Tuyệt Đối Không Lỗi</span>
         </div>
     </header>
 
@@ -506,6 +503,53 @@ function escapeHtml(str) {
     return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
+// Java Modified UTF-8 (MUTF-8) Encoder & Decoder
+// Strictly compliant with Oracle JVM Specification (JVMS §4.4.7)
+// Preserves 0xC0 0x80 as \u0000 without corrupting to \uFFFD (65533)
+function decodeMutf8(bytes) {
+    let out = '';
+    let i = 0;
+    while (i < bytes.length) {
+        const b1 = bytes[i++];
+        if (b1 === 0xC0 && i < bytes.length && bytes[i] === 0x80) {
+            out += '\u0000';
+            i++;
+        } else if ((b1 & 0x80) === 0) {
+            out += String.fromCharCode(b1);
+        } else if ((b1 & 0xE0) === 0xC0) {
+            const b2 = bytes[i++];
+            out += String.fromCharCode(((b1 & 0x1F) << 6) | (b2 & 0x3F));
+        } else if ((b1 & 0xF0) === 0xE0) {
+            const b2 = bytes[i++];
+            const b3 = bytes[i++];
+            out += String.fromCharCode(((b1 & 0x0F) << 12) | ((b2 & 0x3F) << 6) | (b3 & 0x3F));
+        } else {
+            out += String.fromCharCode(b1);
+        }
+    }
+    return out;
+}
+
+function encodeMutf8(str) {
+    const out = [];
+    for (let i = 0; i < str.length; i++) {
+        const code = str.charCodeAt(i);
+        if (code === 0) {
+            out.push(0xC0, 0x80);
+        } else if (code <= 0x7F) {
+            out.push(code);
+        } else if (code <= 0x7FF) {
+            out.push(0xC0 | ((code >> 6) & 0x1F));
+            out.push(0x80 | (code & 0x3F));
+        } else {
+            out.push(0xE0 | ((code >> 12) & 0x0F));
+            out.push(0x80 | ((code >> 6) & 0x3F));
+            out.push(0x80 | (code & 0x3F));
+        }
+    }
+    return new Uint8Array(out);
+}
+
 // Setup Drag & Drop
 const dropzone = document.getElementById('dropzone');
 ['dragenter', 'dragover'].forEach(n => {
@@ -531,7 +575,7 @@ function hideLoading() {
     document.getElementById('loadingCard').classList.add('hidden');
 }
 
-// Java Class Constant Pool Parser & Modifier
+// Java Class Constant Pool Parser & Modifier with True MUTF-8 Support
 function modifyClassConstantPool(arrayBuffer, replacements) {
     const view = new DataView(arrayBuffer);
     if (view.byteLength < 10) return { buffer: arrayBuffer, changes: 0 };
@@ -544,9 +588,6 @@ function modifyClassConstantPool(arrayBuffer, replacements) {
     let changes = 0;
     let i = 1;
 
-    const textDecoder = new TextDecoder('utf-8');
-    const textEncoder = new TextEncoder();
-
     try {
         while (i < count) {
             const tag = view.getUint8(offset);
@@ -558,7 +599,8 @@ function modifyClassConstantPool(arrayBuffer, replacements) {
                 const rawBytes = new Uint8Array(arrayBuffer, offset, len);
                 offset += len;
 
-                let str = textDecoder.decode(rawBytes);
+                // Decode using true MUTF-8 parser
+                let str = decodeMutf8(rawBytes);
                 let modified = false;
                 for (const [oldVal, newVal] of Object.entries(replacements)) {
                     if (oldVal && str.includes(oldVal)) {
@@ -568,7 +610,8 @@ function modifyClassConstantPool(arrayBuffer, replacements) {
                     }
                 }
 
-                const encoded = textEncoder.encode(str);
+                // Re-encode using true MUTF-8 encoder
+                const encoded = encodeMutf8(str);
                 const tagAndLen = new Uint8Array(3);
                 tagAndLen[0] = 1;
                 new DataView(tagAndLen.buffer).setUint16(1, encoded.length);
@@ -684,7 +727,6 @@ async function handleFile(file) {
                     const count = view.getUint16(8);
                     let offset = 10;
                     let i = 1;
-                    const dec = new TextDecoder('utf-8');
 
                     while (i < count) {
                         const tag = view.getUint8(offset);
@@ -693,7 +735,8 @@ async function handleFile(file) {
                             const l = view.getUint16(offset);
                             offset += 2;
                             try {
-                                const s = dec.decode(new Uint8Array(arrayBuf, offset, l));
+                                const rawBytes = new Uint8Array(arrayBuf, offset, l);
+                                const s = decodeMutf8(rawBytes);
                                 const sLower = s.toLowerCase();
 
                                 // Spigot tokens
@@ -956,7 +999,6 @@ function renderAudit() {
         b4.innerHTML = '<div class="finding-chip clean">✔ Không có console banners hoặc phone-home</div>';
     }
 
-    // Render DYNAMIC Options synchronized with this specific file
     renderDynamicOptions();
 }
 
@@ -1010,6 +1052,8 @@ async function cleanAndDownload() {
         replacements['%%__POLYMART__%%'] = '0';
     }
 
+    const replacementKeys = Object.keys(replacements);
+
     let classesModified = 0;
     let stringsReplaced = 0;
     let filesStripped = 0;
@@ -1048,15 +1092,45 @@ async function cleanAndDownload() {
             continue;
         }
 
-        // Clean Classes
-        if (path.endsWith('.class') && Object.keys(replacements).length > 0) {
+        // Clean Classes: ONLY TOUCH CLASSES THAT ACTUALLY CONTAIN THE TARGET STRINGS!
+        // This guarantees 100% safety and zero corruption for other libraries (SnakeYaml, HikariCP, etc.)
+        if (path.endsWith('.class') && replacementKeys.length > 0) {
             const arrayBuf = await zipEntry.async('arraybuffer');
-            const { buffer, changes } = modifyClassConstantPool(arrayBuf, replacements);
-            if (changes > 0) {
-                classesModified++;
-                stringsReplaced += changes;
+            const rawBytes = new Uint8Array(arrayBuf);
+
+            // Fast binary pre-check
+            let containsTarget = false;
+            for (const key of replacementKeys) {
+                if (key.length >= 3) {
+                    const keyBytes = encodeMutf8(key);
+                    // Check if keyBytes is in rawBytes
+                    let found = false;
+                    for (let bIdx = 0; bIdx <= rawBytes.length - keyBytes.length; bIdx++) {
+                        let match = true;
+                        for (let kIdx = 0; kIdx < keyBytes.length; kIdx++) {
+                            if (rawBytes[bIdx + kIdx] !== keyBytes[kIdx]) {
+                                match = false;
+                                break;
+                            }
+                        }
+                        if (match) { found = true; break; }
+                    }
+                    if (found) { containsTarget = true; break; }
+                }
             }
-            cleanZip.file(path, buffer);
+
+            if (containsTarget) {
+                const { buffer, changes } = modifyClassConstantPool(arrayBuf, replacements);
+                if (changes > 0) {
+                    classesModified++;
+                    stringsReplaced += changes;
+                    cleanZip.file(path, buffer);
+                    continue;
+                }
+            }
+
+            // If class does NOT contain any target strings, keep it 100% byte-for-byte untouched!
+            cleanZip.file(path, arrayBuf);
             continue;
         }
 
@@ -1088,10 +1162,11 @@ async function cleanAndDownload() {
         <strong>Thống kê xử lý trực tiếp tại Client:</strong><br>
         • Tên file sạch: <strong style="color: #60a5fa;">${cleanName}</strong><br>
         • Kích thước: <strong>${(cleanBlob.size / 1024 / 1024).toFixed(2)} MB</strong><br>
-        • Số class bytecode đã vá: <strong style="color: #34d399;">${classesModified}</strong> class<br>
+        • Số class bytecode đã vá (chuẩn MUTF-8): <strong style="color: #34d399;">${classesModified}</strong> class<br>
         • Số chuỗi watermark/banner đã triệt tiêu: <strong style="color: #34d399;">${stringsReplaced}</strong> chuỗi<br>
         • Số file chữ ký/rác đã loại bỏ: <strong>${filesStripped}</strong> file<br>
-        • Zip comment: <span style="color: #34d399;">${optComments ? 'Đã xóa sạch hoàn toàn' : 'Giữ nguyên'}</span>
+        • Zip comment: <span style="color: #34d399;">${optComments ? 'Đã xóa sạch hoàn toàn' : 'Giữ nguyên'}</span><br>
+        • Các class khác (SnakeYaml, HikariCP...): <span style="color: #34d399;">100% giữ nguyên cấu trúc gốc, không bị biến dạng</span>
     `;
 
     // Trigger auto-download
