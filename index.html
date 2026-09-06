@@ -93,7 +93,6 @@
             line-height: 1.6;
         }
 
-        /* Platform Tags */
         .platforms-row {
             display: flex;
             justify-content: center;
@@ -119,7 +118,6 @@
         .tag-poly { background: rgba(6, 182, 212, 0.15); color: #22d3ee; border: 1px solid rgba(6, 182, 212, 0.3); }
         .tag-security { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
 
-        /* Card container */
         .card {
             background: var(--bg-card);
             backdrop-filter: blur(16px);
@@ -132,7 +130,6 @@
             transition: all 0.3s ease;
         }
 
-        /* Dropzone */
         .dropzone {
             border: 2px dashed rgba(59, 130, 246, 0.4);
             background: rgba(59, 130, 246, 0.03);
@@ -180,7 +177,6 @@
             font-weight: 500;
         }
 
-        /* Results Split Grid */
         .results-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -234,7 +230,6 @@
         .finding-chip.warning { border-left-color: var(--warning); background: rgba(245, 158, 11, 0.08); }
         .finding-chip.clean { border-left-color: var(--success); color: #34d399; }
 
-        /* Status Badges */
         .status-badge {
             display: inline-flex;
             align-items: center;
@@ -250,7 +245,6 @@
         .status-warning { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid #f59e0b; }
         .status-clean { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid #10b981; }
 
-        /* Options */
         .options-list {
             display: grid;
             grid-template-columns: 1fr;
@@ -300,7 +294,6 @@
             line-height: 1.4;
         }
 
-        /* Buttons */
         button, .btn {
             background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
             color: white;
@@ -335,7 +328,6 @@
             box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
         }
 
-        /* Spinner */
         .spinner {
             border: 3px solid rgba(255, 255, 255, 0.15);
             border-top: 3px solid var(--primary-glow);
@@ -459,63 +451,17 @@
             </div>
         </div>
 
-        <!-- OPTIONS -->
+        <!-- DYNAMIC OPTIONS SECTION -->
         <h3 style="font-size: 16px; font-weight: 700; margin: 24px 0 12px; padding-top: 16px; border-top: 1px solid var(--border-card);">
-            ⚙️ Tùy Chọn Khử Sạch Triệt Để:
+            ⚙️ Tùy Chọn Khử Sạch Theo File Này:
         </h3>
 
-        <div class="options-list">
-            <label class="opt-item">
-                <input type="checkbox" id="optSpigot" checked>
-                <div>
-                    <div class="opt-title">Khử Spigot User ID & Nonce trong Bytecode</div>
-                    <div class="opt-desc">Thay thế số User ID, token %%__USER__%% sang 000000</div>
-                </div>
-            </label>
-
-            <label class="opt-item">
-                <input type="checkbox" id="optPhoneHome" checked>
-                <div>
-                    <div class="opt-title">Ngắt Phone-Home & Spigot License API</div>
-                    <div class="opt-desc">Khóa các URL getAuthor, premium.php, pstats, telemetry</div>
-                </div>
-            </label>
-
-            <label class="opt-item">
-                <input type="checkbox" id="optComments" checked>
-                <div>
-                    <div class="opt-title">Xóa Zip Comment (HoYeuEmBangMat...)</div>
-                    <div class="opt-desc">Gỡ bỏ hoàn toàn ghi chú nén và chuẩn hóa ngày sửa đổi</div>
-                </div>
-            </label>
-
-            <label class="opt-item">
-                <input type="checkbox" id="optBanners" checked>
-                <div>
-                    <div class="opt-title">Xóa Console Banners (Cracked by...)</div>
-                    <div class="opt-desc">Dọn sạch các dòng in Plain Text và Base64 ra console khi bật</div>
-                </div>
-            </label>
-
-            <label class="opt-item">
-                <input type="checkbox" id="optManifest" checked>
-                <div>
-                    <div class="opt-title">Làm Sạch MANIFEST.MF</div>
-                    <div class="opt-desc">Xóa các header Spigot-User, BuiltByBit-Id, Polymart, Buyer</div>
-                </div>
-            </label>
-
-            <label class="opt-item">
-                <input type="checkbox" id="optSigs" checked>
-                <div>
-                    <div class="opt-title">Gỡ Bỏ Digital Signatures (.SF, .RSA)</div>
-                    <div class="opt-desc">Giúp plugin đã sửa bytecode vượt qua xác thực JVM an toàn</div>
-                </div>
-            </label>
+        <div class="options-list" id="dynamicOptionsList">
+            <!-- Dynamically generated based on actual detected watermarks -->
         </div>
 
         <button onclick="cleanAndDownload()" id="btnClean">
-            ⚡ KHỬ SẠCH TRIỆT ĐỂ & TẢI VỀ JAR PURE
+            ⚡ KHỬ SẠCH CÁC MỤC ĐÃ CHỌN & TẢI VỀ JAR PURE
         </button>
     </div>
 
@@ -554,6 +500,11 @@ let currentZip = null;
 let currentFileName = '';
 let currentFileSize = 0;
 let auditData = null;
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
 
 // Setup Drag & Drop
 const dropzone = document.getElementById('dropzone');
@@ -688,7 +639,7 @@ async function handleFile(file) {
             riskLevel: 'CLEAN'
         };
 
-        // 1. Check Zip Comment (e.g. HoYeuEmBangMat)
+        // 1. Check Zip Comment
         if (auditData.zipComment) {
             auditData.metaWatermarks.push(`Zip Archive Comment: "${auditData.zipComment}"`);
             auditData.riskLevel = 'DANGER';
@@ -818,6 +769,130 @@ async function handleFile(file) {
     }
 }
 
+function renderDynamicOptions() {
+    const container = document.getElementById('dynamicOptionsList');
+    container.innerHTML = '';
+    let optionsCount = 0;
+
+    // 1. Zip Comment (Chỉ hiện khi file CÓ comment)
+    if (auditData.zipComment) {
+        optionsCount++;
+        let preview = auditData.zipComment.replace(/\n+/g, ' • ').trim();
+        if (preview.length > 55) preview = preview.substring(0, 52) + '...';
+
+        container.innerHTML += `
+            <label class="opt-item">
+                <input type="checkbox" id="optComments" checked>
+                <div>
+                    <div class="opt-title">Xóa Zip Comment: <span style="color:#f87171">"${escapeHtml(preview)}"</span></div>
+                    <div class="opt-desc">Xóa hoàn toàn ghi chú nén của file và chuẩn hóa ngày sửa đổi</div>
+                </div>
+            </label>
+        `;
+    }
+
+    // 2. Spigot User ID & Tokens (Chỉ hiện khi phát hiện thấy trong file)
+    if (auditData.detectedIds.size > 0 || auditData.spigotWatermarks.some(w => w.includes('%%__'))) {
+        optionsCount++;
+        const idsList = Array.from(auditData.detectedIds).join(', ');
+        const idTitle = idsList ? `Khử Spigot User ID: [${idsList}]` : `Khử Spigot Tokens (%%__USER__%%, ...)`;
+        container.innerHTML += `
+            <label class="opt-item">
+                <input type="checkbox" id="optSpigot" checked>
+                <div>
+                    <div class="opt-title">${idTitle}</div>
+                    <div class="opt-desc">Thay thế các số User ID và tokens Spigot trong class bytecode sang giá trị trung tính</div>
+                </div>
+            </label>
+        `;
+    }
+
+    // 3. Spigot Phone-home / APIs (Chỉ hiện khi phát hiện thấy)
+    if (auditData.spigotWatermarks.some(w => w.includes('Phone-home')) || auditData.bannersAndPhoneHome.some(b => b.display.includes('Phone-home'))) {
+        optionsCount++;
+        container.innerHTML += `
+            <label class="opt-item">
+                <input type="checkbox" id="optPhoneHome" checked>
+                <div>
+                    <div class="opt-title">Ngắt Phone-Home & Spigot License API</div>
+                    <div class="opt-desc">Khóa URL getAuthor, premium.php, pstats để server không kéo tên tài khoản về console</div>
+                </div>
+            </label>
+        `;
+    }
+
+    // 4. BuiltByBit / Polymart (Chỉ hiện khi phát hiện thấy)
+    if (auditData.bbbWatermarks.length > 0) {
+        optionsCount++;
+        container.innerHTML += `
+            <label class="opt-item">
+                <input type="checkbox" id="optBBB" checked>
+                <div>
+                    <div class="opt-title">Xóa Watermark BuiltByBit / Polymart (${auditData.bbbWatermarks.length} mục)</div>
+                    <div class="opt-desc">Làm sạch Buyer ID, Nonce và token %%__POLYMART__%% trong class và manifest</div>
+                </div>
+            </label>
+        `;
+    }
+
+    // 5. Console Banners & Crack Notices (Chỉ hiện khi phát hiện thấy)
+    const bannerItems = auditData.bannersAndPhoneHome.filter(b => !b.display.includes('Phone-home'));
+    if (bannerItems.length > 0) {
+        optionsCount++;
+        let firstBanner = bannerItems[0].display;
+        if (firstBanner.length > 45) firstBanner = firstBanner.substring(0, 42) + '...';
+
+        container.innerHTML += `
+            <label class="opt-item">
+                <input type="checkbox" id="optBanners" checked>
+                <div>
+                    <div class="opt-title">Xóa Console Banners: <span style="color:#f43f5e">"${escapeHtml(firstBanner)}"</span></div>
+                    <div class="opt-desc">Dọn sạch các dòng in Plain Text và Base64 ra console server khi bật plugin</div>
+                </div>
+            </label>
+        `;
+    }
+
+    // 6. Manifest Trackers (Chỉ hiện khi phát hiện thấy)
+    if (auditData.spigotWatermarks.some(w => !w.includes('Token') && !w.includes('Phone-home')) || auditData.bbbWatermarks.length > 0) {
+        optionsCount++;
+        container.innerHTML += `
+            <label class="opt-item">
+                <input type="checkbox" id="optManifest" checked>
+                <div>
+                    <div class="opt-title">Làm Sạch MANIFEST.MF Header</div>
+                    <div class="opt-desc">Gỡ bỏ các thuộc tính Spigot-User-Id, BuiltByBit-Id, Nonce trong metadata</div>
+                </div>
+            </label>
+        `;
+    }
+
+    // 7. Digital Signatures & File Tracker (Chỉ hiện khi phát hiện thấy)
+    if (auditData.metaWatermarks.some(w => w.includes('chữ ký') || w.includes('tracker'))) {
+        optionsCount++;
+        container.innerHTML += `
+            <label class="opt-item">
+                <input type="checkbox" id="optSigs" checked>
+                <div>
+                    <div class="opt-title">Gỡ Bỏ Digital Signatures (.SF, .RSA) & File Tracker</div>
+                    <div class="opt-desc">Giúp plugin sau khi sửa bytecode vượt qua xác thực JVM an toàn</div>
+                </div>
+            </label>
+        `;
+    }
+
+    // NẾU FILE HOÀN TOÀN SẠCH
+    if (optionsCount === 0) {
+        container.innerHTML = `
+            <div style="grid-column: 1 / -1; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 18px; text-align: center; color: #34d399;">
+                <div style="font-size: 24px; margin-bottom: 6px;">🟢</div>
+                <strong>File này hoàn toàn sạch! Không có watermark, user ID hay banner nào cần xóa.</strong>
+                <div style="font-size: 12px; color: #94a3b8; margin-top: 4px;">Bạn có thể tải về bản đóng gói chuẩn hóa nếu muốn.</div>
+            </div>
+        `;
+    }
+}
+
 function renderAudit() {
     document.getElementById('uploadCard').classList.add('hidden');
     document.getElementById('auditCard').classList.remove('hidden');
@@ -839,7 +914,7 @@ function renderAudit() {
     b1.innerHTML = '';
     if (auditData.spigotWatermarks.length > 0 || auditData.detectedIds.size > 0) {
         auditData.spigotWatermarks.forEach(w => {
-            b1.innerHTML += `<div class="finding-chip danger">• ${w}</div>`;
+            b1.innerHTML += `<div class="finding-chip danger">• ${escapeHtml(w)}</div>`;
         });
         if (auditData.detectedIds.size > 0) {
             b1.innerHTML += `<div class="finding-chip danger">• <strong>User ID Bị Nhúng:</strong> ${Array.from(auditData.detectedIds).join(', ')}</div>`;
@@ -853,7 +928,7 @@ function renderAudit() {
     b2.innerHTML = '';
     if (auditData.bbbWatermarks.length > 0) {
         auditData.bbbWatermarks.forEach(w => {
-            b2.innerHTML += `<div class="finding-chip danger">• ${w}</div>`;
+            b2.innerHTML += `<div class="finding-chip danger">• ${escapeHtml(w)}</div>`;
         });
     } else {
         b2.innerHTML = '<div class="finding-chip clean">✔ Không có watermark BuiltByBit / Polymart</div>';
@@ -864,7 +939,7 @@ function renderAudit() {
     b3.innerHTML = '';
     if (auditData.metaWatermarks.length > 0) {
         auditData.metaWatermarks.forEach(w => {
-            b3.innerHTML += `<div class="finding-chip warning">• ${w}</div>`;
+            b3.innerHTML += `<div class="finding-chip warning">• ${escapeHtml(w)}</div>`;
         });
     } else {
         b3.innerHTML = '<div class="finding-chip clean">✔ Zip comment & metadata hoàn toàn sạch</div>';
@@ -875,23 +950,27 @@ function renderAudit() {
     b4.innerHTML = '';
     if (auditData.bannersAndPhoneHome.length > 0) {
         auditData.bannersAndPhoneHome.forEach(b => {
-            b4.innerHTML += `<div class="finding-chip danger">• <strong>${b.display}</strong> <span style="color:#94a3b8">(${b.file})</span></div>`;
+            b4.innerHTML += `<div class="finding-chip danger">• <strong>${escapeHtml(b.display)}</strong> <span style="color:#94a3b8">(${b.file})</span></div>`;
         });
     } else {
         b4.innerHTML = '<div class="finding-chip clean">✔ Không có console banners hoặc phone-home</div>';
     }
+
+    // Render DYNAMIC Options synchronized with this specific file
+    renderDynamicOptions();
 }
 
 async function cleanAndDownload() {
     if (!currentZip) return;
-    showLoading('Đang khử sạch triệt để toàn bộ Watermark & Bytecode...');
+    showLoading('Đang khử sạch các mục đã chọn và sửa bytecode...');
 
-    const optSpigot = document.getElementById('optSpigot').checked;
-    const optPhoneHome = document.getElementById('optPhoneHome').checked;
-    const optComments = document.getElementById('optComments').checked;
-    const optBanners = document.getElementById('optBanners').checked;
-    const optManifest = document.getElementById('optManifest').checked;
-    const optSigs = document.getElementById('optSigs').checked;
+    const optSpigot = document.getElementById('optSpigot')?.checked ?? false;
+    const optPhoneHome = document.getElementById('optPhoneHome')?.checked ?? false;
+    const optComments = document.getElementById('optComments')?.checked ?? false;
+    const optBanners = document.getElementById('optBanners')?.checked ?? false;
+    const optBBB = document.getElementById('optBBB')?.checked ?? false;
+    const optManifest = document.getElementById('optManifest')?.checked ?? false;
+    const optSigs = document.getElementById('optSigs')?.checked ?? false;
 
     const replacements = {};
 
@@ -927,7 +1006,9 @@ async function cleanAndDownload() {
         replacements['maskirovka'] = 'pure';
     }
 
-    replacements['%%__POLYMART__%%'] = '0';
+    if (optBBB) {
+        replacements['%%__POLYMART__%%'] = '0';
+    }
 
     let classesModified = 0;
     let stringsReplaced = 0;
@@ -1010,7 +1091,7 @@ async function cleanAndDownload() {
         • Số class bytecode đã vá: <strong style="color: #34d399;">${classesModified}</strong> class<br>
         • Số chuỗi watermark/banner đã triệt tiêu: <strong style="color: #34d399;">${stringsReplaced}</strong> chuỗi<br>
         • Số file chữ ký/rác đã loại bỏ: <strong>${filesStripped}</strong> file<br>
-        • Zip comment: <span style="color: #34d399;">Đã xóa sạch hoàn toàn</span>
+        • Zip comment: <span style="color: #34d399;">${optComments ? 'Đã xóa sạch hoàn toàn' : 'Giữ nguyên'}</span>
     `;
 
     // Trigger auto-download
