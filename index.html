@@ -678,6 +678,7 @@ async function handleFile(file) {
             bbbWatermarks: [],
             metaWatermarks: [],
             bannersAndPhoneHome: [],
+            nvTrackingTokens: new Set(),
             detectedIds: new Set(),
             riskLevel: 'CLEAN'
         };
@@ -756,6 +757,12 @@ async function handleFile(file) {
                                 // BuiltByBit / Polymart Tokens
                                 if (s.includes('%%__POLYMART__%%') || sLower.includes('polymart.org/api') || sLower.includes('songoda.com/api')) {
                                     auditData.bbbWatermarks.push(`Marketplace Token: ${s}`);
+                                    auditData.riskLevel = 'DANGER';
+                                }
+
+                                // NulledVault Tracking Fingerprint Token
+                                if (s.length === 44 && s.endsWith('MFiBc3gyeJo7/AqXBycJU=')) {
+                                    auditData.nvTrackingTokens.add(s);
                                     auditData.riskLevel = 'DANGER';
                                 }
 
@@ -896,7 +903,23 @@ function renderDynamicOptions() {
         `;
     }
 
-    // 6. Manifest Trackers (Chỉ hiện khi phát hiện thấy)
+    // 6. NulledVault Tracking Fingerprint (Chỉ hiện khi phát hiện thấy trong file)
+    if (auditData.nvTrackingTokens.size > 0) {
+        optionsCount++;
+        const tokList = Array.from(auditData.nvTrackingTokens);
+        const firstTok = tokList[0];
+        container.innerHTML += `
+            <label class="opt-item">
+                <input type="checkbox" id="optNvTokens" checked>
+                <div>
+                    <div class="opt-title">Khử Dấu Vân Tay NulledVault (Fingerprint Tracking Watermark)</div>
+                    <div class="opt-desc">Trung hòa mã Base64 <code style="color:#38bdf8">${escapeHtml(firstTok.substring(0, 18))}...</code> trong bytecode để bảo vệ danh tính tài khoản người tải</div>
+                </div>
+            </label>
+        `;
+    }
+
+    // 7. Manifest Trackers (Chỉ hiện khi phát hiện thấy)
     if (auditData.spigotWatermarks.some(w => !w.includes('Token') && !w.includes('Phone-home')) || auditData.bbbWatermarks.length > 0) {
         optionsCount++;
         container.innerHTML += `
@@ -910,7 +933,7 @@ function renderDynamicOptions() {
         `;
     }
 
-    // 7. Digital Signatures & File Tracker (Chỉ hiện khi phát hiện thấy)
+    // 8. Digital Signatures & File Tracker (Chỉ hiện khi phát hiện thấy)
     if (auditData.metaWatermarks.some(w => w.includes('chữ ký') || w.includes('tracker'))) {
         optionsCount++;
         container.innerHTML += `
@@ -988,14 +1011,20 @@ function renderAudit() {
         b3.innerHTML = '<div class="finding-chip clean">✔ Zip comment & metadata hoàn toàn sạch</div>';
     }
 
-    // Box 4: Banners
+    // Box 4: Banners & Tracking Fingerprints
     const b4 = document.getElementById('boxBanner');
     b4.innerHTML = '';
+    if (auditData.nvTrackingTokens.size > 0) {
+        auditData.nvTrackingTokens.forEach(tok => {
+            b4.innerHTML += `<div class="finding-chip danger">• 🛡️ <strong>NulledVault Tracking Fingerprint:</strong> <code style="color:#38bdf8">${escapeHtml(tok.substring(0, 18))}...${escapeHtml(tok.substring(34))}</code> (Mã vân tay ẩn định danh người tải)</div>`;
+        });
+    }
     if (auditData.bannersAndPhoneHome.length > 0) {
         auditData.bannersAndPhoneHome.forEach(b => {
             b4.innerHTML += `<div class="finding-chip danger">• <strong>${escapeHtml(b.display)}</strong> <span style="color:#94a3b8">(${b.file})</span></div>`;
         });
-    } else {
+    }
+    if (auditData.nvTrackingTokens.size === 0 && auditData.bannersAndPhoneHome.length === 0) {
         b4.innerHTML = '<div class="finding-chip clean">✔ Không có console banners hoặc phone-home</div>';
     }
 
@@ -1011,6 +1040,7 @@ async function cleanAndDownload() {
     const optComments = document.getElementById('optComments')?.checked ?? false;
     const optBanners = document.getElementById('optBanners')?.checked ?? false;
     const optBBB = document.getElementById('optBBB')?.checked ?? false;
+    const optNvTokens = document.getElementById('optNvTokens')?.checked ?? false;
     const optManifest = document.getElementById('optManifest')?.checked ?? false;
     const optSigs = document.getElementById('optSigs')?.checked ?? false;
 
@@ -1050,6 +1080,12 @@ async function cleanAndDownload() {
 
     if (optBBB) {
         replacements['%%__POLYMART__%%'] = '0';
+    }
+
+    if (optNvTokens) {
+        auditData.nvTrackingTokens.forEach(token => {
+            replacements[token] = '0'.repeat(token.length);
+        });
     }
 
     const replacementKeys = Object.keys(replacements);
