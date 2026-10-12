@@ -3,28 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nguyendzvn Enterprise - Minecraft Plugin Suite & Pure Engine</title>
-    <meta name="description" content="Công cụ cấp doanh nghiệp phân tích bảo mật, khử watermark, triệt tiêu telemetry và chuyển đổi plugin Minecraft sang chế độ (pure) standalone 100% offline. 100% Client-side tại trình duyệt.">
+    <title>Nguyendzvn Suite - Minecraft Plugin Studio & Pure Engine</title>
+    <meta name="description" content="Bộ công cụ cao cấp phân tích bảo mật, khử watermark, triệt tiêu telemetry và chuyển đổi plugin Minecraft sang chế độ (pure) standalone 100% offline. 100% Client-side.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <script src="jszip.min.js"></script>
     <style>
         :root {
-            --bg-canvas: #090d16;
-            --bg-surface: #0f172a;
-            --bg-card: rgba(17, 24, 39, 0.75);
-            --bg-card-hover: rgba(30, 41, 59, 0.85);
-            --border-subtle: rgba(255, 255, 255, 0.08);
-            --border-highlight: rgba(99, 102, 241, 0.35);
+            --bg-canvas: #08090d;
+            --bg-surface: #0e1118;
+            --bg-card: rgba(18, 22, 34, 0.7);
+            --bg-card-hover: rgba(26, 32, 48, 0.85);
+            --border-subtle: rgba(255, 255, 255, 0.07);
+            --border-glow: rgba(99, 102, 241, 0.35);
             --primary: #6366f1;
             --primary-glow: #818cf8;
             --cyan: #06b6d4;
-            --cyan-glow: #22d3ee;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --text-primary: #f8fafc;
+            --emerald: #10b981;
+            --amber: #f59e0b;
+            --rose: #f43f5e;
+            --text-main: #f8fafc;
             --text-secondary: #94a3b8;
             --text-muted: #64748b;
             --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -42,17 +41,17 @@
         body {
             background-color: var(--bg-canvas);
             background-image: 
-                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 45%),
-                radial-gradient(at 100% 0%, rgba(6, 182, 212, 0.12) 0px, transparent 40%),
-                radial-gradient(at 50% 100%, rgba(139, 92, 246, 0.08) 0px, transparent 50%);
-            color: var(--text-primary);
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.12) 0px, transparent 40%),
+                radial-gradient(at 100% 0%, rgba(6, 182, 212, 0.1) 0px, transparent 40%),
+                radial-gradient(at 50% 100%, rgba(139, 92, 246, 0.06) 0px, transparent 50%);
+            color: var(--text-main);
             min-height: 100vh;
-            padding-bottom: 60px;
+            padding-bottom: 80px;
         }
 
-        /* Top Enterprise Header */
-        header.enterprise-header {
-            background: rgba(15, 23, 42, 0.85);
+        /* Top Nav */
+        header.nav-header {
+            background: rgba(14, 17, 24, 0.85);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border-bottom: 1px solid var(--border-subtle);
@@ -61,8 +60,8 @@
             z-index: 100;
         }
 
-        .header-inner {
-            max-width: 1240px;
+        .nav-inner {
+            max-width: 1200px;
             margin: 0 auto;
             padding: 14px 20px;
             display: flex;
@@ -72,34 +71,32 @@
             flex-wrap: wrap;
         }
 
-        .brand-cluster {
+        .brand-group {
             display: flex;
             align-items: center;
             gap: 12px;
         }
 
-        .brand-icon {
-            width: 42px;
-            height: 42px;
+        .brand-avatar {
+            width: 40px;
+            height: 40px;
             border-radius: 10px;
             background: linear-gradient(135deg, #6366f1, #06b6d4);
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
             font-size: 20px;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
         }
 
-        .brand-titles h1 {
-            font-size: 17px;
+        .brand-text h1 {
+            font-size: 16px;
             font-weight: 800;
             letter-spacing: -0.3px;
-            background: linear-gradient(135deg, #ffffff 30%, #c7d2fe 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #ffffff;
         }
 
-        .brand-titles p {
+        .brand-text p {
             font-size: 11px;
             font-weight: 600;
             color: var(--cyan);
@@ -107,14 +104,14 @@
             text-transform: uppercase;
         }
 
-        .metrics-strip {
+        .nav-tags {
             display: flex;
             align-items: center;
             gap: 10px;
             flex-wrap: wrap;
         }
 
-        .metric-pill {
+        .tag-pill {
             display: inline-flex;
             align-items: center;
             gap: 6px;
@@ -127,13 +124,13 @@
             color: var(--text-secondary);
         }
 
-        .metric-pill.live {
+        .tag-pill.live {
             border-color: rgba(16, 185, 129, 0.3);
             color: #34d399;
             background: rgba(16, 185, 129, 0.08);
         }
 
-        .live-dot {
+        .dot-pulse {
             width: 7px;
             height: 7px;
             border-radius: 50%;
@@ -147,11 +144,11 @@
             50% { opacity: 0.4; transform: scale(0.85); }
         }
 
-        .github-link-btn {
+        .github-link {
             background: rgba(99, 102, 241, 0.12);
             border: 1px solid rgba(99, 102, 241, 0.35);
             color: #c7d2fe;
-            padding: 5px 12px;
+            padding: 5px 14px;
             border-radius: 9999px;
             font-size: 12px;
             font-family: var(--font-mono);
@@ -163,7 +160,7 @@
             transition: all 0.2s;
         }
 
-        .github-link-btn:hover {
+        .github-link:hover {
             background: rgba(99, 102, 241, 0.25);
             color: #ffffff;
             border-color: #818cf8;
@@ -171,306 +168,317 @@
         }
 
         /* Container */
-        .app-container {
-            max-width: 1240px;
+        .workspace {
+            max-width: 1200px;
             margin: 28px auto 0;
             padding: 0 20px;
         }
 
-        /* Navigation Tabs */
-        .tab-bar {
-            display: flex;
-            gap: 6px;
-            border-bottom: 1px solid var(--border-subtle);
-            padding-bottom: 12px;
-            margin-bottom: 24px;
-            overflow-x: auto;
-            scrollbar-width: none;
-        }
-
-        .tab-btn {
-            background: transparent;
-            border: 1px solid transparent;
-            color: var(--text-secondary);
-            padding: 10px 18px;
-            border-radius: 10px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            white-space: nowrap;
-            transition: all 0.2s ease;
-        }
-
-        .tab-btn:hover {
-            color: var(--text-primary);
-            background: rgba(255, 255, 255, 0.04);
-        }
-
-        .tab-btn.active {
-            color: #ffffff;
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(6, 182, 212, 0.15));
-            border-color: rgba(99, 102, 241, 0.4);
-            box-shadow: 0 4px 16px rgba(99, 102, 241, 0.15);
-        }
-
-        /* Content Sections */
-        .tab-content { display: none; }
-        .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(6px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .card {
+        /* Dropzone Card */
+        .card-dropzone {
             background: var(--bg-card);
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
             border: 1px solid var(--border-subtle);
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
-            transition: border-color 0.2s;
+            border-radius: 18px;
+            padding: 32px 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 32px rgba(0, 0, 0, 0.35);
+            transition: all 0.25s ease;
         }
 
-        .card:hover {
-            border-color: rgba(255, 255, 255, 0.14);
-        }
-
-        .card-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 18px;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .card-title-group h2 {
-            font-size: 19px;
-            font-weight: 700;
-            letter-spacing: -0.3px;
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .card-title-group p {
-            font-size: 13px;
-            color: var(--text-secondary);
-            margin-top: 4px;
-        }
-
-        /* Dropzone Box */
-        .dropzone-box {
+        .drop-area {
             border: 2px dashed rgba(99, 102, 241, 0.35);
             background: rgba(99, 102, 241, 0.03);
-            border-radius: 16px;
-            padding: 44px 20px;
+            border-radius: 14px;
+            padding: 40px 20px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.25s ease;
-            position: relative;
+            transition: all 0.2s ease;
         }
 
-        .dropzone-box:hover, .dropzone-box.dragover {
+        .drop-area:hover, .drop-area.dragover {
             border-color: var(--cyan);
             background: rgba(6, 182, 212, 0.06);
-            transform: scale(1.005);
+            transform: scale(1.003);
         }
 
-        .dropzone-icon {
-            font-size: 48px;
+        .drop-icon {
+            font-size: 46px;
             margin-bottom: 12px;
-            display: inline-block;
         }
 
-        .dropzone-title {
+        .drop-title {
             font-size: 16px;
             font-weight: 700;
             color: #ffffff;
             margin-bottom: 6px;
         }
 
-        .dropzone-desc {
+        .drop-desc {
             font-size: 13px;
             color: var(--text-muted);
-            max-width: 500px;
+            max-width: 520px;
             margin: 0 auto;
         }
 
-        .privacy-guarantee {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            font-size: 12px;
-            color: #34d399;
-            margin-top: 14px;
-            font-weight: 500;
-        }
-
-        /* Options Switches Grid */
-        .options-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 14px;
-            margin: 20px 0;
-        }
-
-        .option-item {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--border-subtle);
+        .file-loaded-bar {
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.3);
             border-radius: 12px;
-            padding: 14px 16px;
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .option-item:hover {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(99, 102, 241, 0.3);
-        }
-
-        .option-checkbox {
-            appearance: none;
-            -webkit-appearance: none;
-            width: 18px;
-            height: 18px;
-            border: 2px solid var(--text-muted);
-            border-radius: 5px;
-            margin-top: 2px;
-            cursor: pointer;
-            position: relative;
-            outline: none;
-            flex-shrink: 0;
-            transition: all 0.2s;
-        }
-
-        .option-checkbox:checked {
-            background: linear-gradient(135deg, #6366f1, #06b6d4);
-            border-color: transparent;
-        }
-
-        .option-checkbox:checked::after {
-            content: '✓';
-            color: #ffffff;
-            position: absolute;
-            font-size: 12px;
-            font-weight: 800;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        .option-meta h4 {
-            font-size: 14px;
-            font-weight: 600;
-            color: #ffffff;
-        }
-
-        .option-meta p {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-top: 3px;
-            line-height: 1.4;
-        }
-
-        /* Action Buttons */
-        .btn-pure {
-            width: 100%;
-            padding: 16px 24px;
-            background: linear-gradient(135deg, #6366f1 0%, #06b6d4 100%);
-            border: none;
-            border-radius: 12px;
-            color: #ffffff;
-            font-size: 15px;
-            font-weight: 800;
-            letter-spacing: 0.3px;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
-            transition: all 0.2s ease;
-        }
-
-        .btn-pure:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 28px rgba(6, 182, 212, 0.5);
-        }
-
-        .btn-pure:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        /* Stepper & Logs */
-        .stepper-box {
-            background: #060911;
-            border: 1px solid var(--border-subtle);
-            border-radius: 12px;
-            padding: 16px;
-            margin-top: 20px;
-            font-family: var(--font-mono);
-            font-size: 12px;
-            max-height: 240px;
-            overflow-y: auto;
-            color: #a5b4fc;
-        }
-
-        .stepper-line {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 6px;
-        }
-
-        .stepper-line.success { color: #34d399; }
-        .stepper-line.info { color: #38bdf8; }
-        .stepper-line.warning { color: #fbbf24; }
-
-        /* Results Display */
-        .result-card {
-            border: 1px solid rgba(16, 185, 129, 0.4);
-            background: linear-gradient(180deg, rgba(16, 185, 129, 0.08) 0%, rgba(15, 23, 42, 0.9) 100%);
-        }
-
-        .download-hero {
+            padding: 16px 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.25);
-            border-radius: 12px;
-            margin-top: 16px;
+            gap: 16px;
             flex-wrap: wrap;
-            gap: 14px;
         }
 
-        .download-meta h3 {
-            font-size: 18px;
+        .file-info-group h3 {
+            font-size: 15px;
             font-weight: 700;
             color: #ffffff;
         }
 
-        .download-meta p {
+        .file-info-group p {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 3px;
+        }
+
+        .btn-change-file {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border-subtle);
+            color: #ffffff;
+            padding: 7px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-change-file:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        /* Section Title */
+        .section-headline {
+            margin-bottom: 18px;
+        }
+
+        .section-headline h2 {
+            font-size: 19px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            color: #ffffff;
+        }
+
+        .section-headline p {
             font-size: 13px;
             color: var(--text-secondary);
             margin-top: 4px;
         }
 
-        .btn-download {
+        /* Feature Modules Grid - TÁCH TỪNG TÍNH NĂNG RIÊNG BIỆT */
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .module-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 18px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.25s ease;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .module-card:hover {
+            border-color: rgba(255, 255, 255, 0.16);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .module-card.featured {
+            border-color: rgba(99, 102, 241, 0.4);
+            background: linear-gradient(180deg, rgba(99, 102, 241, 0.08) 0%, rgba(18, 22, 34, 0.8) 100%);
+        }
+
+        .module-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            margin-bottom: 16px;
+        }
+
+        .module-badge-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .icon-pure { background: rgba(99, 102, 241, 0.18); border: 1px solid rgba(99, 102, 241, 0.4); }
+        .icon-sanitize { background: rgba(6, 182, 212, 0.18); border: 1px solid rgba(6, 182, 212, 0.4); }
+        .icon-audit { background: rgba(16, 185, 129, 0.18); border: 1px solid rgba(16, 185, 129, 0.4); }
+        .icon-inspect { background: rgba(245, 158, 11, 0.18); border: 1px solid rgba(245, 158, 11, 0.4); }
+
+        .module-titles h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: -0.2px;
+        }
+
+        .module-titles p {
+            font-size: 12px;
+            color: var(--cyan);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
+        }
+
+        .module-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.55;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        .module-highlights {
+            list-style: none;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .module-highlights li {
+            font-size: 12px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .module-highlights li span.dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--cyan);
+        }
+
+        /* Action Buttons - TUYỆT ĐỐI KHÔNG CÓ CHECKBOX */
+        .btn-action-primary {
+            width: 100%;
+            padding: 13px 20px;
+            border: none;
+            border-radius: 11px;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            color: #ffffff;
+        }
+
+        .btn-pure-gradient {
+            background: linear-gradient(135deg, #6366f1 0%, #06b6d4 100%);
+            box-shadow: 0 4px 18px rgba(99, 102, 241, 0.35);
+        }
+
+        .btn-pure-gradient:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(6, 182, 212, 0.45);
+        }
+
+        .btn-sanitize-gradient {
+            background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%);
+            box-shadow: 0 4px 18px rgba(14, 165, 233, 0.35);
+        }
+
+        .btn-sanitize-gradient:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(59, 130, 246, 0.45);
+        }
+
+        .btn-audit-gradient {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            box-shadow: 0 4px 18px rgba(16, 185, 129, 0.35);
+        }
+
+        .btn-audit-gradient:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(16, 185, 129, 0.45);
+        }
+
+        .btn-action-primary:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        /* Result Area */
+        .card-result {
+            background: var(--bg-card);
+            border: 1px solid rgba(16, 185, 129, 0.35);
+            border-radius: 18px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-hero {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 14px;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 14px;
+        }
+
+        .result-meta h4 {
+            font-size: 17px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .result-meta p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .btn-download-direct {
             padding: 12px 24px;
             background: #10b981;
             color: #ffffff;
@@ -481,30 +489,31 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
             transition: all 0.2s;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.35);
         }
 
-        .btn-download:hover {
+        .btn-download-direct:hover {
             background: #059669;
             transform: translateY(-2px);
         }
 
-        /* Tables */
+        /* Audit Table */
         .table-wrap {
             overflow-x: auto;
             border-radius: 12px;
             border: 1px solid var(--border-subtle);
+            margin-top: 14px;
         }
 
-        table.enterprise-table {
+        table.clean-table {
             width: 100%;
             border-collapse: collapse;
             font-size: 13px;
             text-align: left;
         }
 
-        table.enterprise-table th {
+        table.clean-table th {
             background: rgba(255, 255, 255, 0.03);
             padding: 12px 16px;
             color: var(--text-secondary);
@@ -512,50 +521,95 @@
             border-bottom: 1px solid var(--border-subtle);
         }
 
-        table.enterprise-table td {
+        table.clean-table td {
             padding: 14px 16px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-            color: var(--text-primary);
+            color: var(--text-main);
         }
 
-        table.enterprise-table tr:hover td {
+        table.clean-table tr:hover td {
             background: rgba(255, 255, 255, 0.02);
         }
 
-        /* Grade Badges */
         .grade-badge {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 800;
-            padding: 8px 16px;
-            border-radius: 12px;
+            padding: 6px 14px;
+            border-radius: 10px;
             display: inline-flex;
             align-items: center;
-            justify-content: center;
         }
 
         .grade-A { background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; color: #34d399; }
         .grade-B { background: rgba(59, 130, 246, 0.15); border: 1px solid #3b82f6; color: #60a5fa; }
         .grade-D { background: rgba(245, 158, 11, 0.15); border: 1px solid #f59e0b; color: #fbbf24; }
-        .grade-F { background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; color: #f87171; }
+        .grade-F { background: rgba(244, 63, 94, 0.15); border: 1px solid #f43f5e; color: #fb7185; }
 
-        .btn-action-small {
-            padding: 8px 16px;
-            background: rgba(99, 102, 241, 0.15);
-            border: 1px solid rgba(99, 102, 241, 0.4);
-            color: #c7d2fe;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.15s;
+        /* Stepper Console */
+        .stepper-box {
+            background: #05070c;
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 16px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            color: #a5b4fc;
         }
 
-        .btn-action-small:hover {
-            background: rgba(99, 102, 241, 0.3);
+        .stepper-line {
+            margin-bottom: 6px;
+        }
+
+        .stepper-line.success { color: #34d399; }
+        .stepper-line.info { color: #38bdf8; }
+        .stepper-line.error { color: #f43f5e; }
+
+        /* Inspector Card */
+        .inspector-input-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+        }
+
+        .inspector-input {
+            flex: 1;
+            min-width: 260px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-subtle);
+            color: #ffffff;
+            padding: 11px 16px;
+            border-radius: 10px;
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .inspector-input:focus {
+            border-color: var(--cyan);
+        }
+
+        .btn-inspect-submit {
+            padding: 11px 22px;
+            background: rgba(6, 182, 212, 0.15);
+            border: 1px solid rgba(6, 182, 212, 0.4);
+            color: #22d3ee;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-inspect-submit:hover:not(:disabled) {
+            background: rgba(6, 182, 212, 0.25);
             color: #ffffff;
         }
 
-        /* Toast Notifications */
+        /* Toast Container */
         #toastContainer {
             position: fixed;
             bottom: 24px;
@@ -567,9 +621,9 @@
         }
 
         .toast {
-            background: #1e293b;
+            background: #182032;
             color: #ffffff;
-            border: 1px solid var(--border-highlight);
+            border: 1px solid rgba(99, 102, 241, 0.4);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
             padding: 12px 18px;
             border-radius: 10px;
@@ -577,10 +631,10 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            animation: slideInRight 0.25s ease;
+            animation: slideIn 0.25s ease;
         }
 
-        @keyframes slideInRight {
+        @keyframes slideIn {
             from { transform: translateX(100%); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
         }
@@ -590,297 +644,237 @@
 </head>
 <body>
 
-    <!-- Top Enterprise Navigation -->
-    <header class="enterprise-header">
-        <div class="header-inner">
-            <div class="brand-cluster">
-                <div class="brand-icon">⚡</div>
-                <div class="brand-titles">
-                    <h1>NGUYENDZVN ENTERPRISE</h1>
-                    <p>Minecraft Plugin Suite • Pure Standalone Engine & Watermark Cleaner</p>
+    <!-- Header Navigation -->
+    <header class="nav-header">
+        <div class="nav-inner">
+            <div class="brand-group">
+                <div class="brand-avatar">⚡</div>
+                <div class="brand-text">
+                    <h1>NGUYENDZVN SUITE</h1>
+                    <p>Minecraft Plugin Studio • Pure Standalone Engine</p>
                 </div>
             </div>
 
-            <div class="metrics-strip">
-                <div class="metric-pill live">
-                    <span class="live-dot"></span>
-                    <span>100% CLIENT-SIDE SECURE</span>
+            <div class="nav-tags">
+                <div class="tag-pill live">
+                    <span class="dot-pulse"></span>
+                    <span>100% CLIENT-SIDE RAM</span>
                 </div>
-                <div class="metric-pill">
-                    <span>MUTF-8 JVMS §4.4.7</span>
+                <div class="tag-pill">
+                    <span>JVMS §4.4.7 MUTF-8</span>
                 </div>
-                <a href="https://github.com/bb99kra/plugin-watermark-cleaner" target="_blank" class="github-link-btn" title="Xem mã nguồn trên GitHub">
-                    ⭐ GitHub Repo
+                <a href="https://github.com/bb99kra/plugin-watermark-cleaner" target="_blank" class="github-link">
+                    ⭐ GitHub Repository
                 </a>
             </div>
         </div>
     </header>
 
-    <!-- Main Container -->
-    <div class="app-container">
+    <div class="workspace">
 
-        <!-- Navigation Tabs -->
-        <nav class="tab-bar">
-            <button class="tab-btn active" onclick="switchTab('pure')">
-                <span>⚡</span> (pure) Standalone Transformer
-            </button>
-            <button class="tab-btn" onclick="switchTab('audit')">
-                <span>🛡️</span> Security Auditor & Sanitizer
-            </button>
-            <button class="tab-btn" onclick="switchTab('inspector')">
-                <span>🔍</span> Bytecode Inspector
-            </button>
-            <button class="tab-btn" onclick="switchTab('protocols')">
-                <span>📜</span> Protocols & Shortcuts
-            </button>
-        </nav>
+        <!-- File Upload Area -->
+        <div class="card-dropzone">
+            <div id="dropArea" class="drop-area" onclick="document.getElementById('fileInput').click()">
+                <input type="file" id="fileInput" accept=".jar" style="display: none;" onchange="handleFile(this.files[0])">
+                <div class="drop-icon">📦</div>
+                <div class="drop-title" id="dropTitle">Kéo thả file .jar vào đây hoặc nhấp để tải lên</div>
+                <div class="drop-desc">Hỗ trợ tất cả plugin Minecraft (Nexo, AxBoosters, AxKoth, GUIPlus, Paper, Folia...) • Chạy trực tiếp 100% trong RAM trình duyệt, không bao giờ gửi file lên server!</div>
+            </div>
 
-        <!-- TAB 1: (pure) STANDALONE ENGINE -->
-        <section id="tab-pure" class="tab-content active">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title-group">
-                        <h2><span>⚡</span> (pure) Standalone Engine - Decouple All Remote DRM</h2>
-                        <p>Biến bất kỳ plugin nào thành phiên bản hoàn toàn độc lập, ngắt toàn bộ liên kết cloud/panel/telemetry/GLeaks, vô hiệu hóa cơ chế kiểm tra bản quyền và xuất file .jar sạch 100% offline-ready.</p>
+            <div id="fileLoadedBar" class="file-loaded-bar hidden">
+                <div class="file-info-group">
+                    <h3 id="loadedFileName">Plugin.jar</h3>
+                    <p id="loadedFileMeta">Dung lượng: 0 MB • 0 Classes đã phân tích</p>
+                </div>
+                <button class="btn-change-file" onclick="resetFile()">🔄 Đổi File Khác</button>
+            </div>
+        </div>
+
+        <!-- Headline -->
+        <div class="section-headline">
+            <h2>Các Tính Năng Chuyên Biệt (Tách Rời Độc Lập)</h2>
+            <p>Chọn chính xác tính năng bạn muốn thực hiện. Nhấp trực tiếp để kích hoạt – Hoàn toàn tự động, không cần chọn tùy chọn rườm rà.</p>
+        </div>
+
+        <!-- Modules Grid - TÁCH TỪNG TÍNH NĂNG RA RIÊNG BIỆT - KHÔNG CÓ CHECKBOX NÀO -->
+        <div class="modules-grid">
+
+            <!-- MODULE 1: (pure) STANDALONE -->
+            <div class="module-card featured">
+                <div>
+                    <div class="module-header">
+                        <div class="module-badge-icon icon-pure">⚡</div>
+                        <div class="module-titles">
+                            <h3>(pure) Standalone Engine</h3>
+                            <p>Độc Lập Tuyệt Đối • 100% Offline</p>
+                        </div>
                     </div>
-                </div>
-
-                <!-- Dropzone Pure -->
-                <div class="dropzone-box" id="dropzonePure" onclick="document.getElementById('fileInputPure').click()">
-                    <input type="file" id="fileInputPure" accept=".jar" style="display: none;" onchange="handleFileSelected(this.files[0])">
-                    <div class="dropzone-icon">📦</div>
-                    <div class="dropzone-title" id="pureDropTitle">Kéo thả file .jar vào đây hoặc nhấp để tải lên</div>
-                    <div class="dropzone-desc" id="pureDropDesc">Xử lý trực tiếp 100% trong RAM trình duyệt thông qua JSZip & MUTF-8 Bytecode Rewriter • Không tải file lên bất kỳ máy chủ nào!</div>
-                    <div class="privacy-guarantee">
-                        <span>🔒</span> 100% Client-Side In-Memory Execution • Hoạt động vĩnh viễn trên GitHub Pages
+                    <div class="module-desc">
+                        Chuyển đổi toàn diện plugin thành bản Standalone 100% độc lập. Tự động vô hiệu hóa toàn bộ cơ chế DRM/License, ngắt kết nối gọi về server từ xa, xóa sạch watermark và xuất file offline-ready.
                     </div>
+                    <ul class="module-highlights">
+                        <li><span class="dot"></span> Hóa giải bẫy DRM, bypass IllegalStateException (GLeaks, Nexo...)</li>
+                        <li><span class="dot"></span> Chuyển hướng toàn bộ Phone-home/Telemetry về dummy 127.0.0.1</li>
+                        <li><span class="dot"></span> Xóa sạch Zip comment, Manifest trackers, Digital signatures</li>
+                        <li><span class="dot"></span> Đóng gói & tải về ngay file <strong>[Plugin]-Pure.jar</strong></li>
+                    </ul>
                 </div>
-
-                <!-- Pure Options Grid -->
-                <div class="options-grid">
-                    <label class="option-item">
-                        <input type="checkbox" class="option-checkbox" id="optDrm" checked>
-                        <div class="option-meta">
-                            <h4>Decouple DRM & License Verification</h4>
-                            <p>Tự động hóa giải hàm kiểm tra giấy phép nhị phân, bypass cơ chế ném IllegalStateException (GLeaks, Nexo, Custom DRM).</p>
-                        </div>
-                    </label>
-
-                    <label class="option-item">
-                        <input type="checkbox" class="option-checkbox" id="optTelemetry" checked>
-                        <div class="option-meta">
-                            <h4>Neutralize Phone-Home & Telemetry</h4>
-                            <p>Chuyển hướng toàn bộ request gọi về server từ xa (Spigot API, Polymart, bStats, Songoda) về loopback an toàn.</p>
-                        </div>
-                    </label>
-
-                    <label class="option-item">
-                        <input type="checkbox" class="option-checkbox" id="optBanners" checked>
-                        <div class="option-meta">
-                            <h4>Strip Crack Banners & Console Spam</h4>
-                            <p>Loại bỏ sạch các thông báo leaker, banner quảng cáo dạng chuỗi thông thường và mã hóa Base64 trong bytecode.</p>
-                        </div>
-                    </label>
-
-                    <label class="option-item">
-                        <input type="checkbox" class="option-checkbox" id="optWatermarks" checked>
-                        <div class="option-meta">
-                            <h4>Clean Watermarks & Metadata</h4>
-                            <p>Xoá trắng Zip Comment (HoYeuEmBangMat), header theo dõi trong MANIFEST.MF, chữ ký số và token %%__USER__%%.</p>
-                        </div>
-                    </label>
-
-                    <label class="option-item">
-                        <input type="checkbox" class="option-checkbox" id="optTimestamps" checked>
-                        <div class="option-meta">
-                            <h4>Normalize File Timestamps</h4>
-                            <p>Chuẩn hoá timestamp các file con về mốc cố định (Zero-metadata footprint) nhằm xoá sạch dấu vết tải xuống.</p>
-                        </div>
-                    </label>
-
-                    <label class="option-item">
-                        <input type="checkbox" class="option-checkbox" id="optCleanYaml" checked>
-                        <div class="option-meta">
-                            <h4>Clean Plugin YAML Comments</h4>
-                            <p>Dọn sạch các dòng comment leaker/watermark trong paper-plugin.yml và plugin.yml.</p>
-                        </div>
-                    </label>
-                </div>
-
-                <!-- Action Button -->
-                <button class="btn-pure" id="btnExecutePure" onclick="executeClientPureTransformation()" disabled>
-                    <span>⚡</span> EXECUTE (PURE) STANDALONE TRANSFORMATION
+                <button class="btn-action-primary btn-pure-gradient" id="btnRunPure" onclick="runPureModule()" disabled>
+                    <span>⚡</span> Kích Hoạt (pure) Standalone Ngay
                 </button>
+            </div>
 
-                <!-- Stepper Progress Log -->
-                <div class="stepper-box hidden" id="pureStepper">
-                    <div class="stepper-line info">[*] Initializing Nguyendzvn Pure Engine...</div>
-                </div>
-
-                <!-- Pure Result Card -->
-                <div class="card result-card hidden" id="pureResultCard" style="margin-top: 20px;">
-                    <div class="card-header">
-                        <div class="card-title-group">
-                            <h2 style="color: #34d399;"><span>🎉</span> (pure) Standalone Transformation Completed!</h2>
-                            <p>Plugin đã được tái cấu trúc thành công thành bản độc lập 100% offline-ready, cấu trúc bytecode nguyên bản được bảo toàn tuyệt đối.</p>
+            <!-- MODULE 2: SANITIZER & WATERMARK -->
+            <div class="module-card">
+                <div>
+                    <div class="module-header">
+                        <div class="module-badge-icon icon-sanitize">🧹</div>
+                        <div class="module-titles">
+                            <h3>Watermark & Identity Cleaner</h3>
+                            <p>Khử Sạch Dấu Vết Định Danh</p>
                         </div>
                     </div>
+                    <div class="module-desc">
+                        Khử sạch triệt để mọi thông tin nhạy cảm của người tải ban đầu: User ID, Buyer ID, mã Fingerprint NulledVault và ghi chú nén của file để bảo vệ an toàn danh tính.
+                    </div>
+                    <ul class="module-highlights">
+                        <li><span class="dot"></span> Khử các số User ID bị Spigot nhúng ngầm trong class bytecode</li>
+                        <li><span class="dot"></span> Neutralize token Spigot (%%__USER__%%) & Polymart</li>
+                        <li><span class="dot"></span> Xóa bỏ hoàn toàn Zip Comment (HoYeuEmBangMat, NulledVault...)</li>
+                        <li><span class="dot"></span> Dọn sạch các banner quảng cáo leaker trong console</li>
+                    </ul>
+                </div>
+                <button class="btn-action-primary btn-sanitize-gradient" id="btnRunSanitize" onclick="runSanitizeModule()" disabled>
+                    <span>🧹</span> Khử Sạch Watermark & User ID
+                </button>
+            </div>
 
-                    <div class="download-hero">
-                        <div class="download-meta">
-                            <h3 id="resPureFilename">Plugin-Pure.jar</h3>
-                            <p id="resPureStats">Đã xử lý: 0 class • 0 chuỗi • Thời gian: 0ms</p>
+            <!-- MODULE 3: SECURITY AUDITOR -->
+            <div class="module-card">
+                <div>
+                    <div class="module-header">
+                        <div class="module-badge-icon icon-audit">🛡️</div>
+                        <div class="module-titles">
+                            <h3>Security & Risk Auditor</h3>
+                            <p>Kiểm Toán Bảo Mật Chuyên Sâu</p>
                         </div>
-                        <a href="#" class="btn-download" id="resPureDownloadBtn" download>
-                            <span>📥</span> Tải Về Trực Tiếp (.jar)
-                        </a>
                     </div>
+                    <div class="module-desc">
+                        Quét và bóc tách toàn bộ rủi ro của plugin: Chấm điểm an toàn (A+, B, D, F), phát hiện ID người mua bị rò rỉ, các domain gọi về máy chủ ngoài và bẫy giấy phép.
+                    </div>
+                    <ul class="module-highlights">
+                        <li><span class="dot"></span> Thang điểm đánh giá độ an toàn bảo mật trực quan</li>
+                        <li><span class="dot"></span> Bóc tách danh sách Buyer ID kèm liên kết hồ sơ Spigot</li>
+                        <li><span class="dot"></span> Liệt kê chi tiết URL phone-home và chữ ký DRM</li>
+                        <li><span class="dot"></span> Chỉ quét và xuất báo cáo, giữ nguyên file gốc</li>
+                    </ul>
                 </div>
+                <button class="btn-action-primary btn-audit-gradient" id="btnRunAudit" onclick="runAuditModule()" disabled>
+                    <span>🛡️</span> Xuất Báo Cáo Kiểm Toán
+                </button>
             </div>
-        </section>
 
-        <!-- TAB 2: AUDITOR -->
-        <section id="tab-audit" class="tab-content">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title-group">
-                        <h2><span>🛡️</span> Security Auditor & Watermark Sanitizer</h2>
-                        <p>Kiểm toán chuyên sâu: Bóc tách mã độc, phát hiện Buyer ID, theo dõi Telemetry và rà soát nguy cơ rò rỉ thông tin cá nhân.</p>
-                    </div>
-                </div>
-
-                <div id="auditReportCard" class="hidden">
-                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
-                        <div>
-                            <h3 id="auditFileName" style="font-size: 20px; color: #ffffff;">Plugin.jar</h3>
-                            <p id="auditMeta" style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">Dung lượng: 0 MB • 0 Classes</p>
+            <!-- MODULE 4: BYTECODE INSPECTOR -->
+            <div class="module-card">
+                <div>
+                    <div class="module-header">
+                        <div class="module-badge-icon icon-inspect">🔍</div>
+                        <div class="module-titles">
+                            <h3>Bytecode Constant Pool Inspector</h3>
+                            <p>Soi Trực Tiếp Chuỗi Nhị Phân</p>
                         </div>
-                        <div id="auditGradeBadge" class="grade-badge grade-A">A+</div>
                     </div>
-
-                    <div class="table-wrap">
-                        <table class="enterprise-table">
-                            <thead>
-                                <tr>
-                                    <th>Danh Mục Kiểm Toán</th>
-                                    <th>Chi Tiết Phát Hiện</th>
-                                    <th>Mức Độ Nguy Cơ</th>
-                                </tr>
-                            </thead>
-                            <tbody id="auditTableBody"></tbody>
-                        </table>
+                    <div class="module-desc">
+                        Tìm kiếm từ khóa trong hàng nghìn class của file JAR ngay tại trình duyệt. Giúp phát hiện nhanh các chuỗi nhạy cảm, URL ẩn, token bản quyền hoặc phương thức mã hóa.
                     </div>
+                    <ul class="module-highlights">
+                        <li><span class="dot"></span> Tra cứu tức thì trong mọi file .class theo thời gian thực</li>
+                        <li><span class="dot"></span> Tìm kiếm từ khóa tự do: license, spigot, gleaks, user_id, http...</li>
+                        <li><span class="dot"></span> Giải mã chuỗi UTF-8 theo chuẩn Oracle JVMS §4.4.7</li>
+                    </ul>
                 </div>
-
-                <div id="auditEmptyNotice" style="text-align: center; color: var(--text-muted); padding: 40px 20px;">
-                    Vui lòng tải lên một file .jar ở tab <strong>(pure) Standalone Transformer</strong> để bắt đầu xem báo cáo kiểm toán.
+                <div class="inspector-input-group">
+                    <input type="text" id="inspectorSearchTerm" class="inspector-input" placeholder="Nhập từ khóa (vd: license, spigot, gleaks)...">
+                    <button class="btn-inspect-submit" id="btnRunInspect" onclick="runInspectModule()" disabled>
+                        Soi Bytecode
+                    </button>
                 </div>
             </div>
-        </section>
 
-        <!-- TAB 3: BYTECODE INSPECTOR -->
-        <section id="tab-inspector" class="tab-content">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title-group">
-                        <h2><span>🔍</span> Bytecode Constant Pool Inspector</h2>
-                        <p>Tìm kiếm và soi trực tiếp bất kỳ chuỗi nhị phân (string, URL, method name, watermark) nào trong hàng nghìn class của file JAR hoàn toàn tại Client.</p>
-                    </div>
-                </div>
+        </div>
 
-                <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px;">
-                    <input type="text" id="inspectorQuery" placeholder="Nhập từ khoá (vd: license, spigot, gleaks, http, user_id)..." style="flex: 1; min-width: 260px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-subtle); color: #ffffff; padding: 10px 14px; border-radius: 8px; font-size: 13px; outline: none;">
-                    <button class="btn-action-small" onclick="searchClientBytecodeStrings()" style="padding: 10px 20px;">Tìm Kiếm Bytecode</button>
-                </div>
+        <!-- Real-time Stepper Box -->
+        <div class="stepper-box hidden" id="stepperConsole">
+            <div class="stepper-line info">[*] Ready to process...</div>
+        </div>
 
-                <div class="table-wrap">
-                    <table class="enterprise-table">
-                        <thead>
-                            <tr>
-                                <th style="width: 35%;">Class Path</th>
-                                <th style="width: 65%;">Constant Pool String</th>
-                            </tr>
-                        </thead>
-                        <tbody id="inspectorTableBody">
-                            <tr><td colspan="2" style="text-align: center; color: var(--text-muted); padding: 30px;">Tải lên file JAR và nhập từ khoá để bắt đầu soi constant pool.</td></tr>
-                        </tbody>
-                    </table>
+        <!-- Result Card: PURE & SANITIZE -->
+        <div class="card-result hidden" id="exportResultCard">
+            <h3 style="font-size: 18px; color: #34d399; margin-bottom: 6px;">🎉 Xử Lý Hoàn Tất Thành Công!</h3>
+            <p id="exportResultDesc" style="font-size: 13px; color: var(--text-secondary);">Plugin đã được tái cấu trúc sạch sẽ và bảo toàn cấu trúc bytecode chuẩn.</p>
+
+            <div class="result-hero">
+                <div class="result-meta">
+                    <h4 id="exportFileName">Plugin-Pure.jar</h4>
+                    <p id="exportFileStats">Dung lượng: 0 MB • 0 Classes đã sửa • Thời gian: 0ms</p>
                 </div>
+                <a href="#" class="btn-download-direct" id="exportDownloadBtn" download>
+                    <span>📥</span> Tải Về Trực Tiếp (.jar)
+                </a>
             </div>
-        </section>
+        </div>
 
-        <!-- TAB 4: PROTOCOLS -->
-        <section id="tab-protocols" class="tab-content">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title-group">
-                        <h2><span>📜</span> Nguyendzvn Minecraft Plugin Suite - Automation Shortcuts</h2>
-                        <p>Bảng tra cứu các giao thức và lệnh tắt vĩnh viễn dành cho bộ công cụ pair-programming.</p>
-                    </div>
+        <!-- Result Card: AUDIT REPORT -->
+        <div class="card-result hidden" id="auditResultCard">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+                <div>
+                    <h3 style="font-size: 18px; color: #ffffff;">Báo Cáo Kiểm Toán Bảo Mật</h3>
+                    <p id="auditMetaTxt" style="font-size: 13px; color: var(--text-secondary); margin-top: 2px;">0 MB • 0 Classes</p>
                 </div>
-
-                <div class="table-wrap">
-                    <table class="enterprise-table">
-                        <thead>
-                            <tr>
-                                <th style="width: 25%;">Lệnh Tắt (Shortcut)</th>
-                                <th style="width: 75%;">Hành Động Tự Động Hóa Tương Ứng</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong style="color: #22d3ee;">(pure) &lt;Plugin&gt;</strong></td>
-                                <td>Biến plugin thành 100% độc lập, ngắt mọi dependency bên ngoài, lưu vào 3 thư mục quy chuẩn.</td>
-                            </tr>
-                            <tr>
-                                <td><strong style="color: #818cf8;">(src) &lt;Plugin&gt;</strong></td>
-                                <td>Dịch ngược code sạch (Vineflower/CFR), sửa lỗi decompilation, đóng gói dự án Maven đầy đủ pom.xml.</td>
-                            </tr>
-                            <tr>
-                                <td><strong style="color: #c084fc;">(all) &lt;Plugin&gt;</strong></td>
-                                <td>Thực hiện cả (src) và (pure) – vừa tạo dự án Maven vừa xuất file .jar độc lập hoàn chỉnh.</td>
-                            </tr>
-                            <tr>
-                                <td><strong style="color: #f472b6;">(patch) &lt;Plugin&gt;</strong></td>
-                                <td>Can thiệp trực tiếp bytecode ASM/Class, hotfix tính năng thẳng trong .jar mà không cần build lại.</td>
-                            </tr>
-                            <tr>
-                                <td><strong style="color: #34d399;">(fix) &lt;Plugin&gt;</strong></td>
-                                <td>Chẩn đoán và khắc phục runtime exception, lỗi tương thích Paper/Folia, packet listeners.</td>
-                            </tr>
-                            <tr>
-                                <td><strong style="color: #fbbf24;">(vi) &lt;Plugin&gt;</strong></td>
-                                <td>Việt hóa chuyên nghiệp toàn bộ messages.yml, config.yml và giao diện GUI với mã màu Minecraft chuẩn.</td>
-                            </tr>
-                            <tr>
-                                <td><strong style="color: #38bdf8;">(log)</strong></td>
-                                <td>Kết nối SFTP test server (kinetic.pikamc.vn), kéo latest.log, phân tích nguyên nhân lỗi.</td>
-                            </tr>
-                            <tr>
-                                <td><strong style="color: #a78bfa;">(tool) &lt;Mô tả&gt;</strong></td>
-                                <td>Phát triển công cụ tự động hóa chuyên dụng (Python/Bash CLI) lưu vào ~/08_Scripts_And_Tools/.</td>
-                            </tr>
-                            <tr>
-                                <td><strong style="color: #f87171;">(clean)</strong></td>
-                                <td>Dọn dẹp workspace, xoá cache và sắp xếp cây thư mục gọn gàng.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <div id="auditGradeBadge" class="grade-badge grade-A">A+</div>
             </div>
-        </section>
+
+            <div class="table-wrap">
+                <table class="clean-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 25%;">Danh Mục</th>
+                            <th style="width: 60%;">Phát Hiện Chi Tiết</th>
+                            <th style="width: 15%;">Mức Rủi Ro</th>
+                        </tr>
+                    </thead>
+                    <tbody id="auditTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Result Card: INSPECTOR MATCHES -->
+        <div class="card-result hidden" id="inspectResultCard">
+            <h3 style="font-size: 18px; color: #ffffff; margin-bottom: 4px;">Kết Quả Soi Constant Pool Bytecode</h3>
+            <p id="inspectMetaTxt" style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">Tìm thấy 0 chuỗi khớp</p>
+
+            <div class="table-wrap">
+                <table class="clean-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 35%;">Class Path</th>
+                            <th style="width: 65%;">Constant Pool String</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inspectTableBody"></tbody>
+                </table>
+            </div>
+        </div>
 
     </div>
 
-    <!-- Toast Notification Container -->
+    <!-- Toast Container -->
     <div id="toastContainer"></div>
 
     <script>
         let currentLoadedZip = null;
         let currentFileObj = null;
-        let auditResults = {
-            filename: '',
-            filesize: 0,
+        let auditData = {
             classesCount: 0,
             zipComment: null,
             manifestTrackers: [],
@@ -906,31 +900,20 @@
             }, 3000);
         }
 
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-
-            const targetBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.getAttribute('onclick').includes(tabId));
-            if (targetBtn) targetBtn.classList.add('active');
-
-            const content = document.getElementById(`tab-${tabId}`);
-            if (content) content.classList.add('active');
-        }
-
         // Setup Drag & Drop
-        const dropzone = document.getElementById('dropzonePure');
+        const dropArea = document.getElementById('dropArea');
         ['dragenter', 'dragover'].forEach(n => {
-            dropzone.addEventListener(n, e => { e.preventDefault(); dropzone.classList.add('dragover'); });
+            dropArea.addEventListener(n, e => { e.preventDefault(); dropArea.classList.add('dragover'); });
         });
         ['dragleave', 'drop'].forEach(n => {
-            dropzone.addEventListener(n, e => { e.preventDefault(); dropzone.classList.remove('dragover'); });
+            dropArea.addEventListener(n, e => { e.preventDefault(); dropArea.classList.remove('dragover'); });
         });
-        dropzone.addEventListener('drop', e => {
+        dropArea.addEventListener('drop', e => {
             const f = e.dataTransfer.files[0];
-            if (f) handleFileSelected(f);
+            if (f) handleFile(f);
         });
 
-        // Java Modified UTF-8 (MUTF-8) Engine (JVMS §4.4.7 compliant)
+        // Java MUTF-8 Engine (JVMS §4.4.7)
         function decodeMutf8(bytes) {
             let out = '';
             let i = 0;
@@ -1056,33 +1039,59 @@
             }
         }
 
-        // Handle File Selection
-        async function handleFileSelected(file) {
+        // Handle File Load
+        async function handleFile(file) {
             if (!file) return;
             currentFileObj = file;
 
-            document.getElementById('pureDropTitle').textContent = `Đã nạp file: ${file.name}`;
-            document.getElementById('pureDropDesc').textContent = `Dung lượng: ${(file.size / (1024*1024)).toFixed(2)} MB • Đang giải nén và phân tích constant pool...`;
-            document.getElementById('btnExecutePure').removeAttribute('disabled');
+            document.getElementById('dropArea').classList.add('hidden');
+            document.getElementById('fileLoadedBar').classList.remove('hidden');
 
-            showToast(`Đang phân tích: ${file.name}...`, 'info');
+            document.getElementById('loadedFileName').textContent = file.name;
+            document.getElementById('loadedFileMeta').textContent = `Dung lượng: ${(file.size / (1024*1024)).toFixed(2)} MB • Đang giải nén trực tiếp trong RAM...`;
+
+            showToast(`Đang phân tích cấu trúc: ${file.name}...`, 'info');
 
             try {
                 const zip = new JSZip();
                 currentLoadedZip = await zip.loadAsync(file);
-                await auditLoadedZip(file, currentLoadedZip);
-                renderAuditReport();
-                showToast(`Phân tích bảo mật hoàn tất!`, 'success');
-            } catch (err) {
-                showToast(`Lỗi giải nén JAR: ${err.message}`, 'error');
+                await auditZip(file, currentLoadedZip);
+
+                document.getElementById('loadedFileMeta').textContent = `Dung lượng: ${(file.size / (1024*1024)).toFixed(2)} MB • ${auditData.classesCount} Classes • Sẵn sàng xử lý!`;
+
+                // Enable all buttons
+                document.getElementById('btnRunPure').removeAttribute('disabled');
+                document.getElementById('btnRunSanitize').removeAttribute('disabled');
+                document.getElementById('btnRunAudit').removeAttribute('disabled');
+                document.getElementById('btnRunInspect').removeAttribute('disabled');
+
+                showToast(`Phân tích xong! Bạn có thể chọn tính năng bên dưới để chạy ngay.`, 'success');
+            } catch (e) {
+                showToast(`Lỗi giải nén: ${e.message}`, 'error');
             }
         }
 
-        // Deep Audit Loaded Zip
-        async function auditLoadedZip(file, zip) {
-            auditResults = {
-                filename: file.name,
-                filesize: file.size,
+        function resetFile() {
+            currentLoadedZip = null;
+            currentFileObj = null;
+            document.getElementById('fileInput').value = '';
+            document.getElementById('fileLoadedBar').classList.add('hidden');
+            document.getElementById('dropArea').classList.remove('hidden');
+
+            document.getElementById('btnRunPure').setAttribute('disabled', 'true');
+            document.getElementById('btnRunSanitize').setAttribute('disabled', 'true');
+            document.getElementById('btnRunAudit').setAttribute('disabled', 'true');
+            document.getElementById('btnRunInspect').setAttribute('disabled', 'true');
+
+            document.getElementById('exportResultCard').classList.add('hidden');
+            document.getElementById('auditResultCard').classList.add('hidden');
+            document.getElementById('inspectResultCard').classList.add('hidden');
+            document.getElementById('stepperConsole').classList.add('hidden');
+        }
+
+        // Audit Engine
+        async function auditZip(file, zip) {
+            auditData = {
                 classesCount: 0,
                 zipComment: zip.comment ? zip.comment.trim() : null,
                 manifestTrackers: [],
@@ -1098,47 +1107,39 @@
 
             const crackKeywords = ['cracked by', 'nulled by', 'leaked by', 'nulledvault', 'blackspigot', 'directleaks', 'leakzone', 'craftrip', 'mc-market', 'gleaks'];
 
-            if (auditResults.zipComment) {
-                auditResults.riskScore += 30;
-            }
+            if (auditData.zipComment) auditData.riskScore += 30;
 
-            // Check Manifest
-            const mfEntry = zip.file('META-INF/MANIFEST.MF');
-            if (mfEntry) {
+            const mf = zip.file('META-INF/MANIFEST.MF');
+            if (mf) {
                 try {
-                    const mfTxt = await mfEntry.async('text');
-                    mfTxt.split('\n').forEach(l => {
-                        const low = l.toLowerCase();
+                    const txt = await mf.async('text');
+                    txt.split('\n').forEach(l => {
                         if (/^(spigot|builtbybit|bbb|polymart|songoda|buyer|customer|license|purchased|download|user-id|userid|resource-id|resourceid|account-id|nonce)/i.test(l.split(':')[0].trim())) {
-                            auditResults.manifestTrackers.push(l.trim());
-                            auditResults.riskScore += 25;
+                            auditData.manifestTrackers.push(l.trim());
+                            auditData.riskScore += 25;
                             const nums = l.match(/\b\d{5,8}\b/g);
-                            if (nums) nums.forEach(n => auditResults.detectedIds.add(n));
+                            if (nums) nums.forEach(n => auditData.detectedIds.add(n));
                         }
                     });
                 } catch (e) {}
             }
 
-            // Check Classes & Files
             for (const [path, entry] of Object.entries(zip.files)) {
                 const low = path.toLowerCase();
                 const base = low.split('/').pop();
 
                 if (base.endsWith('.sf') || base.endsWith('.rsa') || base.endsWith('.dsa') || base.includes('.spigot') || base.includes('.builtbybit')) {
-                    auditResults.suspiciousFiles.push(path);
-                    auditResults.riskScore += 10;
+                    auditData.suspiciousFiles.push(path);
+                    auditData.riskScore += 10;
                 }
 
                 if (path === 'com/nexomc/nexo/NexoPlugin.class') {
-                    auditResults.drmSignatures.push({
-                        class: path,
-                        desc: 'GLeaks / Nexo AES-CBC Bytecode License Trap'
-                    });
-                    auditResults.riskScore += 40;
+                    auditData.drmSignatures.push({ class: path, desc: 'GLeaks / Nexo AES-CBC Bytecode License Trap' });
+                    auditData.riskScore += 40;
                 }
 
                 if (path.endsWith('.class')) {
-                    auditResults.classesCount++;
+                    auditData.classesCount++;
                     const arrayBuf = await entry.async('arraybuffer');
                     const view = new DataView(arrayBuf);
                     if (view.byteLength >= 10 && view.getUint32(0) === 0xCAFEBABE) {
@@ -1156,48 +1157,42 @@
                                     const s = decodeMutf8(rawBytes);
                                     const sLower = s.toLowerCase();
 
-                                    // Spigot tokens
                                     if (s.includes('%%__USER__%%') || s.includes('%%__RESOURCE__%%') || s.includes('%%__NONCE__%%') || s.includes('%%__USERNAME__%%') || s.includes('%%__POLYMART__%%')) {
-                                        auditResults.riskScore += 20;
+                                        auditData.riskScore += 20;
                                     }
 
-                                    // Banners
                                     if (crackKeywords.some(kw => sLower.includes(kw)) && s.length < 200) {
-                                        auditResults.crackBanners.push({ raw: s, decoded: s, isBase64: false });
-                                        auditResults.riskScore += 15;
+                                        auditData.crackBanners.push({ raw: s, decoded: s, isBase64: false });
+                                        auditData.riskScore += 15;
                                     }
 
-                                    // Base64 Banners
                                     if (s.length >= 20 && s.length <= 256 && /^[A-Za-z0-9+/=]+$/.test(s) && !s.endsWith('.class')) {
                                         try {
                                             const bDec = atob(s);
                                             if (crackKeywords.some(kw => bDec.toLowerCase().includes(kw)) || bDec.toLowerCase().includes('cracked')) {
-                                                auditResults.crackBanners.push({ raw: s, decoded: bDec, isBase64: true });
-                                                auditResults.riskScore += 20;
+                                                auditData.crackBanners.push({ raw: s, decoded: bDec, isBase64: true });
+                                                auditData.riskScore += 20;
                                             }
                                         } catch (e) {}
                                     }
 
-                                    // NulledVault tracking tokens
                                     if (s.length === 44 && s.endsWith('MFiBc3gyeJo7/AqXBycJU=')) {
-                                        auditResults.nvTokens.add(s);
-                                        auditResults.riskScore += 25;
+                                        auditData.nvTokens.add(s);
+                                        auditData.riskScore += 25;
                                     }
 
-                                    // Phone-Home URLs
                                     if (s.startsWith('http://') || s.startsWith('https://')) {
                                         if (['api.spigotmc.org', 'pstats.', 'spigotmc.org/legacy', 'license', 'songoda.com/api', 'polymart.org/api', 'nulledvault.com', 'gleaks.pro'].some(dom => sLower.includes(dom))) {
-                                            auditResults.phoneHomeUrls.push(s);
-                                            auditResults.riskScore += 25;
+                                            auditData.phoneHomeUrls.push(s);
+                                            auditData.riskScore += 25;
                                             const m = s.match(/user_id=(\d+)/) || s.match(/id=(\d+)/);
-                                            if (m) auditResults.detectedIds.add(m[1]);
+                                            if (m) auditData.detectedIds.add(m[1]);
                                         }
                                     }
 
-                                    // Standalone User ID
                                     if (l >= 5 && l <= 8 && /^\d+$/.test(s)) {
                                         const v = parseInt(s, 10);
-                                        if (v >= 10000 && v <= 99999999) auditResults.detectedIds.add(s);
+                                        if (v >= 10000 && v <= 99999999) auditData.detectedIds.add(s);
                                     }
                                 } catch (e) {}
                                 offset += l;
@@ -1213,131 +1208,67 @@
                 }
             }
 
-            const score = Math.min(100, auditResults.riskScore);
-            auditResults.riskScore = score;
-            if (score === 0) auditResults.grade = 'A+';
-            else if (score <= 25) auditResults.grade = 'A';
-            else if (score <= 50) auditResults.grade = 'B';
-            else if (score <= 75) auditResults.grade = 'D';
-            else auditResults.grade = 'F';
+            const score = Math.min(100, auditData.riskScore);
+            auditData.riskScore = score;
+            if (score === 0) auditData.grade = 'A+';
+            else if (score <= 25) auditData.grade = 'A';
+            else if (score <= 50) auditData.grade = 'B';
+            else if (score <= 75) auditData.grade = 'D';
+            else auditData.grade = 'F';
         }
 
-        function renderAuditReport() {
-            document.getElementById('auditEmptyNotice').classList.add('hidden');
-            document.getElementById('auditReportCard').classList.remove('hidden');
-
-            document.getElementById('auditFileName').textContent = auditResults.filename;
-            document.getElementById('auditMeta').textContent = `Dung lượng: ${(auditResults.filesize / (1024*1024)).toFixed(2)} MB • ${auditResults.classesCount} Classes • Phân tích trực tiếp tại Client`;
-
-            const badge = document.getElementById('auditGradeBadge');
-            badge.className = `grade-badge grade-${auditResults.grade.charAt(0)}`;
-            badge.textContent = `${auditResults.grade} (Điểm rủi ro: ${auditResults.riskScore}%)`;
-
-            const tbody = document.getElementById('auditTableBody');
-            tbody.innerHTML = '';
-
-            if (auditResults.zipComment) {
-                tbody.innerHTML += `<tr><td><strong>Zip Archive Comment</strong></td><td style="color:#f87171; font-family:var(--font-mono);">${escapeHtml(auditResults.zipComment)}</td><td><span style="color:#ef4444; font-weight:700;">DANGER</span></td></tr>`;
-            }
-
-            if (auditResults.manifestTrackers.length) {
-                tbody.innerHTML += `<tr><td><strong>MANIFEST.MF Trackers</strong></td><td>${auditResults.manifestTrackers.map(m => `<div style="font-family:var(--font-mono); font-size:11px;">${escapeHtml(m)}</div>`).join('')}</td><td><span style="color:#f59e0b; font-weight:700;">WARNING</span></td></tr>`;
-            }
-
-            if (auditResults.detectedIds.size) {
-                tbody.innerHTML += `<tr><td><strong>Detected Buyer IDs</strong></td><td>${Array.from(auditResults.detectedIds).map(id => `<div><strong>ID: ${id}</strong> <a href="https://www.spigotmc.org/members/${id}/" target="_blank" style="color:#38bdf8; text-decoration:none;">(Xem Profile Spigot)</a></div>`).join('')}</td><td><span style="color:#ef4444; font-weight:700;">CRITICAL</span></td></tr>`;
-            }
-
-            if (auditResults.crackBanners.length) {
-                tbody.innerHTML += `<tr><td><strong>Crack / Leaker Banners</strong></td><td>${auditResults.crackBanners.map(b => `<div style="font-family:var(--font-mono); font-size:11px; color:#fbbf24;">${escapeHtml(b.decoded)} <small>(${b.isBase64 ? 'Base64' : 'Plain'})</small></div>`).join('')}</td><td><span style="color:#ef4444; font-weight:700;">DANGER</span></td></tr>`;
-            }
-
-            if (auditResults.phoneHomeUrls.length) {
-                tbody.innerHTML += `<tr><td><strong>Phone-Home / Telemetry</strong></td><td>${auditResults.phoneHomeUrls.map(u => `<div style="font-family:var(--font-mono); font-size:11px; color:#38bdf8;">${escapeHtml(u)}</div>`).join('')}</td><td><span style="color:#ef4444; font-weight:700;">CRITICAL</span></td></tr>`;
-            }
-
-            if (auditResults.drmSignatures.length) {
-                tbody.innerHTML += `<tr><td><strong>Bytecode DRM Traps</strong></td><td>${auditResults.drmSignatures.map(d => `<div style="color:#f87171;"><strong>${d.desc}</strong> (${d.class})</div>`).join('')}</td><td><span style="color:#ef4444; font-weight:700;">CRITICAL</span></td></tr>`;
-            }
-
-            if (!tbody.innerHTML) {
-                tbody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: #34d399; padding: 24px;">✨ File hoàn toàn sạch! Không phát hiện thấy watermark, DRM hay liên kết telemetry nào.</td></tr>`;
-            }
-        }
-
-        // Execute Client-Side Pure Transformation
-        async function executeClientPureTransformation() {
+        // FUNCTION 1: RUN PURE MODULE (ALL-IN-ONE STANDALONE TRANSFORM)
+        async function runPureModule() {
             if (!currentLoadedZip) return;
 
-            const btn = document.getElementById('btnExecutePure');
-            btn.setAttribute('disabled', 'true');
-            btn.innerHTML = `<span>⏳</span> TRANSFORMING PLUGIN BYTECODE...`;
-
-            const stepper = document.getElementById('pureStepper');
+            const stepper = document.getElementById('stepperConsole');
             stepper.classList.remove('hidden');
             stepper.innerHTML = `
-                <div class="stepper-line info">[*] Initializing Nguyendzvn Pure Engine for ${currentFileObj.name}...</div>
-                <div class="stepper-line">[*] Analyzing class hierarchy and constant pools...</div>
+                <div class="stepper-line info">[*] Executing (pure) Standalone Protocol for ${currentFileObj.name}...</div>
+                <div class="stepper-line">[*] Decoupling remote DRM & neutralizing license traps...</div>
             `;
 
-            const optDrm = document.getElementById('optDrm').checked;
-            const optTelemetry = document.getElementById('optTelemetry').checked;
-            const optBanners = document.getElementById('optBanners').checked;
-            const optWatermarks = document.getElementById('optWatermarks').checked;
-            const optTimestamps = document.getElementById('optTimestamps').checked;
-            const optCleanYaml = document.getElementById('optCleanYaml').checked;
-
+            const t0 = performance.now();
             const replacements = {};
 
-            if (optBanners) {
-                auditResults.crackBanners.forEach(b => {
-                    replacements[b.raw] = b.isBase64 ? 'IA==' : '';
-                });
-                replacements['https://nulledvault.com'] = 'http://127.0.0.1:9999';
-                replacements['http://nulledvault.com'] = 'http://127.0.0.1:9999';
-                replacements['nulledvault.com'] = '127.0.0.1';
-                replacements['nulledvault'] = 'pure';
-                replacements['maskirovka'] = 'pure';
-                replacements['blackspigot'] = 'pure';
-                replacements['directleaks'] = 'pure';
-                replacements['gleaks.pro'] = '127.0.0.1';
-                replacements['https://gleaks.pro'] = 'http://127.0.0.1:9999';
-            }
+            // Neutralize banners
+            auditData.crackBanners.forEach(b => { replacements[b.raw] = b.isBase64 ? 'IA==' : ''; });
+            replacements['https://nulledvault.com'] = 'http://127.0.0.1:9999';
+            replacements['http://nulledvault.com'] = 'http://127.0.0.1:9999';
+            replacements['nulledvault.com'] = '127.0.0.1';
+            replacements['nulledvault'] = 'pure';
+            replacements['maskirovka'] = 'pure';
+            replacements['blackspigot'] = 'pure';
+            replacements['directleaks'] = 'pure';
+            replacements['gleaks.pro'] = '127.0.0.1';
+            replacements['https://gleaks.pro'] = 'http://127.0.0.1:9999';
 
-            if (optWatermarks) {
-                auditResults.detectedIds.forEach(id => replacements[id] = '0'.repeat(id.length));
-                auditResults.nvTokens.forEach(t => replacements[t] = '0'.repeat(t.length));
-                replacements['%%__USER__%%'] = '0';
-                replacements['%%__RESOURCE__%%'] = '0';
-                replacements['%%__NONCE__%%'] = '0';
-                replacements['%%__USERNAME__%%'] = 'PureUser';
-                replacements['%%__POLYMART__%%'] = '0';
-                replacements['%%__NV_USER_ID__%%'] = '0';
-            }
+            // Neutralize watermarks & IDs
+            auditData.detectedIds.forEach(id => replacements[id] = '0'.repeat(id.length));
+            auditData.nvTokens.forEach(t => replacements[t] = '0'.repeat(t.length));
+            replacements['%%__USER__%%'] = '0';
+            replacements['%%__RESOURCE__%%'] = '0';
+            replacements['%%__NONCE__%%'] = '0';
+            replacements['%%__USERNAME__%%'] = 'PureUser';
+            replacements['%%__POLYMART__%%'] = '0';
+            replacements['%%__NV_USER_ID__%%'] = '0';
 
-            if (optTelemetry) {
-                replacements['https://api.spigotmc.org/simple/0.2/index.php'] = 'http://127.0.0.1:9999/dummy';
-                replacements['https://api.spigotmc.org/legacy/premium.php'] = 'http://127.0.0.1:9999/dummy';
-                replacements['http://api.spigotmc.org'] = 'http://127.0.0.1:9999';
-                replacements['https://pstats.devs.beer'] = 'http://127.0.0.1:9999';
-                replacements['https://license.pikzstudio.xyz'] = 'http://127.0.0.1:9999';
-            }
+            // Neutralize Telemetry
+            replacements['https://api.spigotmc.org/simple/0.2/index.php'] = 'http://127.0.0.1:9999/dummy';
+            replacements['https://api.spigotmc.org/legacy/premium.php'] = 'http://127.0.0.1:9999/dummy';
+            replacements['http://api.spigotmc.org'] = 'http://127.0.0.1:9999';
+            replacements['https://pstats.devs.beer'] = 'http://127.0.0.1:9999';
+            replacements['https://license.pikzstudio.xyz'] = 'http://127.0.0.1:9999';
 
             const cleanZip = new JSZip();
             cleanZip.comment = '';
 
-            const t0 = performance.now();
             let classesModified = 0;
             let stringsReplaced = 0;
             let filesStripped = 0;
-
             const repKeys = Object.keys(replacements);
 
             try {
-                stepper.innerHTML += `<div class="stepper-line info">[*] Decoupling remote DRM traps & bytecode license checkers...</div>`;
-                stepper.innerHTML += `<div class="stepper-line info">[*] Sanitizing phone-home URLs, buyer IDs, and comment metadata...</div>`;
-                stepper.scrollTop = stepper.scrollHeight;
-
                 for (const [path, entry] of Object.entries(currentLoadedZip.files)) {
                     const low = path.toLowerCase();
                     const base = low.split('/').pop();
@@ -1360,7 +1291,7 @@
                     }
 
                     // Clean YAML comments
-                    if ((path === 'plugin.yml' || path === 'paper-plugin.yml') && optCleanYaml) {
+                    if (path === 'plugin.yml' || path === 'paper-plugin.yml') {
                         try {
                             const yTxt = await entry.async('text');
                             const cleanY = yTxt.split('\n').filter(l => {
@@ -1372,7 +1303,7 @@
                         } catch (e) {}
                     }
 
-                    // Clean Classes with constant pool
+                    // Modify classes
                     if (path.endsWith('.class') && repKeys.length > 0) {
                         const arrayBuf = await entry.async('arraybuffer');
                         const rawBytes = new Uint8Array(arrayBuf);
@@ -1413,7 +1344,7 @@
                     cleanZip.file(path, content);
                 }
 
-                stepper.innerHTML += `<div class="stepper-line info">[*] Rebuilding zero-metadata Pure JAR archive...</div>`;
+                stepper.innerHTML += `<div class="stepper-line info">[*] Rebuilding zero-metadata Pure archive...</div>`;
                 stepper.scrollTop = stepper.scrollHeight;
 
                 const cleanBlob = await cleanZip.generateAsync({
@@ -1428,45 +1359,175 @@
                 const downloadUrl = URL.createObjectURL(cleanBlob);
 
                 stepper.innerHTML += `
-                    <div class="stepper-line success">[✓] Modified ${classesModified} classes and neutralized ${stringsReplaced} constant pool entries.</div>
-                    <div class="stepper-line success">[✓] Stripped ${filesStripped} tracker files and manifest headers.</div>
-                    <div class="stepper-line success">[✓] Pure Standalone JAR generated in ${duration}ms!</div>
+                    <div class="stepper-line success">[✓] Decoupled DRM and neutralized ${stringsReplaced} constant pool entries.</div>
+                    <div class="stepper-line success">[✓] Pure Standalone JAR ready in ${duration}ms!</div>
                 `;
                 stepper.scrollTop = stepper.scrollHeight;
 
-                document.getElementById('resPureFilename').textContent = pureName;
-                document.getElementById('resPureStats').textContent = `Dung lượng: ${(cleanBlob.size / (1024*1024)).toFixed(2)} MB • ${classesModified} classes đã vá • Thời gian: ${duration}ms`;
+                document.getElementById('exportFileName').textContent = pureName;
+                document.getElementById('exportFileStats').textContent = `Dung lượng: ${(cleanBlob.size / (1024*1024)).toFixed(2)} MB • ${classesModified} classes đã vá • Thời gian: ${duration}ms`;
+                document.getElementById('exportResultDesc').textContent = 'Đã hóa giải DRM, ngắt phone-home và xóa sạch watermark. Plugin hoàn toàn sẵn sàng chạy offline.';
 
-                const btnDownload = document.getElementById('resPureDownloadBtn');
+                const btnDownload = document.getElementById('exportDownloadBtn');
                 btnDownload.href = downloadUrl;
                 btnDownload.download = pureName;
 
-                document.getElementById('pureResultCard').classList.remove('hidden');
+                document.getElementById('exportResultCard').classList.remove('hidden');
+                document.getElementById('auditResultCard').classList.add('hidden');
+                document.getElementById('inspectResultCard').classList.add('hidden');
+
                 showToast("Chuyển đổi (pure) thành công!", "success");
-
-                // Auto-trigger download
                 btnDownload.click();
-
             } catch (err) {
-                stepper.innerHTML += `<div class="stepper-line" style="color: #ef4444;">[!] Lỗi: ${err.message}</div>`;
+                stepper.innerHTML += `<div class="stepper-line error">[!] Lỗi: ${err.message}</div>`;
                 showToast(`Lỗi: ${err.message}`, 'error');
-            } finally {
-                btn.removeAttribute('disabled');
-                btn.innerHTML = `<span>⚡</span> EXECUTE (PURE) STANDALONE TRANSFORMATION`;
             }
         }
 
-        // Bytecode Inspector Search (Client-Side)
-        async function searchClientBytecodeStrings() {
-            if (!currentLoadedZip) {
-                showToast("Vui lòng tải lên file JAR trước!", "error");
+        // FUNCTION 2: RUN SANITIZER MODULE (WATERMARK & ID ONLY)
+        async function runSanitizeModule() {
+            if (!currentLoadedZip) return;
+
+            const stepper = document.getElementById('stepperConsole');
+            stepper.classList.remove('hidden');
+            stepper.innerHTML = `
+                <div class="stepper-line info">[*] Sanitizing Buyer IDs, tokens, and zip comments for ${currentFileObj.name}...</div>
+            `;
+
+            const t0 = performance.now();
+            const replacements = {};
+
+            auditData.detectedIds.forEach(id => replacements[id] = '0'.repeat(id.length));
+            auditData.nvTokens.forEach(t => replacements[t] = '0'.repeat(t.length));
+            replacements['%%__USER__%%'] = '0';
+            replacements['%%__RESOURCE__%%'] = '0';
+            replacements['%%__NONCE__%%'] = '0';
+            replacements['%%__USERNAME__%%'] = 'PureUser';
+            replacements['%%__POLYMART__%%'] = '0';
+
+            const cleanZip = new JSZip();
+            cleanZip.comment = '';
+
+            let classesModified = 0;
+            let stringsReplaced = 0;
+            const repKeys = Object.keys(replacements);
+
+            try {
+                for (const [path, entry] of Object.entries(currentLoadedZip.files)) {
+                    if (path === 'META-INF/MANIFEST.MF') {
+                        const mfText = await entry.async('text');
+                        const cleanLines = mfText.split('\n').filter(l => !/^(spigot|builtbybit|bbb|polymart|buyer|nonce)/i.test(l.split(':')[0].trim()));
+                        cleanZip.file(path, cleanLines.join('\n'));
+                        continue;
+                    }
+
+                    if (path.endsWith('.class') && repKeys.length > 0) {
+                        const arrayBuf = await entry.async('arraybuffer');
+                        const { buffer, changes } = modifyClassConstantPool(arrayBuf, replacements);
+                        if (changes > 0) {
+                            classesModified++;
+                            stringsReplaced += changes;
+                            cleanZip.file(path, buffer);
+                            continue;
+                        }
+                        cleanZip.file(path, arrayBuf);
+                        continue;
+                    }
+
+                    const content = await entry.async('arraybuffer');
+                    cleanZip.file(path, content);
+                }
+
+                const cleanBlob = await cleanZip.generateAsync({ type: 'blob', compression: 'DEFLATE', comment: '' });
+                const duration = Math.round(performance.now() - t0);
+                const cleanName = currentFileObj.name.replace(/\.jar$/i, '') + '-Clean.jar';
+                const downloadUrl = URL.createObjectURL(cleanBlob);
+
+                stepper.innerHTML += `
+                    <div class="stepper-line success">[✓] Sanitized ${stringsReplaced} watermark entries across ${classesModified} classes.</div>
+                    <div class="stepper-line success">[✓] Clean JAR ready in ${duration}ms!</div>
+                `;
+                stepper.scrollTop = stepper.scrollHeight;
+
+                document.getElementById('exportFileName').textContent = cleanName;
+                document.getElementById('exportFileStats').textContent = `Dung lượng: ${(cleanBlob.size / (1024*1024)).toFixed(2)} MB • ${classesModified} classes • Thời gian: ${duration}ms`;
+                document.getElementById('exportResultDesc').textContent = 'Đã khử sạch Buyer ID, Spigot tokens và xóa Zip Comment.';
+
+                const btnDownload = document.getElementById('exportDownloadBtn');
+                btnDownload.href = downloadUrl;
+                btnDownload.download = cleanName;
+
+                document.getElementById('exportResultCard').classList.remove('hidden');
+                document.getElementById('auditResultCard').classList.add('hidden');
+                document.getElementById('inspectResultCard').classList.add('hidden');
+
+                showToast("Khử sạch watermark thành công!", "success");
+                btnDownload.click();
+            } catch (err) {
+                stepper.innerHTML += `<div class="stepper-line error">[!] Lỗi: ${err.message}</div>`;
+                showToast(`Lỗi: ${err.message}`, 'error');
+            }
+        }
+
+        // FUNCTION 3: RUN AUDIT REPORT MODULE
+        function runAuditModule() {
+            if (!currentLoadedZip) return;
+
+            document.getElementById('auditMetaTxt').textContent = `${currentFileObj.name} • ${(currentFileObj.size / (1024*1024)).toFixed(2)} MB • ${auditData.classesCount} Classes`;
+
+            const badge = document.getElementById('auditGradeBadge');
+            badge.className = `grade-badge grade-${auditData.grade.charAt(0)}`;
+            badge.textContent = `${auditData.grade} (${auditData.riskScore}% rủi ro)`;
+
+            const tbody = document.getElementById('auditTableBody');
+            tbody.innerHTML = '';
+
+            if (auditData.zipComment) {
+                tbody.innerHTML += `<tr><td><strong>Zip Archive Comment</strong></td><td style="color:#f87171; font-family:var(--font-mono);">${escapeHtml(auditData.zipComment)}</td><td><span style="color:#f43f5e; font-weight:700;">DANGER</span></td></tr>`;
+            }
+
+            if (auditData.manifestTrackers.length) {
+                tbody.innerHTML += `<tr><td><strong>MANIFEST.MF Trackers</strong></td><td>${auditData.manifestTrackers.map(m => `<div style="font-family:var(--font-mono); font-size:11px;">${escapeHtml(m)}</div>`).join('')}</td><td><span style="color:#f59e0b; font-weight:700;">WARNING</span></td></tr>`;
+            }
+
+            if (auditData.detectedIds.size) {
+                tbody.innerHTML += `<tr><td><strong>Buyer IDs Phát Hiện</strong></td><td>${Array.from(auditData.detectedIds).map(id => `<div><strong>ID: ${id}</strong> <a href="https://www.spigotmc.org/members/${id}/" target="_blank" style="color:#38bdf8; text-decoration:none;">(Profile Spigot)</a></div>`).join('')}</td><td><span style="color:#f43f5e; font-weight:700;">CRITICAL</span></td></tr>`;
+            }
+
+            if (auditData.crackBanners.length) {
+                tbody.innerHTML += `<tr><td><strong>Crack / Leaker Banners</strong></td><td>${auditData.crackBanners.map(b => `<div style="font-family:var(--font-mono); font-size:11px; color:#fbbf24;">${escapeHtml(b.decoded)} <small>(${b.isBase64 ? 'Base64' : 'Plain'})</small></div>`).join('')}</td><td><span style="color:#f43f5e; font-weight:700;">DANGER</span></td></tr>`;
+            }
+
+            if (auditData.phoneHomeUrls.length) {
+                tbody.innerHTML += `<tr><td><strong>Phone-Home / Telemetry</strong></td><td>${auditData.phoneHomeUrls.map(u => `<div style="font-family:var(--font-mono); font-size:11px; color:#38bdf8;">${escapeHtml(u)}</div>`).join('')}</td><td><span style="color:#f43f5e; font-weight:700;">CRITICAL</span></td></tr>`;
+            }
+
+            if (auditData.drmSignatures.length) {
+                tbody.innerHTML += `<tr><td><strong>Bytecode DRM Traps</strong></td><td>${auditData.drmSignatures.map(d => `<div style="color:#f87171;"><strong>${d.desc}</strong> (${d.class})</div>`).join('')}</td><td><span style="color:#f43f5e; font-weight:700;">CRITICAL</span></td></tr>`;
+            }
+
+            if (!tbody.innerHTML) {
+                tbody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: #34d399; padding: 24px;">✨ File hoàn toàn sạch! Không phát hiện thấy watermark, DRM hay liên kết telemetry nào.</td></tr>`;
+            }
+
+            document.getElementById('auditResultCard').classList.remove('hidden');
+            document.getElementById('exportResultCard').classList.add('hidden');
+            document.getElementById('inspectResultCard').classList.add('hidden');
+            document.getElementById('auditResultCard').scrollIntoView({ behavior: 'smooth' });
+            showToast("Báo cáo kiểm toán đã được tạo!", "success");
+        }
+
+        // FUNCTION 4: RUN INSPECT MODULE
+        async function runInspectModule() {
+            if (!currentLoadedZip) return;
+            const query = document.getElementById('inspectorSearchTerm').value.trim();
+            if (!query) {
+                showToast("Vui lòng nhập từ khóa cần soi bytecode!", "error");
                 return;
             }
-            const query = document.getElementById('inspectorQuery').value.trim();
-            if (!query) return;
 
-            const tbody = document.getElementById('inspectorTableBody');
-            tbody.innerHTML = '<tr><td colspan="2" style="text-align: center; color: var(--text-muted); padding: 30px;">⏳ Đang soi constant pool...</td></tr>';
+            const tbody = document.getElementById('inspectTableBody');
+            tbody.innerHTML = '<tr><td colspan="2" style="text-align: center; color: var(--text-muted); padding: 24px;">⏳ Đang soi constant pool trong mọi class...</td></tr>';
 
             const matches = [];
             const queryLower = query.toLowerCase();
@@ -1507,20 +1568,26 @@
                 }
             }
 
+            document.getElementById('inspectMetaTxt').textContent = `Từ khóa: "${escapeHtml(query)}" • Tìm thấy ${matches.length} kết quả khớp`;
+
             if (matches.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="2" style="text-align: center; color: var(--text-muted); padding: 30px;">Không tìm thấy chuỗi nào khớp với "${escapeHtml(query)}".</td></tr>`;
-                return;
+                tbody.innerHTML = `<tr><td colspan="2" style="text-align: center; color: var(--text-muted); padding: 24px;">Không tìm thấy chuỗi nào khớp với "${escapeHtml(query)}".</td></tr>`;
+            } else {
+                tbody.innerHTML = '';
+                matches.forEach(m => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td style="font-family: var(--font-mono); font-size: 11px; color: #818cf8;">${m.class}</td>
+                        <td style="font-family: var(--font-mono); font-size: 11px; color: #ffffff; word-break: break-all;">${escapeHtml(m.string)}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
             }
 
-            tbody.innerHTML = '';
-            matches.forEach(m => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td style="font-family: var(--font-mono); font-size: 11px; color: #818cf8;">${m.class}</td>
-                    <td style="font-family: var(--font-mono); font-size: 11px; color: #ffffff; word-break: break-all;">${escapeHtml(m.string)}</td>
-                `;
-                tbody.appendChild(tr);
-            });
+            document.getElementById('inspectResultCard').classList.remove('hidden');
+            document.getElementById('exportResultCard').classList.add('hidden');
+            document.getElementById('auditResultCard').classList.add('hidden');
+            document.getElementById('inspectResultCard').scrollIntoView({ behavior: 'smooth' });
         }
 
         function escapeHtml(str) {
