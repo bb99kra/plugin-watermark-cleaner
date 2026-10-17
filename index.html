@@ -1822,7 +1822,7 @@
 
             try {
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 2500);
+                const timeoutId = setTimeout(() => controller.abort(), 15000);
 
                 const response = await fetch(`${cfg.url}/chat/completions`, {
                     method: 'POST',
