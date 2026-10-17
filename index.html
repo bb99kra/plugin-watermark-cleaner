@@ -3,26 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nguyendzvn Suite - Minecraft Plugin Studio & Pure Engine</title>
-    <meta name="description" content="Bộ công cụ cao cấp phân tích bảo mật, khử watermark, triệt tiêu telemetry và chuyển đổi plugin Minecraft sang chế độ (pure) standalone 100% offline. 100% Client-side.">
+    <title>Nguyendzvn Suite - Minecraft Plugin Studio & AI Thinking Engine</title>
+    <meta name="description" content="Bộ công cụ cao cấp phân tích bảo mật, khử watermark, triệt tiêu telemetry và chuyển đổi plugin Minecraft sang chế độ (pure) standalone 100% offline với AI Thinking Realtime.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="jszip.min.js"></script>
     <style>
         :root {
-            --bg-canvas: #08090d;
-            --bg-surface: #0e1118;
-            --bg-card: rgba(18, 22, 34, 0.7);
-            --bg-card-hover: rgba(26, 32, 48, 0.85);
-            --border-subtle: rgba(255, 255, 255, 0.07);
-            --border-glow: rgba(99, 102, 241, 0.35);
+            --bg-canvas: #07080c;
+            --bg-surface: #0e111a;
+            --bg-card: rgba(16, 20, 32, 0.75);
+            --bg-card-hover: rgba(24, 30, 48, 0.9);
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --border-glow: rgba(99, 102, 241, 0.4);
             --primary: #6366f1;
             --primary-glow: #818cf8;
             --cyan: #06b6d4;
+            --cyan-glow: #22d3ee;
             --emerald: #10b981;
             --amber: #f59e0b;
             --rose: #f43f5e;
+            --purple: #a855f7;
             --text-main: #f8fafc;
             --text-secondary: #94a3b8;
             --text-muted: #64748b;
@@ -41,9 +43,9 @@
         body {
             background-color: var(--bg-canvas);
             background-image: 
-                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.12) 0px, transparent 40%),
-                radial-gradient(at 100% 0%, rgba(6, 182, 212, 0.1) 0px, transparent 40%),
-                radial-gradient(at 50% 100%, rgba(139, 92, 246, 0.06) 0px, transparent 50%);
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 40%),
+                radial-gradient(at 100% 0%, rgba(6, 182, 212, 0.12) 0px, transparent 40%),
+                radial-gradient(at 50% 100%, rgba(168, 85, 247, 0.08) 0px, transparent 50%);
             color: var(--text-main);
             min-height: 100vh;
             padding-bottom: 80px;
@@ -51,9 +53,9 @@
 
         /* Top Nav */
         header.nav-header {
-            background: rgba(14, 17, 24, 0.85);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            background: rgba(14, 17, 26, 0.88);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
             border-bottom: 1px solid var(--border-subtle);
             position: sticky;
             top: 0;
@@ -61,7 +63,7 @@
         }
 
         .nav-inner {
-            max-width: 1200px;
+            max-width: 1240px;
             margin: 0 auto;
             padding: 14px 20px;
             display: flex;
@@ -78,15 +80,15 @@
         }
 
         .brand-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
             background: linear-gradient(135deg, #6366f1, #06b6d4);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
-            box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+            font-size: 22px;
+            box-shadow: 0 0 25px rgba(99, 102, 241, 0.45);
         }
 
         .brand-text h1 {
@@ -100,7 +102,7 @@
             font-size: 11px;
             font-weight: 600;
             color: var(--cyan);
-            letter-spacing: 0.5px;
+            letter-spacing: 0.6px;
             text-transform: uppercase;
         }
 
@@ -125,9 +127,15 @@
         }
 
         .tag-pill.live {
-            border-color: rgba(16, 185, 129, 0.3);
+            border-color: rgba(16, 185, 129, 0.35);
             color: #34d399;
             background: rgba(16, 185, 129, 0.08);
+        }
+
+        .tag-pill.ai-online {
+            border-color: rgba(99, 102, 241, 0.4);
+            color: #a5b4fc;
+            background: rgba(99, 102, 241, 0.12);
         }
 
         .dot-pulse {
@@ -139,77 +147,69 @@
             animation: pulse-dot 2s infinite;
         }
 
+        .dot-pulse.purple {
+            background: #a855f7;
+            box-shadow: 0 0 10px #a855f7;
+        }
+
         @keyframes pulse-dot {
             0%, 100% { opacity: 1; transform: scale(1); }
             50% { opacity: 0.4; transform: scale(0.85); }
         }
 
         .github-link {
-            background: rgba(99, 102, 241, 0.12);
-            border: 1px solid rgba(99, 102, 241, 0.35);
+            background: rgba(99, 102, 241, 0.14);
+            border: 1px solid rgba(99, 102, 241, 0.4);
             color: #c7d2fe;
+            text-decoration: none;
             padding: 5px 14px;
             border-radius: 9999px;
             font-size: 12px;
-            font-family: var(--font-mono);
             font-weight: 600;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
             transition: all 0.2s;
         }
 
         .github-link:hover {
             background: rgba(99, 102, 241, 0.25);
+            border-color: var(--primary-glow);
             color: #ffffff;
-            border-color: #818cf8;
-            transform: translateY(-1px);
         }
 
-        /* Container */
         .workspace {
-            max-width: 1200px;
+            max-width: 1240px;
             margin: 28px auto 0;
             padding: 0 20px;
         }
 
-        /* Dropzone Card */
+        /* File Upload Area */
         .card-dropzone {
-            background: var(--bg-card);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            border: 1px solid var(--border-subtle);
-            border-radius: 18px;
-            padding: 32px 24px;
             margin-bottom: 24px;
-            box-shadow: 0 10px 32px rgba(0, 0, 0, 0.35);
-            transition: all 0.25s ease;
         }
 
         .drop-area {
             border: 2px dashed rgba(99, 102, 241, 0.35);
-            background: rgba(99, 102, 241, 0.03);
-            border-radius: 14px;
-            padding: 40px 20px;
+            border-radius: 20px;
+            padding: 36px 20px;
             text-align: center;
+            background: rgba(14, 18, 28, 0.6);
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.25s ease;
+            backdrop-filter: blur(10px);
         }
 
         .drop-area:hover, .drop-area.dragover {
             border-color: var(--cyan);
-            background: rgba(6, 182, 212, 0.06);
-            transform: scale(1.003);
+            background: rgba(6, 182, 212, 0.08);
+            transform: scale(1.002);
         }
 
         .drop-icon {
-            font-size: 46px;
+            font-size: 48px;
             margin-bottom: 12px;
         }
 
         .drop-title {
-            font-size: 16px;
+            font-size: 17px;
             font-weight: 700;
             color: #ffffff;
             margin-bottom: 6px;
@@ -218,15 +218,15 @@
         .drop-desc {
             font-size: 13px;
             color: var(--text-muted);
-            max-width: 520px;
+            max-width: 580px;
             margin: 0 auto;
         }
 
         .file-loaded-bar {
-            background: rgba(99, 102, 241, 0.1);
-            border: 1px solid rgba(99, 102, 241, 0.3);
-            border-radius: 12px;
-            padding: 16px 20px;
+            background: rgba(99, 102, 241, 0.12);
+            border: 1px solid rgba(99, 102, 241, 0.35);
+            border-radius: 14px;
+            padding: 16px 22px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -250,7 +250,7 @@
             background: rgba(255, 255, 255, 0.06);
             border: 1px solid var(--border-subtle);
             color: #ffffff;
-            padding: 7px 14px;
+            padding: 7px 15px;
             border-radius: 8px;
             font-size: 12px;
             font-weight: 600;
@@ -259,7 +259,409 @@
         }
 
         .btn-change-file:hover {
-            background: rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.14);
+        }
+
+        /* AI QUEST & AGENT WORKSPACE */
+        .ai-quest-card {
+            background: linear-gradient(180deg, rgba(16, 20, 36, 0.85) 0%, rgba(11, 14, 24, 0.95) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.35);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 28px;
+            box-shadow: 0 10px 32px rgba(0, 0, 0, 0.45);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ai-quest-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #6366f1, #06b6d4, #a855f7);
+        }
+
+        .ai-quest-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .ai-quest-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .ai-quest-brand h2 {
+            font-size: 17px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.2px;
+        }
+
+        .ai-quest-brand span.badge {
+            background: rgba(168, 85, 247, 0.15);
+            border: 1px solid rgba(168, 85, 247, 0.4);
+            color: #d8b4fe;
+            padding: 3px 9px;
+            border-radius: 9999px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .gateway-status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid var(--border-subtle);
+            border-radius: 9999px;
+            padding: 6px 14px;
+            font-size: 12px;
+            font-family: var(--font-mono);
+        }
+
+        .btn-settings-toggle {
+            background: transparent;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-settings-toggle:hover {
+            border-color: var(--primary-glow);
+            color: #ffffff;
+        }
+
+        /* Config Drawer */
+        .config-drawer {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 14px 18px;
+            margin-bottom: 18px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 14px;
+        }
+
+        .config-field label {
+            display: block;
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .config-field input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-subtle);
+            color: #ffffff;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            outline: none;
+        }
+
+        .config-field input:focus {
+            border-color: var(--cyan);
+        }
+
+        /* Quest Input & Chips */
+        .quest-input-box {
+            position: relative;
+            margin-bottom: 14px;
+        }
+
+        .quest-textarea {
+            width: 100%;
+            min-height: 85px;
+            background: rgba(10, 14, 24, 0.85);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 14px;
+            padding: 14px 18px;
+            font-size: 14px;
+            color: #ffffff;
+            line-height: 1.5;
+            outline: none;
+            resize: vertical;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .quest-textarea:focus {
+            border-color: var(--cyan);
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.25);
+        }
+
+        .quest-actions-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .quest-chips {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .quest-chip {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            padding: 6px 12px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .quest-chip:hover {
+            background: rgba(99, 102, 241, 0.15);
+            border-color: rgba(99, 102, 241, 0.4);
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
+
+        .btn-submit-quest {
+            background: linear-gradient(135deg, #6366f1 0%, #06b6d4 100%);
+            border: none;
+            color: #ffffff;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+            transition: all 0.2s;
+        }
+
+        .btn-submit-quest:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(6, 182, 212, 0.5);
+        }
+
+        .btn-submit-quest:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* KHUNG GHI LOG AI THINKING LÀM VIỆC THEO THỜI GIAN THỰC */
+        .ai-terminal-console {
+            background: #06080e;
+            border: 1px solid rgba(99, 102, 241, 0.4);
+            border-radius: 16px;
+            margin-top: 20px;
+            overflow: hidden;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        .terminal-header {
+            background: #0c0f18;
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .terminal-window-btns {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .win-dot {
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+        }
+
+        .win-dot.red { background: #ef4444; }
+        .win-dot.yellow { background: #f59e0b; }
+        .win-dot.green { background: #10b981; }
+
+        .terminal-title {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            font-weight: 600;
+            color: #cbd5e1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .terminal-meta-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-badge {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 6px;
+            text-transform: uppercase;
+        }
+
+        .status-badge.idle { background: rgba(255, 255, 255, 0.08); color: #94a3b8; }
+        .status-badge.thinking { background: rgba(168, 85, 247, 0.2); color: #d8b4fe; border: 1px solid rgba(168, 85, 247, 0.5); }
+        .status-badge.executing { background: rgba(6, 182, 212, 0.2); color: #67e8f9; border: 1px solid rgba(6, 182, 212, 0.5); }
+        .status-badge.completed { background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.5); }
+
+        .timer-badge {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--cyan);
+            background: rgba(6, 182, 212, 0.08);
+            padding: 3px 8px;
+            border-radius: 6px;
+            border: 1px solid rgba(6, 182, 212, 0.2);
+        }
+
+        .btn-console-tool {
+            background: transparent;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-muted);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-console-tool:hover {
+            color: #ffffff;
+            border-color: var(--text-secondary);
+        }
+
+        /* KHUNG AI THINKING (COLLAPSIBLE / LIVE STREAM) */
+        .ai-thinking-box {
+            background: rgba(13, 16, 28, 0.95);
+            border-bottom: 1px solid rgba(168, 85, 247, 0.3);
+            border-left: 3px solid var(--purple);
+            padding: 14px 18px;
+            transition: all 0.3s ease;
+        }
+
+        .thinking-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .thinking-title-area {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #d8b4fe;
+            font-family: var(--font-mono);
+        }
+
+        .thinking-pulse-icon {
+            animation: pulse-icon 1.5s infinite;
+        }
+
+        @keyframes pulse-icon {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.9); }
+        }
+
+        .thinking-body {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed rgba(168, 85, 247, 0.2);
+            font-family: var(--font-mono);
+            font-size: 12px;
+            line-height: 1.6;
+            color: #c4b5fd;
+            max-height: 240px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        /* DÒNG SỰ KIỆN LÀM VIỆC & THỰC THI (WORKING STREAM) */
+        .execution-log-box {
+            padding: 14px 18px;
+            background: #06080e;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            line-height: 1.65;
+            max-height: 220px;
+            overflow-y: auto;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .log-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 4px;
+        }
+
+        .log-time { color: var(--text-muted); font-size: 11px; flex-shrink: 0; }
+        .log-tag { font-weight: 700; font-size: 11px; padding: 0 4px; border-radius: 4px; flex-shrink: 0; }
+        .log-tag.info { color: #38bdf8; background: rgba(56, 189, 248, 0.1); }
+        .log-tag.work { color: #818cf8; background: rgba(129, 140, 248, 0.1); }
+        .log-tag.warn { color: #fbbf24; background: rgba(251, 191, 36, 0.1); }
+        .log-tag.pure { color: #34d399; background: rgba(52, 211, 153, 0.1); }
+        .log-tag.err { color: #f87171; background: rgba(248, 113, 113, 0.1); }
+        .log-msg { color: #e2e8f0; flex-grow: 1; word-break: break-word; }
+
+        /* PHẢN HỒI AI STREAMING OUTPUT */
+        .ai-response-box {
+            padding: 16px 20px;
+            background: #090c14;
+            border-top: 1px solid var(--border-subtle);
+            font-size: 13px;
+            line-height: 1.65;
+            color: #f1f5f9;
+            max-height: 320px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .ai-response-box code {
+            font-family: var(--font-mono);
+            background: rgba(255, 255, 255, 0.08);
+            padding: 2px 5px;
+            border-radius: 4px;
+            color: #67e8f9;
         }
 
         /* Section Title */
@@ -309,8 +711,8 @@
         }
 
         .module-card.featured {
-            border-color: rgba(99, 102, 241, 0.4);
-            background: linear-gradient(180deg, rgba(99, 102, 241, 0.08) 0%, rgba(18, 22, 34, 0.8) 100%);
+            border-color: rgba(99, 102, 241, 0.45);
+            background: linear-gradient(180deg, rgba(99, 102, 241, 0.09) 0%, rgba(18, 22, 34, 0.8) 100%);
         }
 
         .module-header {
@@ -331,10 +733,10 @@
             flex-shrink: 0;
         }
 
-        .icon-pure { background: rgba(99, 102, 241, 0.18); border: 1px solid rgba(99, 102, 241, 0.4); }
-        .icon-sanitize { background: rgba(6, 182, 212, 0.18); border: 1px solid rgba(6, 182, 212, 0.4); }
-        .icon-audit { background: rgba(16, 185, 129, 0.18); border: 1px solid rgba(16, 185, 129, 0.4); }
-        .icon-inspect { background: rgba(245, 158, 11, 0.18); border: 1px solid rgba(245, 158, 11, 0.4); }
+        .icon-pure { background: rgba(99, 102, 241, 0.2); border: 1px solid rgba(99, 102, 241, 0.4); }
+        .icon-sanitize { background: rgba(6, 182, 212, 0.2); border: 1px solid rgba(6, 182, 212, 0.4); }
+        .icon-audit { background: rgba(16, 185, 129, 0.2); border: 1px solid rgba(16, 185, 129, 0.4); }
+        .icon-inspect { background: rgba(245, 158, 11, 0.2); border: 1px solid rgba(245, 158, 11, 0.4); }
 
         .module-titles h3 {
             font-size: 16px;
@@ -545,28 +947,6 @@
         .grade-D { background: rgba(245, 158, 11, 0.15); border: 1px solid #f59e0b; color: #fbbf24; }
         .grade-F { background: rgba(244, 63, 94, 0.15); border: 1px solid #f43f5e; color: #fb7185; }
 
-        /* Stepper Console */
-        .stepper-box {
-            background: #05070c;
-            border: 1px solid var(--border-subtle);
-            border-radius: 12px;
-            padding: 16px;
-            margin-top: 16px;
-            font-family: var(--font-mono);
-            font-size: 12px;
-            max-height: 200px;
-            overflow-y: auto;
-            color: #a5b4fc;
-        }
-
-        .stepper-line {
-            margin-bottom: 6px;
-        }
-
-        .stepper-line.success { color: #34d399; }
-        .stepper-line.info { color: #38bdf8; }
-        .stepper-line.error { color: #f43f5e; }
-
         /* Inspector Card */
         .inspector-input-group {
             display: flex;
@@ -651,7 +1031,7 @@
                 <div class="brand-avatar">⚡</div>
                 <div class="brand-text">
                     <h1>NGUYENDZVN SUITE</h1>
-                    <p>Minecraft Plugin Studio • Pure Standalone Engine</p>
+                    <p>Minecraft Plugin Studio • AI Thinking & Pure Engine</p>
                 </div>
             </div>
 
@@ -659,6 +1039,10 @@
                 <div class="tag-pill live">
                     <span class="dot-pulse"></span>
                     <span>100% CLIENT-SIDE RAM</span>
+                </div>
+                <div class="tag-pill ai-online">
+                    <span class="dot-pulse purple"></span>
+                    <span id="navGatewayStatus">9ROUTER: 127.0.0.1:20128</span>
                 </div>
                 <div class="tag-pill">
                     <span>JVMS §4.4.7 MUTF-8</span>
@@ -690,10 +1074,113 @@
             </div>
         </div>
 
-        <!-- Headline -->
+        <!-- AI QUEST CONTROL CENTER & REAL-TIME LOG -->
+        <div class="ai-quest-card">
+            <div class="ai-quest-top">
+                <div class="ai-quest-brand">
+                    <h2>🤖 AI Agent Quest & Thinking Hub</h2>
+                    <span class="badge">9Router Stream</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <div class="gateway-status-pill">
+                        <span id="gatewayStatusDot" class="dot-pulse purple"></span>
+                        <span id="gatewayStatusText">Checking 9Router...</span>
+                    </div>
+                    <button class="btn-settings-toggle" onclick="toggleConfigDrawer()">⚙️ Cấu hình</button>
+                </div>
+            </div>
+
+            <!-- Config Drawer -->
+            <div class="config-drawer hidden" id="configDrawer">
+                <div class="config-field">
+                    <label>9Router Endpoint</label>
+                    <input type="text" id="cfgGatewayUrl" value="http://127.0.0.1:20128/api/v1" placeholder="http://127.0.0.1:20128/api/v1">
+                </div>
+                <div class="config-field">
+                    <label>API Key</label>
+                    <input type="password" id="cfgApiKey" value="sk-0ac05722fecdc502-yd0otp-e4c6cfba" placeholder="sk-...">
+                </div>
+                <div class="config-field">
+                    <label>Model</label>
+                    <input type="text" id="cfgModel" value="ag/gemini-3.8-flash-high" placeholder="ag/gemini-3.8-flash-high">
+                </div>
+                <div style="grid-column: 1 / -1; display: flex; justify-content: flex-end; gap: 8px;">
+                    <button class="btn-change-file" onclick="testGatewayConnection()">⚡ Kiểm tra kết nối</button>
+                    <button class="btn-change-file" style="background: rgba(99, 102, 241, 0.2); border-color: var(--primary);" onclick="saveGatewayConfig()">💾 Lưu Cấu Hình</button>
+                </div>
+            </div>
+
+            <!-- Quest Input -->
+            <div class="quest-input-box">
+                <textarea id="questPromptInput" class="quest-textarea" placeholder="Nhập nhiệm vụ / quest cho AI: Ví dụ: Khử toàn bộ Discord Webhook và bẫy check license; Dịch GUI sang tiếng Việt; Phân tích class Main..."></textarea>
+            </div>
+
+            <!-- Quest Chips & Submit Row -->
+            <div class="quest-actions-row">
+                <div class="quest-chips">
+                    <span class="quest-chip" onclick="applyPresetQuest('pure')">⚡ (pure) Offline Standalone</span>
+                    <span class="quest-chip" onclick="applyPresetQuest('clean')">🧹 Khử Sạch Buyer ID & Watermark</span>
+                    <span class="quest-chip" onclick="applyPresetQuest('audit')">🛡️ Kiểm Toán Backdoor & DRM</span>
+                    <span class="quest-chip" onclick="applyPresetQuest('vi')">🇻🇳 (vi) Dịch GUI Tiếng Việt</span>
+                    <span class="quest-chip" onclick="applyPresetQuest('license')">🔍 Soi Logic License Trap</span>
+                </div>
+                <button class="btn-submit-quest" id="btnSubmitQuest" onclick="handleQuestSubmit()">
+                    <span>🚀</span> Gửi Nhiệm Vụ Cho AI
+                </button>
+            </div>
+
+            <!-- REAL-TIME AI THINKING & WORKING LOG FRAME -->
+            <div class="ai-terminal-console" id="aiTerminalConsole">
+                <div class="terminal-header">
+                    <div class="terminal-window-btns">
+                        <div class="win-dot red"></div>
+                        <div class="win-dot yellow"></div>
+                        <div class="win-dot green"></div>
+                    </div>
+                    <div class="terminal-title">
+                        <span>⚡</span>
+                        <span>AI AGENT BRAIN • REAL-TIME THINKING & WORKING CONSOLE</span>
+                    </div>
+                    <div class="terminal-meta-group">
+                        <span class="status-badge idle" id="consoleStatusBadge">IDLE</span>
+                        <span class="timer-badge" id="consoleTimerBadge">⏱ 0.0s</span>
+                        <span class="timer-badge" id="consoleTokenBadge" style="display:none; color: #d8b4fe; border-color: rgba(168, 85, 247, 0.3);">🧠 0 tokens</span>
+                        <button class="btn-console-tool" onclick="copyConsoleLog()">📋 Copy</button>
+                        <button class="btn-console-tool" onclick="clearConsoleLog()">🧹 Xóa</button>
+                    </div>
+                </div>
+
+                <!-- KHUNG AI THINKING LIVE STREAM (COLLAPSIBLE) -->
+                <div class="ai-thinking-box" id="aiThinkingBox">
+                    <div class="thinking-header" onclick="toggleThinkingBody()">
+                        <div class="thinking-title-area">
+                            <span class="thinking-pulse-icon">💭</span>
+                            <span id="thinkingTitleText">Quá Trình Tư Duy AI (Thinking Stream) • Chờ lệnh...</span>
+                        </div>
+                        <span id="thinkingToggleIcon" style="font-size: 11px; color: var(--text-muted);">[▼ Thu gọn]</span>
+                    </div>
+                    <div class="thinking-body" id="aiThinkingBody">Chưa có luồng tư duy. Hãy chọn file .jar và gửi quest để kích hoạt AI Thinking theo thời gian thực!</div>
+                </div>
+
+                <!-- DÒNG SỰ KIỆN LÀM VIỆC & THỰC THI (WORKING LOG) -->
+                <div class="execution-log-box" id="aiExecutionLogBox">
+                    <div class="log-row">
+                        <span class="log-time">[00:00:00]</span>
+                        <span class="log-tag info">SYSTEM</span>
+                        <span class="log-msg">Hệ thống sẵn sàng. Kết nối Termux 9Router Gateway tại 127.0.0.1:20128.</span>
+                    </div>
+                </div>
+
+                <!-- PHẢN HỒI KẾT QUẢ AI STREAMING -->
+                <div class="ai-response-box hidden" id="aiResponseBox"></div>
+            </div>
+
+        </div>
+
+        <!-- Headline: 4 Action Modules -->
         <div class="section-headline">
             <h2>Các Tính Năng Chuyên Biệt (Tách Rời Độc Lập)</h2>
-            <p>Chọn chính xác tính năng bạn muốn thực hiện. Nhấp trực tiếp để kích hoạt – Hoàn toàn tự động, không cần chọn tùy chọn rườm rà.</p>
+            <p>Chọn chính xác tính năng bạn muốn thực hiện. Nhấp trực tiếp để kích hoạt – Hoàn toàn tự động, không có checkbox rườm rà.</p>
         </div>
 
         <!-- Modules Grid - TÁCH TỪNG TÍNH NĂNG RA RIÊNG BIỆT - KHÔNG CÓ CHECKBOX NÀO -->
@@ -803,11 +1290,6 @@
 
         </div>
 
-        <!-- Real-time Stepper Box -->
-        <div class="stepper-box hidden" id="stepperConsole">
-            <div class="stepper-line info">[*] Ready to process...</div>
-        </div>
-
         <!-- Result Card: PURE & SANITIZE -->
         <div class="card-result hidden" id="exportResultCard">
             <h3 style="font-size: 18px; color: #34d399; margin-bottom: 6px;">🎉 Xử Lý Hoàn Tất Thành Công!</h3>
@@ -874,6 +1356,11 @@
     <script>
         let currentLoadedZip = null;
         let currentFileObj = null;
+        let isAiStreaming = false;
+        let thinkingTimerInterval = null;
+        let thinkingStartTime = 0;
+        let reasoningTokenCount = 0;
+
         let auditData = {
             classesCount: 0,
             zipComment: null,
@@ -888,11 +1375,87 @@
             grade: 'A+'
         };
 
+        // Gateway Config Storage
+        function getGatewayConfig() {
+            return {
+                url: localStorage.getItem('9r_url') || 'http://127.0.0.1:20128/api/v1',
+                apiKey: localStorage.getItem('9r_key') || 'sk-0ac05722fecdc502-yd0otp-e4c6cfba',
+                model: localStorage.getItem('9r_model') || 'ag/gemini-3.8-flash-high'
+            };
+        }
+
+        function initGatewayConfigUI() {
+            const cfg = getGatewayConfig();
+            document.getElementById('cfgGatewayUrl').value = cfg.url;
+            document.getElementById('cfgApiKey').value = cfg.apiKey;
+            document.getElementById('cfgModel').value = cfg.model;
+            testGatewayConnection(true);
+        }
+
+        function saveGatewayConfig() {
+            const url = document.getElementById('cfgGatewayUrl').value.trim();
+            const apiKey = document.getElementById('cfgApiKey').value.trim();
+            const model = document.getElementById('cfgModel').value.trim();
+            localStorage.setItem('9r_url', url);
+            localStorage.setItem('9r_key', apiKey);
+            localStorage.setItem('9r_model', model);
+            showToast('Đã lưu cấu hình 9Router!', 'success');
+            testGatewayConnection();
+            toggleConfigDrawer();
+        }
+
+        function toggleConfigDrawer() {
+            const el = document.getElementById('configDrawer');
+            el.classList.toggle('hidden');
+        }
+
+        async function testGatewayConnection(silent = false) {
+            const cfg = getGatewayConfig();
+            const dot = document.getElementById('gatewayStatusDot');
+            const text = document.getElementById('gatewayStatusText');
+            const navText = document.getElementById('navGatewayStatus');
+
+            try {
+                const testUrl = cfg.url.replace(/\/api\/v1\/?$/, '') + '/api/version';
+                const res = await fetch(testUrl, { method: 'GET', mode: 'cors' }).catch(() => null);
+
+                if (res && res.ok) {
+                    dot.className = 'dot-pulse';
+                    text.textContent = '9Router Live (Termux:20128)';
+                    text.style.color = '#34d399';
+                    navText.textContent = '9ROUTER: ONLINE (20128)';
+                    if (!silent) showToast('9Router Gateway phản hồi tốt!', 'success');
+                    return true;
+                } else {
+                    const optRes = await fetch(cfg.url + '/chat/completions', {
+                        method: 'OPTIONS',
+                        headers: { 'Authorization': 'Bearer ' + cfg.apiKey }
+                    }).catch(() => null);
+
+                    if (optRes) {
+                        dot.className = 'dot-pulse';
+                        text.textContent = '9Router Ready';
+                        text.style.color = '#34d399';
+                        navText.textContent = '9ROUTER: ONLINE';
+                        if (!silent) showToast('Kết nối thành công 9Router!', 'success');
+                        return true;
+                    }
+                }
+            } catch (e) {}
+
+            dot.className = 'dot-pulse purple';
+            text.textContent = '9Router Offline / Termux';
+            text.style.color = '#fbbf24';
+            navText.textContent = '9ROUTER: STANDBY';
+            if (!silent) showToast('Chưa thấy 9Router trên cổng 20128. Hãy gõ: 9router trong Termux!', 'error');
+            return false;
+        }
+
         function showToast(msg, type = 'info') {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
             toast.className = 'toast';
-            toast.innerHTML = `<span>${type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️'}</span> ${msg}`;
+            toast.innerHTML = `<span>${type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️'}</span> ${escapeHtml(msg)}`;
             container.appendChild(toast);
             setTimeout(() => {
                 toast.style.opacity = '0';
@@ -1050,6 +1613,7 @@
             document.getElementById('loadedFileName').textContent = file.name;
             document.getElementById('loadedFileMeta').textContent = `Dung lượng: ${(file.size / (1024*1024)).toFixed(2)} MB • Đang giải nén trực tiếp trong RAM...`;
 
+            appendWorkingLog(`📦 Đang tiếp nhận file: ${file.name} (${(file.size / (1024*1024)).toFixed(2)} MB)...`, 'info');
             showToast(`Đang phân tích cấu trúc: ${file.name}...`, 'info');
 
             try {
@@ -1065,8 +1629,10 @@
                 document.getElementById('btnRunAudit').removeAttribute('disabled');
                 document.getElementById('btnRunInspect').removeAttribute('disabled');
 
-                showToast(`Phân tích xong! Bạn có thể chọn tính năng bên dưới để chạy ngay.`, 'success');
+                appendWorkingLog(`✅ Phân tích hoàn tất: ${auditData.classesCount} classes • Điểm rủi ro: ${auditData.grade} (${auditData.riskScore}%)`, 'pure');
+                showToast(`Phân tích xong! Bạn có thể gửi quest cho AI hoặc chọn tính năng bên dưới.`, 'success');
             } catch (e) {
+                appendWorkingLog(`❌ Lỗi giải nén: ${e.message}`, 'err');
                 showToast(`Lỗi giải nén: ${e.message}`, 'error');
             }
         }
@@ -1086,7 +1652,254 @@
             document.getElementById('exportResultCard').classList.add('hidden');
             document.getElementById('auditResultCard').classList.add('hidden');
             document.getElementById('inspectResultCard').classList.add('hidden');
-            document.getElementById('stepperConsole').classList.add('hidden');
+            appendWorkingLog('🔄 Đã đặt lại phiên làm việc với file mới.', 'info');
+        }
+
+        // LOGGING & TERMINAL HELPERS
+        function getTimestamp() {
+            const d = new Date();
+            return d.toTimeString().split(' ')[0] + '.' + String(d.getMilliseconds()).padStart(3, '0');
+        }
+
+        function appendWorkingLog(msg, type = 'info') {
+            const box = document.getElementById('aiExecutionLogBox');
+            const row = document.createElement('div');
+            row.className = 'log-row';
+            const tagMap = {
+                info: 'INFO',
+                work: 'EXEC',
+                warn: 'WARN',
+                pure: 'PURE',
+                err: 'ERROR'
+            };
+            row.innerHTML = `
+                <span class="log-time">[${getTimestamp()}]</span>
+                <span class="log-tag ${type}">${tagMap[type] || 'LOG'}</span>
+                <span class="log-msg">${escapeHtml(msg)}</span>
+            `;
+            box.appendChild(row);
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function setConsoleStatus(status, text) {
+            const badge = document.getElementById('consoleStatusBadge');
+            badge.className = `status-badge ${status}`;
+            badge.textContent = text;
+        }
+
+        function startThinkingTimer() {
+            stopThinkingTimer();
+            thinkingStartTime = Date.now();
+            reasoningTokenCount = 0;
+            const timerEl = document.getElementById('consoleTimerBadge');
+            const tokenEl = document.getElementById('consoleTokenBadge');
+            tokenEl.style.display = 'inline-block';
+            tokenEl.textContent = '🧠 0 tokens';
+
+            thinkingTimerInterval = setInterval(() => {
+                const elapsed = ((Date.now() - thinkingStartTime) / 1000).toFixed(1);
+                timerEl.textContent = `⏱ ${elapsed}s`;
+            }, 100);
+        }
+
+        function stopThinkingTimer() {
+            if (thinkingTimerInterval) {
+                clearInterval(thinkingTimerInterval);
+                thinkingTimerInterval = null;
+            }
+        }
+
+        function toggleThinkingBody() {
+            const body = document.getElementById('aiThinkingBody');
+            const icon = document.getElementById('thinkingToggleIcon');
+            if (body.style.display === 'none') {
+                body.style.display = 'block';
+                icon.textContent = '[▼ Thu gọn]';
+            } else {
+                body.style.display = 'none';
+                icon.textContent = '[▶ Mở rộng]';
+            }
+        }
+
+        function copyConsoleLog() {
+            const execText = document.getElementById('aiExecutionLogBox').innerText;
+            const thinkText = document.getElementById('aiThinkingBody').innerText;
+            const respText = document.getElementById('aiResponseBox').innerText;
+            const all = `=== AI THINKING ===\n${thinkText}\n\n=== EXECUTION LOG ===\n${execText}\n\n=== RESPONSE ===\n${respText}`;
+            navigator.clipboard.writeText(all).then(() => {
+                showToast('Đã copy toàn bộ log!', 'success');
+            });
+        }
+
+        function clearConsoleLog() {
+            document.getElementById('aiExecutionLogBox').innerHTML = '';
+            document.getElementById('aiThinkingBody').textContent = 'Log đã được làm sạch.';
+            document.getElementById('aiResponseBox').innerHTML = '';
+            document.getElementById('aiResponseBox').classList.add('hidden');
+            setConsoleStatus('idle', 'IDLE');
+            document.getElementById('consoleTimerBadge').textContent = '⏱ 0.0s';
+            document.getElementById('consoleTokenBadge').style.display = 'none';
+            showToast('Đã dọn sạch console', 'info');
+        }
+
+        function applyPresetQuest(kind) {
+            const input = document.getElementById('questPromptInput');
+            if (kind === 'pure') {
+                input.value = 'Chuyển đổi plugin này sang bản (pure) standalone 100% offline, hóa giải toàn bộ bẫy DRM và ngắt các URL gọi về bên ngoài.';
+            } else if (kind === 'clean') {
+                input.value = 'Khử sạch toàn bộ Buyer ID, token người tải Spigot/Polymart và xóa hoàn toàn ghi chú zip comment.';
+            } else if (kind === 'audit') {
+                input.value = 'Kiểm toán bảo mật chuyên sâu: bóc tách các domain rủi ro, phân tích khả năng tồn tại backdoor hoặc telemetries độc hại.';
+            } else if (kind === 'vi') {
+                input.value = 'Phân tích giao diện, thông báo messages.yml trong file và định hướng bản dịch tiếng Việt chuẩn màu Minecraft (&a, &b, &e...).';
+            } else if (kind === 'license') {
+                input.value = 'Tìm kiếm và phân tích cơ chế kiểm tra bản quyền (License validation/Check trap) trong bytecode constant pool.';
+            }
+            input.focus();
+        }
+
+        // REAL-TIME AI STREAMING & QUEST DISPATCHER
+        async function handleQuestSubmit() {
+            const input = document.getElementById('questPromptInput');
+            const quest = input.value.trim();
+            if (!quest) {
+                showToast('Vui lòng nhập nội dung nhiệm vụ!', 'error');
+                input.focus();
+                return;
+            }
+            if (isAiStreaming) return;
+
+            const cfg = getGatewayConfig();
+            isAiStreaming = true;
+            document.getElementById('btnSubmitQuest').setAttribute('disabled', 'true');
+            setConsoleStatus('thinking', 'THINKING');
+            startThinkingTimer();
+
+            const thinkingBody = document.getElementById('aiThinkingBody');
+            const thinkingTitle = document.getElementById('thinkingTitleText');
+            const responseBox = document.getElementById('aiResponseBox');
+
+            thinkingBody.textContent = '';
+            thinkingTitle.textContent = 'Đang tư duy & suy luận đa tầng...';
+            responseBox.innerHTML = '';
+            responseBox.classList.remove('hidden');
+
+            appendWorkingLog(`🚀 Nhận nhiệm vụ: "${quest}"`, 'work');
+
+            // Build contextual analysis data
+            let fileContext = 'Chưa có file .jar nào được tải lên.';
+            if (currentFileObj && auditData) {
+                fileContext = `Tên file: ${currentFileObj.name} (${(currentFileObj.size / (1024*1024)).toFixed(2)} MB), Classes: ${auditData.classesCount}, Mức rủi ro: ${auditData.grade} (${auditData.riskScore}%). Buyer IDs: ${Array.from(auditData.detectedIds).join(', ') || 'Không có'}. DRM: ${auditData.drmSignatures.map(d=>d.desc).join('; ') || 'Không có'}. URLs: ${auditData.phoneHomeUrls.slice(0, 5).join(', ') || 'Không có'}.`;
+            }
+
+            appendWorkingLog(`📦 Đã gắn ngữ cảnh bytecode JAR vào prompt AI Agent...`, 'info');
+            appendWorkingLog(`🌐 Đang mở kết nối SSE tới 9Router (${cfg.model})...`, 'work');
+
+            const systemPrompt = `Bạn là Antigravity Core AI, chuyên gia dịch ngược bytecode và bảo mật plugin Minecraft cho Nguyendzvn.
+Quy tắc:
+1. Luôn ưu tiên tiêu chí: Standalone 100%, Offline-ready, Decoupled DRM, Khử sạch watermark/Buyer ID.
+2. Trình bày tư duy rõ ràng, logic, ngắn gọn và hữu ích.
+3. Nếu người dùng yêu cầu (pure), phân tích cụ thể class nào có bẫy bản quyền và cách hóa giải.
+4. Trả lời bằng tiếng Việt chuyên nghiệp, súc tích, định dạng Markdown đẹp mắt.`;
+
+            const userPrompt = `Ngữ cảnh file: ${fileContext}\n\nNhiệm vụ: ${quest}`;
+
+            try {
+                const response = await fetch(`${cfg.url}/chat/completions`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${cfg.apiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: cfg.model,
+                        messages: [
+                            { role: 'system', content: systemPrompt },
+                            { role: 'user', content: userPrompt }
+                        ],
+                        stream: true
+                    })
+                });
+
+                if (!response.ok) {
+                    const errTxt = await response.text();
+                    throw new Error(`HTTP ${response.status}: ${errTxt.slice(0, 200)}`);
+                }
+
+                appendWorkingLog(`⚡ Đã kết nối luồng SSE! Bắt đầu nhận Reasoning & Content Stream theo thời gian thực...`, 'work');
+
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder('utf-8');
+                let buffer = '';
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+
+                    buffer += decoder.decode(value, { stream: true });
+                    const lines = buffer.split('\n');
+                    buffer = lines.pop();
+
+                    for (const line of lines) {
+                        const trimmed = line.trim();
+                        if (!trimmed || !trimmed.startsWith('data:')) continue;
+
+                        const dataStr = trimmed.slice(5).trim();
+                        if (dataStr === '[DONE]') {
+                            appendWorkingLog(`🏁 Luồng dữ liệu hoàn tất ([DONE]).`, 'pure');
+                            break;
+                        }
+
+                        try {
+                            const parsed = JSON.parse(dataStr);
+                            const delta = parsed.choices?.[0]?.delta;
+
+                            // STREAM AI THINKING
+                            if (delta?.reasoning_content) {
+                                setConsoleStatus('thinking', 'THINKING');
+                                thinkingBody.textContent += delta.reasoning_content;
+                                thinkingBody.scrollTop = thinkingBody.scrollHeight;
+                                reasoningTokenCount++;
+                                document.getElementById('consoleTokenBadge').textContent = `🧠 ${reasoningTokenCount} tokens`;
+                            }
+
+                            // STREAM AI RESPONSE
+                            if (delta?.content) {
+                                setConsoleStatus('executing', 'STREAMING');
+                                responseBox.textContent += delta.content;
+                                responseBox.scrollTop = responseBox.scrollHeight;
+                            }
+                        } catch (e) {}
+                    }
+                }
+
+                const totalElapsed = ((Date.now() - thinkingStartTime) / 1000).toFixed(1);
+                thinkingTitle.textContent = `Quá Trình Tư Duy Hoàn Tất (⏱ ${totalElapsed}s | 🧠 ${reasoningTokenCount} tokens)`;
+                setConsoleStatus('completed', 'HOÀN THÀNH');
+                appendWorkingLog(`🎉 Hoàn tất nhiệm vụ trong ${totalElapsed}s!`, 'pure');
+                showToast('AI đã hoàn thành phân tích nhiệm vụ!', 'success');
+
+                if (/pure|offline|decouple/i.test(quest) && currentLoadedZip) {
+                    appendWorkingLog(`⚡ Tự động kích hoạt (pure) Standalone Engine trong RAM...`, 'work');
+                    runPureModule(true);
+                } else if (/clean|watermark|buyer/i.test(quest) && currentLoadedZip) {
+                    appendWorkingLog(`🧹 Tự động kích hoạt Watermark Cleaner trong RAM...`, 'work');
+                    runSanitizeModule(true);
+                }
+
+            } catch (err) {
+                appendWorkingLog(`⚠️ Lỗi kết nối 9Router: ${err.message}`, 'err');
+                appendWorkingLog(`💡 Gợi ý: Hãy đảm bảo 9router đang chạy trong Termux: gõ lệnh "9router" (cổng 20128).`, 'warn');
+
+                thinkingBody.textContent = `[Offline Mode] Không thể gọi 9Router trực tiếp (${err.message}).\nTermux chưa bật 9router hoặc chặn CORS. Đang thực thi theo bộ quy tắc offline của Nguyendzvn Suite...`;
+                responseBox.textContent = `### 🛡️ Phân Tích Offline Heuristics:\n- File: ${currentFileObj ? currentFileObj.name : 'Chưa chọn file'}\n- Trạng thái: Bạn có thể nhấn trực tiếp các nút tính năng bên dưới để xử lý 100% Client-side trong RAM mà không cần gọi API!\n- Lệnh chạy 9Router trên Termux: \`9router\``;
+                setConsoleStatus('idle', 'OFFLINE HEURISTIC');
+                showToast(`9Router không phản hồi. Chuyển sang chế độ Client-side Heuristic.`, 'error');
+            } finally {
+                stopThinkingTimer();
+                isAiStreaming = false;
+                document.getElementById('btnSubmitQuest').removeAttribute('disabled');
+            }
         }
 
         // Audit Engine
@@ -1217,16 +2030,12 @@
             else auditData.grade = 'F';
         }
 
-        // FUNCTION 1: RUN PURE MODULE (ALL-IN-ONE STANDALONE TRANSFORM)
-        async function runPureModule() {
+        // FUNCTION 1: RUN PURE MODULE
+        async function runPureModule(fromAi = false) {
             if (!currentLoadedZip) return;
 
-            const stepper = document.getElementById('stepperConsole');
-            stepper.classList.remove('hidden');
-            stepper.innerHTML = `
-                <div class="stepper-line info">[*] Executing (pure) Standalone Protocol for ${currentFileObj.name}...</div>
-                <div class="stepper-line">[*] Decoupling remote DRM & neutralizing license traps...</div>
-            `;
+            appendWorkingLog(`⚡ Kích hoạt (pure) Standalone Protocol cho ${currentFileObj.name}...`, 'pure');
+            setConsoleStatus('executing', 'VÁ (PURE)');
 
             const t0 = performance.now();
             const replacements = {};
@@ -1344,8 +2153,7 @@
                     cleanZip.file(path, content);
                 }
 
-                stepper.innerHTML += `<div class="stepper-line info">[*] Rebuilding zero-metadata Pure archive...</div>`;
-                stepper.scrollTop = stepper.scrollHeight;
+                appendWorkingLog(`🛠 Đang đóng gói lại kho lưu trữ Pure (Zero-Metadata)...`, 'work');
 
                 const cleanBlob = await cleanZip.generateAsync({
                     type: 'blob',
@@ -1358,11 +2166,9 @@
                 const pureName = currentFileObj.name.replace(/\.jar$/i, '') + '-Pure.jar';
                 const downloadUrl = URL.createObjectURL(cleanBlob);
 
-                stepper.innerHTML += `
-                    <div class="stepper-line success">[✓] Decoupled DRM and neutralized ${stringsReplaced} constant pool entries.</div>
-                    <div class="stepper-line success">[✓] Pure Standalone JAR ready in ${duration}ms!</div>
-                `;
-                stepper.scrollTop = stepper.scrollHeight;
+                appendWorkingLog(`✅ Đã hóa giải bẫy DRM và thay thế ${stringsReplaced} hằng số trong ${classesModified} classes!`, 'pure');
+                appendWorkingLog(`🎉 Xuất file ${pureName} (${(cleanBlob.size / (1024*1024)).toFixed(2)} MB) trong ${duration}ms!`, 'pure');
+                setConsoleStatus('completed', 'PURE READY');
 
                 document.getElementById('exportFileName').textContent = pureName;
                 document.getElementById('exportFileStats').textContent = `Dung lượng: ${(cleanBlob.size / (1024*1024)).toFixed(2)} MB • ${classesModified} classes đã vá • Thời gian: ${duration}ms`;
@@ -1376,23 +2182,20 @@
                 document.getElementById('auditResultCard').classList.add('hidden');
                 document.getElementById('inspectResultCard').classList.add('hidden');
 
-                showToast("Chuyển đổi (pure) thành công!", "success");
+                showToast('Chuyển đổi (pure) thành công!', 'success');
                 btnDownload.click();
             } catch (err) {
-                stepper.innerHTML += `<div class="stepper-line error">[!] Lỗi: ${err.message}</div>`;
+                appendWorkingLog(`❌ Lỗi pure: ${err.message}`, 'err');
                 showToast(`Lỗi: ${err.message}`, 'error');
             }
         }
 
-        // FUNCTION 2: RUN SANITIZER MODULE (WATERMARK & ID ONLY)
-        async function runSanitizeModule() {
+        // FUNCTION 2: RUN SANITIZER MODULE
+        async function runSanitizeModule(fromAi = false) {
             if (!currentLoadedZip) return;
 
-            const stepper = document.getElementById('stepperConsole');
-            stepper.classList.remove('hidden');
-            stepper.innerHTML = `
-                <div class="stepper-line info">[*] Sanitizing Buyer IDs, tokens, and zip comments for ${currentFileObj.name}...</div>
-            `;
+            appendWorkingLog(`🧹 Khử sạch Buyer ID, Spigot tokens và zip comment cho ${currentFileObj.name}...`, 'work');
+            setConsoleStatus('executing', 'LÀM SẠCH');
 
             const t0 = performance.now();
             const replacements = {};
@@ -1443,11 +2246,9 @@
                 const cleanName = currentFileObj.name.replace(/\.jar$/i, '') + '-Clean.jar';
                 const downloadUrl = URL.createObjectURL(cleanBlob);
 
-                stepper.innerHTML += `
-                    <div class="stepper-line success">[✓] Sanitized ${stringsReplaced} watermark entries across ${classesModified} classes.</div>
-                    <div class="stepper-line success">[✓] Clean JAR ready in ${duration}ms!</div>
-                `;
-                stepper.scrollTop = stepper.scrollHeight;
+                appendWorkingLog(`✅ Đã khử sạch ${stringsReplaced} watermark trong ${classesModified} classes.`, 'pure');
+                appendWorkingLog(`🎉 Xuất file ${cleanName} trong ${duration}ms!`, 'pure');
+                setConsoleStatus('completed', 'CLEAN READY');
 
                 document.getElementById('exportFileName').textContent = cleanName;
                 document.getElementById('exportFileStats').textContent = `Dung lượng: ${(cleanBlob.size / (1024*1024)).toFixed(2)} MB • ${classesModified} classes • Thời gian: ${duration}ms`;
@@ -1461,10 +2262,10 @@
                 document.getElementById('auditResultCard').classList.add('hidden');
                 document.getElementById('inspectResultCard').classList.add('hidden');
 
-                showToast("Khử sạch watermark thành công!", "success");
+                showToast('Khử sạch watermark thành công!', 'success');
                 btnDownload.click();
             } catch (err) {
-                stepper.innerHTML += `<div class="stepper-line error">[!] Lỗi: ${err.message}</div>`;
+                appendWorkingLog(`❌ Lỗi sanitize: ${err.message}`, 'err');
                 showToast(`Lỗi: ${err.message}`, 'error');
             }
         }
@@ -1473,6 +2274,7 @@
         function runAuditModule() {
             if (!currentLoadedZip) return;
 
+            appendWorkingLog(`🛡️ Bóc tách báo cáo kiểm toán cho ${currentFileObj.name}...`, 'info');
             document.getElementById('auditMetaTxt').textContent = `${currentFileObj.name} • ${(currentFileObj.size / (1024*1024)).toFixed(2)} MB • ${auditData.classesCount} Classes`;
 
             const badge = document.getElementById('auditGradeBadge');
@@ -1514,7 +2316,7 @@
             document.getElementById('exportResultCard').classList.add('hidden');
             document.getElementById('inspectResultCard').classList.add('hidden');
             document.getElementById('auditResultCard').scrollIntoView({ behavior: 'smooth' });
-            showToast("Báo cáo kiểm toán đã được tạo!", "success");
+            showToast('Báo cáo kiểm toán đã được tạo!', 'success');
         }
 
         // FUNCTION 4: RUN INSPECT MODULE
@@ -1522,9 +2324,11 @@
             if (!currentLoadedZip) return;
             const query = document.getElementById('inspectorSearchTerm').value.trim();
             if (!query) {
-                showToast("Vui lòng nhập từ khóa cần soi bytecode!", "error");
+                showToast('Vui lòng nhập từ khóa cần soi bytecode!', 'error');
                 return;
             }
+
+            appendWorkingLog(`🔍 Đang soi constant pool cho từ khóa "${query}"...`, 'work');
 
             const tbody = document.getElementById('inspectTableBody');
             tbody.innerHTML = '<tr><td colspan="2" style="text-align: center; color: var(--text-muted); padding: 24px;">⏳ Đang soi constant pool trong mọi class...</td></tr>';
@@ -1584,6 +2388,7 @@
                 });
             }
 
+            appendWorkingLog(`🔍 Đã tìm thấy ${matches.length} kết quả khớp với "${query}".`, 'pure');
             document.getElementById('inspectResultCard').classList.remove('hidden');
             document.getElementById('exportResultCard').classList.add('hidden');
             document.getElementById('auditResultCard').classList.add('hidden');
@@ -1594,6 +2399,11 @@
             if (!str) return '';
             return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
         }
+
+        // Init on DOM ready
+        window.addEventListener('DOMContentLoaded', () => {
+            initGatewayConfigUI();
+        });
     </script>
 </body>
 </html>
