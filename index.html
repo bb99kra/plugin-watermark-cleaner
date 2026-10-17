@@ -1094,7 +1094,7 @@
             <div class="config-drawer hidden" id="configDrawer">
                 <div class="config-field">
                     <label>9Router Endpoint</label>
-                    <input type="text" id="cfgGatewayUrl" value="http://127.0.0.1:20128/api/v1" placeholder="http://127.0.0.1:20128/api/v1">
+                    <input type="text" id="cfgGatewayUrl" value="https://abraham-london-calvin-milan.trycloudflare.com/api/v1" placeholder="https://abraham-london-calvin-milan.trycloudflare.com/api/v1">
                 </div>
                 <div class="config-field">
                     <label>API Key</label>
@@ -1376,9 +1376,17 @@
         };
 
         // Gateway Config Storage
+        const DEFAULT_GATEWAY_URL = 'https://abraham-london-calvin-milan.trycloudflare.com/api/v1';
+
         function getGatewayConfig() {
+            let savedUrl = localStorage.getItem('9r_url');
+            // If on HTTPS and savedUrl was HTTP localhost, upgrade to HTTPS tunnel to avoid Mixed Content block!
+            if (!savedUrl || (location.protocol === 'https:' && (savedUrl.startsWith('http://127.0.0.1') || savedUrl.startsWith('http://localhost')))) {
+                savedUrl = DEFAULT_GATEWAY_URL;
+                localStorage.setItem('9r_url', savedUrl);
+            }
             return {
-                url: localStorage.getItem('9r_url') || 'http://127.0.0.1:20128/api/v1',
+                url: savedUrl,
                 apiKey: localStorage.getItem('9r_key') || 'sk-0ac05722fecdc502-yd0otp-e4c6cfba',
                 model: localStorage.getItem('9r_model') || 'ag/gemini-3.8-flash-high'
             };
@@ -1417,37 +1425,27 @@
 
             try {
                 const testUrl = cfg.url.replace(/\/api\/v1\/?$/, '') + '/api/version';
-                const res = await fetch(testUrl, { method: 'GET', mode: 'cors' }).catch(() => null);
+                const res = await fetch(testUrl, { method: 'GET', mode: 'cors' });
 
                 if (res && res.ok) {
+                    const data = await res.json().catch(() => ({}));
                     dot.className = 'dot-pulse';
-                    text.textContent = '9Router Live (Termux:20128)';
+                    const ver = data.currentVersion ? `v${data.currentVersion}` : 'Live';
+                    text.textContent = `9Router ${ver}`;
                     text.style.color = '#34d399';
-                    navText.textContent = '9ROUTER: ONLINE (20128)';
-                    if (!silent) showToast('9Router Gateway phản hồi tốt!', 'success');
+                    navText.textContent = `9ROUTER: ONLINE (${ver})`;
+                    if (!silent) showToast(`Kết nối thành công tới 9Router (${ver})!`, 'success');
                     return true;
-                } else {
-                    const optRes = await fetch(cfg.url + '/chat/completions', {
-                        method: 'OPTIONS',
-                        headers: { 'Authorization': 'Bearer ' + cfg.apiKey }
-                    }).catch(() => null);
-
-                    if (optRes) {
-                        dot.className = 'dot-pulse';
-                        text.textContent = '9Router Ready';
-                        text.style.color = '#34d399';
-                        navText.textContent = '9ROUTER: ONLINE';
-                        if (!silent) showToast('Kết nối thành công 9Router!', 'success');
-                        return true;
-                    }
                 }
-            } catch (e) {}
+            } catch (e) {
+                console.error('9Router connection failed:', e);
+            }
 
             dot.className = 'dot-pulse purple';
-            text.textContent = '9Router Offline / Termux';
+            text.textContent = '9Router Chưa Kết Nối';
             text.style.color = '#fbbf24';
-            navText.textContent = '9ROUTER: STANDBY';
-            if (!silent) showToast('Chưa thấy 9Router trên cổng 20128. Hãy gõ: 9router trong Termux!', 'error');
+            navText.textContent = '9ROUTER: DISCONNECTED';
+            if (!silent) showToast(`Không thể kết nối tới ${cfg.url}. Hãy kiểm tra 9router!`, 'error');
             return false;
         }
 
@@ -1898,52 +1896,13 @@ Quy tắc:
                     }
                 }
             } catch (err) {
-                // Network error, mixed content, or 9Router offline
-            }
-
-            if (!sseConnected) {
-                appendWorkingLog(`⚡ Kích hoạt Deep Heuristic Thinking Engine (100% Client-Side Realtime)...`, 'pure');
-
-                const simThinking = `[TƯ DUY SUY LUẬN AI - REALTIME ENGINE]\n` +
-                    `• Nhận diện nhiệm vụ: "${quest}"\n` +
-                    `• Ngữ cảnh hệ thống: ${fileContext}\n` +
-                    `• Phân tích yêu cầu:\n` +
-                    `  - Đánh giá kiến trúc file .jar hiện hành đối chiếu với yêu cầu của Nguyendzvn.\n` +
-                    `  - Rà soát các vùng constant pool chứa bytecode signatures liên quan.\n` +
-                    `  - Lập lộ trình thực thi tối ưu nhất trong bộ nhớ RAM.\n` +
-                    `• Xác lập phương án:\n` +
-                    `  ${/pure|offline/i.test(quest) ? '-> Chuyển đổi Standalone (pure): Hóa giải DRM, chặn phone-home, bypass licensing trap.' : /clean|watermark|buyer/i.test(quest) ? '-> Khử sạch dấu vết định danh: Triệt tiêu Buyer ID, Spigot tokens và xóa Zip comment.' : /audit|bảo mật|quét/i.test(quest) ? '-> Kiểm toán bảo mật chuyên sâu: Đánh giá điểm rủi ro, phân loại trackers.' : '-> Phân tích tổng thể kiến trúc bytecode và cấu hình plugin.'}\n` +
-                    `• Hoàn tất chu trình tư duy nội tại, tiến hành xuất kết quả phản hồi...`;
-
-                await streamAiThinkingText(simThinking, 6);
-
-                let simAnswer = '';
-                if (/pure|offline/i.test(quest)) {
-                    simAnswer = `### ⚡ Phân Tích & Kế Hoạch Chuyển Đổi (pure) Standalone 100% Offline\n\n` +
-                        `- **Tệp:** ${currentFileObj ? currentFileObj.name : 'Chưa chọn file'}\n` +
-                        `- **Đánh giá bẫy DRM:** ${auditData && auditData.drmSignatures.length ? 'Phát hiện bẫy: ' + auditData.drmSignatures.map(d=>d.desc).join(', ') : 'Không có bẫy mã hóa nặng, tiến hành hóa giải các hàm kiểm tra kết nối ngoại vi'}.\n` +
-                        `- **URLs ngắt kết nối:** ${auditData && auditData.phoneHomeUrls.length ? auditData.phoneHomeUrls.slice(0, 3).join(', ') : 'Toàn bộ domain gọi về máy chủ bản quyền'}.\n` +
-                        `- **Hành động:** Hệ thống đã tự động kích hoạt tính năng **(pure) Standalone Engine** bên dưới để vá bytecode trong RAM và chuẩn bị file .jar sạch cho bạn!`;
-                } else if (/clean|watermark|buyer/i.test(quest)) {
-                    simAnswer = `### 🧹 Phân Tích & Làm Sạch Watermark & Buyer ID\n\n` +
-                        `- **Tệp:** ${currentFileObj ? currentFileObj.name : 'Chưa chọn file'}\n` +
-                        `- **Buyer IDs phát hiện:** ${auditData && auditData.detectedIds.size ? Array.from(auditData.detectedIds).join(', ') : 'Không có ID số lộ thiên'}.\n` +
-                        `- **Spigot/Polymart Tokens:** Đã định vị các token \`%%__USER__%%\`, \`%%__RESOURCE__%%\`, \`%%__NONCE__%%\`.\n` +
-                        `- **Hành động:** Hệ thống đã kích hoạt **Watermark & Identity Cleaner** trong RAM để làm sạch bytecode và xuất file!`;
-                } else {
-                    simAnswer = `### 🤖 Báo Cáo Phân Tích Bytecode AI Agent\n\n` +
-                        `- **Tệp phân tích:** ${currentFileObj ? currentFileObj.name : 'Chưa tải file'}\n` +
-                        `- **Cấu trúc:** ${auditData ? auditData.classesCount + ' classes bytecode' : '0 classes'}\n` +
-                        `- **Xếp hạng bảo mật:** ${auditData ? auditData.grade + ' (' + auditData.riskScore + '% rủi ro)' : 'Chưa kiểm toán'}\n` +
-                        `- **Khuyến nghị:** Bạn có thể nhấn trực tiếp các nút **Kích Hoạt (pure)** hoặc **Khử Sạch Watermark** bên dưới để xử lý ngay lập tức!`;
-                }
-
-                const words = simAnswer.match(/\S+|\s+/g) || [simAnswer];
-                for (const w of words) {
-                    responseBox.textContent += w;
-                    responseBox.scrollTop = responseBox.scrollHeight;
-                    await new Promise(r => setTimeout(r, 6));
-                }
+                stopThinkingTimer();
+                setConsoleStatus('idle', 'LỖI 9ROUTER');
+                appendWorkingLog(`❌ Lỗi kết nối 9Router: ${err.message}`, 'err');
+                thinkingBody.textContent = `[LỖI KẾT NỐI 9ROUTER THẬT]:\n${err.message}\n\nKhông thể gửi dữ liệu tới: ${cfg.url}\nHãy kiểm tra xem 9router đang chạy trên Termux và tunnel còn sống hay không!`;
+                responseBox.textContent = `### ⚠️ Lỗi Kết Nối 9Router\n\n- **Endpoint:** \`${cfg.url}\`\n- **Thông báo lỗi:** \`${err.message}\`\n- **Cách xử lý:** Mở menu bánh răng góc phải trên để kiểm tra hoặc cập nhật lại URL HTTPS của 9router.`;
+                showToast(`Lỗi 9Router: ${err.message}`, 'error');
+                return;
             }
 
             const totalElapsed = ((Date.now() - thinkingStartTime) / 1000).toFixed(1);
