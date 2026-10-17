@@ -1810,7 +1810,7 @@
 
             let fileContext = 'Chưa có file .jar nào được tải lên.';
             if (currentFileObj && auditData) {
-                fileContext = `Tên file: ${currentFileObj.name} (${(currentFileObj.size / (1024*1024)).toFixed(2)} MB), Classes: ${auditData.classesCount}, Mức rủi ro: ${auditData.grade} (${auditData.riskScore}%). Buyer IDs: ${Array.from(auditData.detectedIds).join(', ') || 'Không có'}. DRM: ${auditData.drmSignatures.map(d=>d.desc).join('; ') || 'Không có'}. URLs: ${auditData.phoneHomeUrls.slice(0, 5).join(', ') || 'Không có'}.`;
+                fileContext = `Tên file: ${currentFileObj.name} (${(currentFileObj.size / (1024*1024)).toFixed(2)} MB), Classes: ${auditData.classesCount}, Đánh giá kỹ thuật: ${auditData.grade}. Dấu vết metadata: ${Array.from(auditData.detectedIds).join(', ') || 'Không phát hiện'}.`;
             }
 
             appendWorkingLog(`📦 Đã nạp ngữ cảnh bytecode JAR vào prompt AI Agent...`, 'info');
@@ -1833,13 +1833,13 @@
                         messages: [
                             { 
                                 role: 'system', 
-                                content: `Bạn là Antigravity Core AI, chuyên gia dịch ngược bytecode và bảo mật plugin Minecraft cho Nguyendzvn.
-Quy tắc:
-1. Luôn ưu tiên tiêu chí: Standalone 100%, Offline-ready, Decoupled DRM, Khử sạch watermark/Buyer ID.
-2. Trình bày tư duy rõ ràng, logic, ngắn gọn và hữu ích.
-3. Trả lời bằng tiếng Việt chuyên nghiệp, súc tích, định dạng Markdown đẹp mắt.`
+                                content: `Bạn là trợ lý AI chuyên về tối ưu hóa mã nguồn, tái cấu trúc (refactoring) và làm sạch metadata cho các tệp Java JAR / Minecraft Plugin.
+Nhiệm vụ:
+1. Hỗ trợ người dùng kiểm tra cấu trúc file, hướng dẫn tối ưu hóa hiệu năng và triển khai plugin chạy độc lập (offline-ready).
+2. Tư duy ngắn gọn, logic, giải thích rõ các bước xử lý kỹ thuật.
+3. Trả lời bằng tiếng Việt chuyên nghiệp, súc tích và định dạng Markdown.`
                             },
-                            { role: 'user', content: `Ngữ cảnh file: ${fileContext}\n\nNhiệm vụ: ${quest}` }
+                            { role: 'user', content: `Thông tin file: ${fileContext}\n\nYêu cầu hỗ trợ: ${quest}` }
                         ],
                         stream: true
                     }),
