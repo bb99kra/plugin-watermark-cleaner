@@ -1820,7 +1820,7 @@
 
             try {
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 15000);
+                const timeoutId = setTimeout(() => controller.abort(), 60000);
 
                 const response = await fetch(`${cfg.url}/chat/completions`, {
                     method: 'POST',
@@ -1848,60 +1848,66 @@ Quy tắc:
 
                 clearTimeout(timeoutId);
 
-                if (response.ok) {
-                    sseConnected = true;
-                    appendWorkingLog(`⚡ Đã kết nối luồng SSE! Bắt đầu nhận Reasoning & Content Stream theo thời gian thực...`, 'work');
+                if (!response.ok) {
+                    const errTxt = await response.text().catch(() => '');
+                    throw new Error(`HTTP ${response.status}: ${errTxt.slice(0, 300) || response.statusText}`);
+                }
 
-                    const reader = response.body.getReader();
-                    const decoder = new TextDecoder('utf-8');
-                    let buffer = '';
+                appendWorkingLog(`⚡ 9Router đã phản hồi 200 OK! Bắt đầu nhận Reasoning & Content Stream...`, 'pure');
 
-                    while (true) {
-                        const { done, value } = await reader.read();
-                        if (done) break;
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder('utf-8');
+                let buffer = '';
 
-                        buffer += decoder.decode(value, { stream: true });
-                        const lines = buffer.split('\n');
-                        buffer = lines.pop();
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
 
-                        for (const line of lines) {
-                            const trimmed = line.trim();
-                            if (!trimmed || !trimmed.startsWith('data:')) continue;
+                    buffer += decoder.decode(value, { stream: true });
+                    const lines = buffer.split('\n');
+                    buffer = lines.pop();
 
-                            const dataStr = trimmed.slice(5).trim();
-                            if (dataStr === '[DONE]') {
-                                appendWorkingLog(`🏁 Luồng dữ liệu hoàn tất ([DONE]).`, 'pure');
-                                break;
+                    for (const line of lines) {
+                        const trimmed = line.trim();
+                        if (!trimmed || !trimmed.startsWith('data:')) continue;
+
+                        const dataStr = trimmed.slice(5).trim();
+                        if (dataStr === '[DONE]') {
+                            appendWorkingLog(`🏁 Luồng 9Router hoàn tất ([DONE]).`, 'pure');
+                            break;
+                        }
+
+                        try {
+                            const parsed = JSON.parse(dataStr);
+                            const delta = parsed.choices?.[0]?.delta;
+
+                            // REAL AI THINKING STREAM DIRECTLY FROM 9ROUTER
+                            if (delta?.reasoning_content) {
+                                setConsoleStatus('thinking', 'THINKING');
+                                thinkingBody.textContent += delta.reasoning_content;
+                                thinkingBody.scrollTop = thinkingBody.scrollHeight;
+                                reasoningTokenCount++;
+                                document.getElementById('consoleTokenBadge').style.display = 'inline-flex';
+                                document.getElementById('consoleTokenBadge').textContent = `🧠 ${reasoningTokenCount} tokens`;
                             }
 
-                            try {
-                                const parsed = JSON.parse(dataStr);
-                                const delta = parsed.choices?.[0]?.delta;
-
-                                if (delta?.reasoning_content) {
-                                    setConsoleStatus('thinking', 'THINKING');
-                                    thinkingBody.textContent += delta.reasoning_content;
-                                    thinkingBody.scrollTop = thinkingBody.scrollHeight;
-                                    reasoningTokenCount++;
-                                    document.getElementById('consoleTokenBadge').textContent = `🧠 ${reasoningTokenCount} tokens`;
-                                }
-
-                                if (delta?.content) {
-                                    setConsoleStatus('executing', 'STREAMING');
-                                    responseBox.textContent += delta.content;
-                                    responseBox.scrollTop = responseBox.scrollHeight;
-                                }
-                            } catch (e) {}
-                        }
+                            // REAL AI RESPONSE DIRECTLY FROM 9ROUTER
+                            if (delta?.content) {
+                                setConsoleStatus('executing', 'STREAMING');
+                                responseBox.textContent += delta.content;
+                                responseBox.scrollTop = responseBox.scrollHeight;
+                            }
+                        } catch (e) {}
                     }
                 }
             } catch (err) {
                 stopThinkingTimer();
                 setConsoleStatus('idle', 'LỖI 9ROUTER');
-                appendWorkingLog(`❌ Lỗi kết nối 9Router: ${err.message}`, 'err');
-                thinkingBody.textContent = `[LỖI KẾT NỐI 9ROUTER THẬT]:\n${err.message}\n\nKhông thể gửi dữ liệu tới: ${cfg.url}\nHãy kiểm tra xem 9router đang chạy trên Termux và tunnel còn sống hay không!`;
-                responseBox.textContent = `### ⚠️ Lỗi Kết Nối 9Router\n\n- **Endpoint:** \`${cfg.url}\`\n- **Thông báo lỗi:** \`${err.message}\`\n- **Cách xử lý:** Mở menu bánh răng góc phải trên để kiểm tra hoặc cập nhật lại URL HTTPS của 9router.`;
-                showToast(`Lỗi 9Router: ${err.message}`, 'error');
+                const errMsg = err.name === 'AbortError' ? 'Quá thời gian chờ phản hồi (Timeout 60s)' : err.message;
+                appendWorkingLog(`❌ Lỗi kết nối 9Router: ${errMsg}`, 'err');
+                thinkingBody.textContent = `[LỖI KẾT NỐI 9ROUTER THẬT]:\n${errMsg}\n\nKhông thể gửi dữ liệu tới: ${cfg.url}\n\nKiểm tra:\n1. Mở menu ⚙️ góc phải trên xem URL có đúng là "${DEFAULT_GATEWAY_URL}" chưa.\n2. Kiểm tra xem Termux có mạng và 9router đang chạy không.`;
+                responseBox.textContent = `### ⚠️ Lỗi Kết Nối 9Router\n\n- **Endpoint:** \`${cfg.url}\`\n- **Thông báo lỗi:** \`${errMsg}\`\n- **Cách xử lý:** Mở menu bánh răng ⚙️ góc phải trên để kiểm tra hoặc bấm **⚡ Kiểm tra kết nối**.`;
+                showToast(`Lỗi 9Router: ${errMsg}`, 'error');
                 return;
             }
 
