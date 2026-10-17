@@ -1,8 +1,8 @@
-# ⚡ Nguyendzvn Enterprise - Minecraft Plugin Suite & Pure Engine
+# 🛡️ Nguyendzvn Suite - Minecraft Plugin Leak & Watermark Purger
 
-> **100% Client-Side • Chạy Trực Tiếp Tại Trình Duyệt • Không Cần Backend Server • Bảo Mật Tuyệt Đối**
+> **100% Client-Side • Chạy Trực Tiếp Tại Trình Duyệt • Không Dùng AI • Bảo Toàn Bytecode JVMS §4.4.7**
 > 
-> Nền tảng cấp doanh nghiệp giúp phân tích bảo mật, khử sạch triệt để **Watermark, Buyer ID, Telemetry Phone-Home, Console Banners** và chuyển đổi plugin Minecraft sang chế độ **`(pure)` Standalone 100% Offline**.
+> Chuyên dụng quét và khử sạch triệt để **NulledVault, BlackSpigot, GLeaks, DirectLeaks, Buyer ID, Spigot/Polymart Tokens, Telemetry Phone-Home, Zip Archive Comments** và bảo vệ an toàn danh tính 100% mà không làm hỏng plugin.
 
 ---
 
