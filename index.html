@@ -6,31 +6,35 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>Nguyendzvn Suite - Minecraft Plugin Leak & Watermark Purger</title>
-    <meta name="description" content="Chuyên dụng quét và khử sạch dấu vết NulledVault, BlackSpigot, GLeaks, DirectLeaks, xoá vân tay Buyer ID và bảo toàn 100% bytecode plugin Minecraft theo chuẩn JVMS §4.4.7.">
+    <title>Nguyendzvn Suite - Minecraft Plugin Leak & Watermark Purger 3D</title>
+    <meta name="description" content="Chuyên dụng quét và khử sạch dấu vết NulledVault, BlackSpigot, GLeaks, DirectLeaks, xoá vân tay Buyer ID với hiệu ứng 3D Holographic trực quan và bảo toàn 100% bytecode JVMS §4.4.7.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="jszip.min.js"></script>
+    <script src="three.min.js"></script>
     <style>
         :root {
-            --bg-canvas: #06070a;
-            --bg-surface: #0c0f17;
-            --bg-card: rgba(15, 19, 30, 0.78);
-            --bg-card-hover: rgba(22, 28, 44, 0.9);
-            --border-subtle: rgba(255, 255, 255, 0.08);
-            --border-glow: rgba(16, 185, 129, 0.35);
+            --bg-canvas: #040508;
+            --bg-surface: rgba(10, 14, 24, 0.82);
+            --bg-card: rgba(13, 18, 32, 0.72);
+            --bg-card-hover: rgba(18, 25, 45, 0.88);
+            --border-subtle: rgba(0, 240, 255, 0.15);
+            --border-glow: rgba(16, 185, 129, 0.45);
             --primary: #10b981;
             --primary-glow: #34d399;
+            --neon-cyan: #00f0ff;
+            --neon-cyan-glow: rgba(0, 240, 255, 0.5);
+            --neon-pink: #ff007f;
             --indigo: #6366f1;
-            --cyan: #06b6d4;
             --amber: #f59e0b;
             --rose: #f43f5e;
             --purple: #a855f7;
             --text-main: #f8fafc;
             --text-secondary: #94a3b8;
             --text-muted: #64748b;
-            --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-display: 'Orbitron', -apple-system, sans-serif;
+            --font-sans: 'Plus Jakarta Sans', -apple-system, sans-serif;
             --font-mono: 'JetBrains Mono', monospace;
         }
 
@@ -44,30 +48,55 @@
 
         body {
             background-color: var(--bg-canvas);
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.12) 0px, transparent 40%),
-                radial-gradient(at 100% 0%, rgba(99, 102, 241, 0.1) 0px, transparent 40%),
-                radial-gradient(at 50% 100%, rgba(6, 182, 212, 0.08) 0px, transparent 50%);
             color: var(--text-main);
             min-height: 100vh;
-            padding-bottom: 80px;
+            padding-bottom: 90px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* 3D WebGL Background Canvas */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Cyberpunk Scanline & Holographic Noise Overlay */
+        .cyber-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+            pointer-events: none;
+            background: linear-gradient(rgba(18, 16, 26, 0) 50%, rgba(0, 0, 0, 0.28) 50%),
+                        linear-gradient(90deg, rgba(0, 240, 255, 0.02), rgba(16, 185, 129, 0.01), rgba(255, 0, 127, 0.02));
+            background-size: 100% 4px, 6px 100%;
+            box-shadow: inset 0 0 120px rgba(0, 0, 0, 0.85);
         }
 
         /* Top Nav */
         header.nav-header {
-            background: rgba(12, 15, 23, 0.9);
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
+            background: rgba(8, 11, 20, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border-subtle);
             position: sticky;
             top: 0;
             z-index: 100;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
         }
 
         .nav-inner {
-            max-width: 1240px;
+            max-width: 1280px;
             margin: 0 auto;
-            padding: 14px 20px;
+            padding: 14px 24px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -78,33 +107,43 @@
         .brand-group {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
         }
 
         .brand-avatar {
-            width: 42px;
-            height: 42px;
+            width: 44px;
+            height: 44px;
             border-radius: 12px;
-            background: linear-gradient(135deg, #10b981, #06b6d4);
+            background: linear-gradient(135deg, #10b981, #00f0ff);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 22px;
-            box-shadow: 0 0 25px rgba(16, 185, 129, 0.4);
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            animation: pulse-avatar 3s infinite alternate;
+        }
+
+        @keyframes pulse-avatar {
+            0% { transform: scale(1); box-shadow: 0 0 20px rgba(16, 185, 129, 0.4); }
+            100% { transform: scale(1.04); box-shadow: 0 0 32px rgba(0, 240, 255, 0.6); }
         }
 
         .brand-text h1 {
-            font-size: 16px;
-            font-weight: 800;
-            letter-spacing: -0.3px;
-            color: #ffffff;
+            font-size: 17px;
+            font-weight: 900;
+            font-family: var(--font-display);
+            letter-spacing: 0.5px;
+            background: linear-gradient(90deg, #ffffff, #00f0ff 60%, #34d399 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .brand-text p {
             font-size: 11px;
-            font-weight: 600;
+            font-weight: 700;
             color: var(--primary-glow);
-            letter-spacing: 0.6px;
+            letter-spacing: 0.8px;
             text-transform: uppercase;
         }
 
@@ -119,25 +158,50 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 5px 12px;
+            padding: 5px 13px;
             background: rgba(255, 255, 255, 0.04);
             border: 1px solid var(--border-subtle);
             border-radius: 9999px;
-            font-size: 12px;
-            font-weight: 500;
+            font-size: 11px;
+            font-weight: 700;
             color: var(--text-secondary);
+            font-family: var(--font-mono);
+            letter-spacing: 0.3px;
         }
 
         .tag-pill.live {
-            border-color: rgba(16, 185, 129, 0.35);
+            border-color: rgba(16, 185, 129, 0.4);
             color: #34d399;
             background: rgba(16, 185, 129, 0.08);
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
         }
 
         .tag-pill.safe {
-            border-color: rgba(6, 182, 212, 0.35);
+            border-color: rgba(0, 240, 255, 0.4);
             color: #22d3ee;
-            background: rgba(6, 182, 212, 0.08);
+            background: rgba(0, 240, 255, 0.08);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+        }
+
+        .btn-sfx-toggle {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-subtle);
+            color: #cbd5e1;
+            padding: 5px 12px;
+            border-radius: 9999px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-sfx-toggle:hover {
+            border-color: var(--neon-cyan);
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
         }
 
         .dot-pulse {
@@ -151,61 +215,88 @@
 
         @keyframes pulse-dot {
             0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.4; transform: scale(0.85); }
+            50% { opacity: 0.3; transform: scale(0.8); }
         }
 
         .github-link {
-            background: rgba(16, 185, 129, 0.12);
-            border: 1px solid rgba(16, 185, 129, 0.4);
-            color: #a7f3d0;
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.15), rgba(16, 185, 129, 0.15));
+            border: 1px solid rgba(0, 240, 255, 0.4);
+            color: #e0f2fe;
             text-decoration: none;
             padding: 5px 14px;
             border-radius: 9999px;
             font-size: 12px;
-            font-weight: 600;
-            transition: all 0.2s;
+            font-weight: 700;
+            transition: all 0.25s;
         }
 
         .github-link:hover {
-            background: rgba(16, 185, 129, 0.25);
-            border-color: var(--primary-glow);
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.3), rgba(16, 185, 129, 0.3));
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
             color: #ffffff;
         }
 
+        /* Main Workspace Container */
         .workspace {
-            max-width: 1240px;
+            max-width: 1280px;
             margin: 28px auto 0;
-            padding: 0 20px;
+            padding: 0 24px;
+            position: relative;
+            z-index: 10;
         }
 
-        /* Hero Notice */
-        .hero-banner {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(99, 102, 241, 0.05));
-            border: 1px solid rgba(16, 185, 129, 0.25);
-            border-radius: 16px;
-            padding: 20px 24px;
-            margin-bottom: 24px;
+        /* 3D Cyber HUD Hero Banner */
+        .cyber-hero-banner {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(0, 240, 255, 0.05) 50%, rgba(99, 102, 241, 0.05));
+            border: 1px solid rgba(0, 240, 255, 0.25);
+            border-radius: 20px;
+            padding: 24px 28px;
+            margin-bottom: 28px;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(16px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4), inset 0 0 25px rgba(0, 240, 255, 0.05);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 16px;
+            gap: 20px;
             flex-wrap: wrap;
         }
 
+        .cyber-hero-banner::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 60px; height: 2px;
+            background: var(--neon-cyan);
+            box-shadow: 0 0 15px var(--neon-cyan);
+        }
+
+        .cyber-hero-banner::after {
+            content: '';
+            position: absolute;
+            bottom: 0; right: 0; width: 60px; height: 2px;
+            background: var(--primary);
+            box-shadow: 0 0 15px var(--primary);
+        }
+
         .hero-banner-text h2 {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 800;
+            font-family: var(--font-display);
+            letter-spacing: 0.5px;
             color: #ffffff;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            text-shadow: 0 0 20px rgba(0, 240, 255, 0.35);
         }
 
         .hero-banner-text p {
             font-size: 13px;
             color: var(--text-secondary);
-            margin-top: 4px;
-            line-height: 1.5;
+            margin-top: 6px;
+            line-height: 1.6;
+            max-width: 780px;
         }
 
         .hero-banner-badges {
@@ -216,166 +307,226 @@
 
         .leak-badge {
             font-size: 11px;
-            font-weight: 700;
-            padding: 4px 10px;
-            border-radius: 6px;
+            font-weight: 800;
+            padding: 5px 12px;
+            border-radius: 8px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.6px;
+            font-family: var(--font-mono);
+            transition: all 0.2s;
         }
 
-        .badge-nv { background: rgba(168, 85, 247, 0.18); color: #d8b4fe; border: 1px solid rgba(168, 85, 247, 0.35); }
-        .badge-bs { background: rgba(245, 158, 11, 0.18); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.35); }
-        .badge-gl { background: rgba(244, 63, 94, 0.18); color: #fda4af; border: 1px solid rgba(244, 63, 94, 0.35); }
-        .badge-dl { background: rgba(6, 182, 212, 0.18); color: #67e8f9; border: 1px solid rgba(6, 182, 212, 0.35); }
-        .badge-sp { background: rgba(234, 88, 12, 0.18); color: #fdba74; border: 1px solid rgba(234, 88, 12, 0.35); }
+        .badge-nv { background: rgba(168, 85, 247, 0.16); color: #d8b4fe; border: 1px solid rgba(168, 85, 247, 0.4); box-shadow: 0 0 10px rgba(168, 85, 247, 0.2); }
+        .badge-bs { background: rgba(245, 158, 11, 0.16); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.4); box-shadow: 0 0 10px rgba(245, 158, 11, 0.2); }
+        .badge-gl { background: rgba(244, 63, 94, 0.16); color: #fda4af; border: 1px solid rgba(244, 63, 94, 0.4); box-shadow: 0 0 10px rgba(244, 63, 94, 0.2); }
+        .badge-dl { background: rgba(6, 182, 212, 0.16); color: #67e8f9; border: 1px solid rgba(6, 182, 212, 0.4); box-shadow: 0 0 10px rgba(6, 182, 212, 0.2); }
+        .badge-sp { background: rgba(234, 88, 12, 0.16); color: #fdba74; border: 1px solid rgba(234, 88, 12, 0.4); box-shadow: 0 0 10px rgba(234, 88, 12, 0.2); }
 
-        /* File Upload Area */
-        .card-dropzone {
-            margin-bottom: 24px;
+        /* 3D Holographic Core & Dropzone Section */
+        .card-dropzone-3d {
+            margin-bottom: 28px;
+            position: relative;
         }
 
-        .drop-area {
-            border: 2px dashed rgba(16, 185, 129, 0.35);
-            border-radius: 20px;
-            padding: 36px 20px;
+        .drop-area-3d {
+            border: 2px dashed rgba(0, 240, 255, 0.35);
+            border-radius: 24px;
+            padding: 30px 24px;
             text-align: center;
-            background: rgba(12, 16, 25, 0.65);
+            background: rgba(10, 15, 28, 0.7);
             cursor: pointer;
-            transition: all 0.25s ease;
-            backdrop-filter: blur(10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(18px);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.4), inset 0 0 30px rgba(0, 240, 255, 0.04);
+            transform-style: preserve-3d;
+            perspective: 1000px;
         }
 
-        .drop-area:hover, .drop-area.dragover {
-            border-color: var(--primary-glow);
-            background: rgba(16, 185, 129, 0.08);
-            transform: scale(1.002);
+        .drop-area-3d:hover, .drop-area-3d.dragover {
+            border-color: var(--neon-cyan);
+            background: rgba(0, 240, 255, 0.08);
+            box-shadow: 0 20px 60px rgba(0, 240, 255, 0.25), inset 0 0 40px rgba(0, 240, 255, 0.1);
+            transform: scale(1.008) translateY(-2px);
         }
 
-        .drop-icon {
-            font-size: 48px;
-            margin-bottom: 12px;
+        /* 3D Hologram Canvas container */
+        .holo-canvas-wrapper {
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 10px;
+            position: relative;
+            pointer-events: none;
         }
 
-        .drop-title {
-            font-size: 17px;
-            font-weight: 700;
+        #holo-core-canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .drop-title-3d {
+            font-size: 19px;
+            font-weight: 800;
+            font-family: var(--font-display);
+            letter-spacing: 0.5px;
             color: #ffffff;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
         }
 
-        .drop-desc {
+        .drop-desc-3d {
             font-size: 13px;
             color: var(--text-muted);
-            max-width: 620px;
+            max-width: 650px;
             margin: 0 auto;
-            line-height: 1.5;
+            line-height: 1.6;
         }
 
-        .file-loaded-bar {
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid rgba(16, 185, 129, 0.35);
-            border-radius: 14px;
-            padding: 16px 22px;
+        .file-loaded-bar-3d {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(0, 240, 255, 0.08));
+            border: 1px solid rgba(0, 240, 255, 0.4);
+            border-radius: 18px;
+            padding: 18px 26px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 16px;
             flex-wrap: wrap;
+            box-shadow: 0 10px 35px rgba(0, 240, 255, 0.15);
+            animation: fadeIn 0.3s ease-out;
         }
 
         .file-info-group h3 {
-            font-size: 16px;
-            font-weight: 700;
+            font-size: 17px;
+            font-weight: 800;
             color: #ffffff;
+            font-family: var(--font-mono);
+            letter-spacing: 0.3px;
         }
 
         .file-info-group p {
             font-size: 13px;
             color: var(--text-secondary);
-            margin-top: 3px;
+            margin-top: 4px;
         }
 
         .btn-change-file {
             background: rgba(255, 255, 255, 0.06);
             border: 1px solid var(--border-subtle);
             color: var(--text-main);
-            padding: 8px 16px;
-            border-radius: 10px;
+            padding: 10px 18px;
+            border-radius: 12px;
             font-size: 13px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.25s;
         }
 
         .btn-change-file:hover {
-            background: rgba(255, 255, 255, 0.12);
-            border-color: rgba(255, 255, 255, 0.25);
+            background: rgba(0, 240, 255, 0.15);
+            border-color: var(--neon-cyan);
+            color: #ffffff;
+            box-shadow: 0 0 18px rgba(0, 240, 255, 0.4);
         }
 
-        /* 4-Stat Metric Grid */
-        .stats-grid {
+        /* 3D Tilt Metric Grid */
+        .stats-grid-3d {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 16px;
-            margin-bottom: 24px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 18px;
+            margin-bottom: 28px;
+            perspective: 1200px;
         }
 
-        .stat-card {
+        .stat-card-3d {
             background: var(--bg-card);
             border: 1px solid var(--border-subtle);
-            border-radius: 14px;
-            padding: 18px 20px;
+            border-radius: 18px;
+            padding: 20px 22px;
             display: flex;
             align-items: center;
-            gap: 16px;
-            transition: border-color 0.2s;
+            gap: 18px;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
 
-        .stat-card:hover {
-            border-color: rgba(255, 255, 255, 0.18);
+        .stat-card-3d:hover {
+            border-color: var(--neon-cyan);
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(0, 240, 255, 0.2);
         }
 
-        .stat-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
+        .stat-card-3d .glare {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 255, 255, 0.12) 0%, transparent 60%);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .stat-card-3d:hover .glare {
+            opacity: 1;
+        }
+
+        .stat-icon-3d {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 22px;
+            font-size: 24px;
             flex-shrink: 0;
+            transform: translateZ(25px);
+            transition: transform 0.2s;
         }
 
-        .icon-banner { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); }
-        .icon-fingerprint { background: rgba(244, 63, 94, 0.15); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.3); }
-        .icon-telemetry { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
-        .icon-junk { background: rgba(6, 182, 212, 0.15); color: #38bdf8; border: 1px solid rgba(6, 182, 212, 0.3); }
+        .icon-banner { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.4); box-shadow: 0 0 15px rgba(168, 85, 247, 0.3); }
+        .icon-fingerprint { background: rgba(244, 63, 94, 0.15); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.4); box-shadow: 0 0 15px rgba(244, 63, 94, 0.3); }
+        .icon-telemetry { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); box-shadow: 0 0 15px rgba(245, 158, 11, 0.3); }
+        .icon-junk { background: rgba(0, 240, 255, 0.15); color: #38bdf8; border: 1px solid rgba(0, 240, 255, 0.4); box-shadow: 0 0 15px rgba(0, 240, 255, 0.3); }
 
-        .stat-data h4 {
-            font-size: 22px;
-            font-weight: 800;
+        .stat-data-3d {
+            transform: translateZ(20px);
+        }
+
+        .stat-data-3d h4 {
+            font-size: 26px;
+            font-weight: 900;
             color: #ffffff;
             line-height: 1.1;
+            font-family: var(--font-display);
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
         }
 
-        .stat-data p {
+        .stat-data-3d p {
             font-size: 12px;
             color: var(--text-secondary);
             margin-top: 4px;
-            font-weight: 500;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         /* Primary Action Section */
-        .action-panel {
-            background: linear-gradient(180deg, rgba(16, 185, 129, 0.08), rgba(12, 16, 25, 0.85));
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            border-radius: 18px;
-            padding: 24px;
-            margin-bottom: 28px;
+        .action-panel-3d {
+            background: linear-gradient(180deg, rgba(16, 185, 129, 0.1), rgba(10, 14, 25, 0.88));
+            border: 1px solid rgba(16, 185, 129, 0.35);
+            border-radius: 22px;
+            padding: 28px;
+            margin-bottom: 30px;
             display: flex;
             flex-direction: column;
-            gap: 18px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            gap: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5), inset 0 0 25px rgba(16, 185, 129, 0.08);
+            position: relative;
+            backdrop-filter: blur(20px);
         }
 
         .action-header {
@@ -387,12 +538,14 @@
         }
 
         .action-title-group h3 {
-            font-size: 18px;
-            font-weight: 800;
+            font-size: 20px;
+            font-weight: 900;
             color: #ffffff;
+            font-family: var(--font-display);
+            letter-spacing: 0.5px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
         .action-title-group p {
@@ -403,37 +556,41 @@
 
         .action-button-group {
             display: flex;
-            gap: 12px;
+            gap: 14px;
             flex-wrap: wrap;
             width: 100%;
         }
 
-        .btn-purge-master {
+        .btn-purge-master-3d {
             flex: 1;
-            min-width: 280px;
-            padding: 16px 24px;
-            border-radius: 14px;
+            min-width: 290px;
+            padding: 18px 28px;
+            border-radius: 16px;
             font-size: 16px;
-            font-weight: 800;
+            font-weight: 900;
+            font-family: var(--font-display);
+            letter-spacing: 0.8px;
             color: #ffffff;
-            background: linear-gradient(135deg, #10b981 0%, #059669 50%, #06b6d4 100%);
-            border: none;
+            background: linear-gradient(135deg, #10b981 0%, #059669 45%, #00f0ff 100%);
+            border: 1px solid rgba(255, 255, 255, 0.25);
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            box-shadow: 0 0 25px rgba(16, 185, 129, 0.4);
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            gap: 12px;
+            box-shadow: 0 0 35px rgba(16, 185, 129, 0.5), inset 0 0 15px rgba(255, 255, 255, 0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
         }
 
-        .btn-purge-master:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 0 35px rgba(16, 185, 129, 0.6);
-            filter: brightness(1.1);
+        .btn-purge-master-3d:hover:not(:disabled) {
+            transform: translateY(-3px) scale(1.01);
+            box-shadow: 0 0 50px rgba(0, 240, 255, 0.7), inset 0 0 25px rgba(255, 255, 255, 0.4);
+            filter: brightness(1.15);
         }
 
-        .btn-purge-master:disabled {
+        .btn-purge-master-3d:disabled {
             opacity: 0.4;
             cursor: not-allowed;
             transform: none;
@@ -441,65 +598,70 @@
             filter: grayscale(0.8);
         }
 
-        .btn-rescan {
-            padding: 16px 20px;
-            border-radius: 14px;
+        .btn-rescan-3d {
+            padding: 18px 24px;
+            border-radius: 16px;
             font-size: 14px;
-            font-weight: 700;
+            font-weight: 800;
+            font-family: var(--font-display);
+            letter-spacing: 0.5px;
             color: var(--text-main);
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--border-subtle);
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.25s;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
-        .btn-rescan:hover:not(:disabled) {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.2);
+        .btn-rescan-3d:hover:not(:disabled) {
+            background: rgba(0, 240, 255, 0.15);
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
         }
 
-        .btn-rescan:disabled {
+        .btn-rescan-3d:disabled {
             opacity: 0.4;
             cursor: not-allowed;
         }
 
-        .safety-checklist {
+        .safety-checklist-3d {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 10px;
-            border-top: 1px solid rgba(255, 255, 255, 0.07);
-            padding-top: 14px;
+            gap: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 16px;
         }
 
-        .check-item {
+        .check-item-3d {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             font-size: 12px;
             color: var(--text-secondary);
+            font-weight: 500;
         }
 
-        .check-item span.icon-check {
+        .check-item-3d span.icon-check {
             color: #34d399;
-            font-weight: 800;
+            font-weight: 900;
+            text-shadow: 0 0 10px rgba(52, 211, 153, 0.8);
         }
 
         /* Result & Download Card */
-        .card-result {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(6, 182, 212, 0.08));
-            border: 1px solid rgba(16, 185, 129, 0.4);
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 28px;
-            box-shadow: 0 0 30px rgba(16, 185, 129, 0.2);
-            animation: fadeIn 0.3s ease-out;
+        .card-result-3d {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.16), rgba(0, 240, 255, 0.12));
+            border: 1px solid rgba(0, 240, 255, 0.5);
+            border-radius: 20px;
+            padding: 28px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 45px rgba(0, 240, 255, 0.3), inset 0 0 25px rgba(16, 185, 129, 0.15);
+            animation: fadeIn 0.4s ease-out;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
+            from { opacity: 0; transform: translateY(12px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
@@ -507,128 +669,137 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 16px;
+            gap: 20px;
             flex-wrap: wrap;
-            margin-top: 16px;
+            margin-top: 18px;
         }
 
         .result-meta h4 {
-            font-size: 18px;
-            font-weight: 800;
+            font-size: 20px;
+            font-weight: 900;
             color: #ffffff;
             font-family: var(--font-mono);
+            letter-spacing: 0.3px;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
         }
 
         .result-meta p {
             font-size: 13px;
             color: var(--text-secondary);
-            margin-top: 4px;
+            margin-top: 5px;
         }
 
-        .btn-download-direct {
-            background: linear-gradient(135deg, #10b981, #06b6d4);
+        .btn-download-direct-3d {
+            background: linear-gradient(135deg, #10b981, #00f0ff);
             color: #ffffff;
             text-decoration: none;
-            padding: 14px 26px;
-            border-radius: 12px;
-            font-size: 15px;
-            font-weight: 800;
+            padding: 16px 30px;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 900;
+            font-family: var(--font-display);
+            letter-spacing: 0.6px;
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-            box-shadow: 0 0 25px rgba(16, 185, 129, 0.45);
-            transition: all 0.2s;
+            gap: 12px;
+            box-shadow: 0 0 35px rgba(0, 240, 255, 0.6);
+            transition: all 0.25s;
         }
 
-        .btn-download-direct:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 35px rgba(16, 185, 129, 0.65);
+        .btn-download-direct-3d:hover {
+            transform: scale(1.03) translateY(-2px);
+            box-shadow: 0 0 50px rgba(0, 240, 255, 0.85);
         }
 
-        /* Working Terminal Console */
-        .terminal-panel {
+        /* 3D Cyber Terminal Console */
+        .terminal-panel-3d {
             background: var(--bg-surface);
             border: 1px solid var(--border-subtle);
-            border-radius: 16px;
+            border-radius: 20px;
             overflow: hidden;
-            margin-bottom: 28px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            margin-bottom: 30px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(0, 240, 255, 0.04);
+            backdrop-filter: blur(20px);
         }
 
         .terminal-header {
-            background: rgba(18, 22, 34, 0.95);
-            padding: 12px 18px;
+            background: rgba(14, 20, 34, 0.95);
+            padding: 14px 22px;
             border-bottom: 1px solid var(--border-subtle);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 12px;
+            gap: 14px;
             flex-wrap: wrap;
         }
 
         .terminal-window-btns {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
         }
 
         .win-dot {
-            width: 11px;
-            height: 11px;
+            width: 12px;
+            height: 12px;
             border-radius: 50%;
+            box-shadow: 0 0 8px currentColor;
         }
 
-        .win-dot.red { background: #ef4444; }
-        .win-dot.yellow { background: #f59e0b; }
-        .win-dot.green { background: #10b981; }
+        .win-dot.red { background: #ef4444; color: #ef4444; }
+        .win-dot.yellow { background: #f59e0b; color: #f59e0b; }
+        .win-dot.green { background: #10b981; color: #10b981; }
 
         .terminal-title {
             font-size: 12px;
-            font-weight: 700;
-            color: var(--text-secondary);
+            font-weight: 800;
+            color: var(--neon-cyan);
             font-family: var(--font-mono);
-            letter-spacing: 0.5px;
+            letter-spacing: 0.8px;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
         }
 
         .terminal-controls {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
         .status-badge {
             font-size: 11px;
-            font-weight: 700;
-            padding: 3px 8px;
-            border-radius: 6px;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 8px;
             font-family: var(--font-mono);
+            letter-spacing: 0.5px;
         }
 
         .status-badge.idle { background: rgba(148, 163, 184, 0.15); color: #94a3b8; }
-        .status-badge.scanning { background: rgba(6, 182, 212, 0.2); color: #22d3ee; }
-        .status-badge.purging { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
-        .status-badge.completed { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+        .status-badge.scanning { background: rgba(0, 240, 255, 0.2); color: #00f0ff; box-shadow: 0 0 15px rgba(0, 240, 255, 0.3); }
+        .status-badge.purging { background: rgba(245, 158, 11, 0.2); color: #fbbf24; box-shadow: 0 0 15px rgba(245, 158, 11, 0.3); }
+        .status-badge.completed { background: rgba(16, 185, 129, 0.2); color: #34d399; box-shadow: 0 0 15px rgba(16, 185, 129, 0.3); }
         .status-badge.err { background: rgba(244, 63, 94, 0.2); color: #f43f5e; }
 
         .timer-badge {
             font-size: 11px;
-            font-weight: 600;
+            font-weight: 700;
             color: var(--text-secondary);
             font-family: var(--font-mono);
             background: rgba(255, 255, 255, 0.05);
-            padding: 3px 8px;
-            border-radius: 6px;
+            padding: 4px 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
         }
 
         .btn-console-tool {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--border-subtle);
             color: var(--text-secondary);
-            padding: 3px 10px;
-            border-radius: 6px;
+            padding: 4px 12px;
+            border-radius: 8px;
             font-size: 11px;
             font-family: var(--font-mono);
             cursor: pointer;
@@ -636,24 +807,25 @@
         }
 
         .btn-console-tool:hover {
-            color: var(--text-main);
-            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border-color: var(--neon-cyan);
+            background: rgba(0, 240, 255, 0.1);
         }
 
         .terminal-log-box {
-            padding: 14px 18px;
+            padding: 16px 22px;
             font-family: var(--font-mono);
             font-size: 12px;
-            line-height: 1.6;
-            max-height: 240px;
+            line-height: 1.65;
+            max-height: 250px;
             overflow-y: auto;
-            background: #090b10;
+            background: rgba(6, 9, 16, 0.95);
         }
 
         .log-row {
             display: flex;
-            gap: 10px;
-            margin-bottom: 4px;
+            gap: 12px;
+            margin-bottom: 5px;
             word-break: break-all;
         }
 
@@ -663,69 +835,77 @@
         }
 
         .log-tag {
-            font-weight: 700;
+            font-weight: 800;
             flex-shrink: 0;
-            min-width: 55px;
+            min-width: 58px;
             text-align: center;
-            border-radius: 4px;
-            padding: 0 4px;
+            border-radius: 5px;
+            padding: 0 6px;
             font-size: 10px;
-            height: 18px;
-            line-height: 18px;
+            height: 19px;
+            line-height: 19px;
+            letter-spacing: 0.4px;
         }
 
-        .log-tag.info { background: rgba(6, 182, 212, 0.15); color: #38bdf8; }
-        .log-tag.work { background: rgba(99, 102, 241, 0.15); color: #a5b4fc; }
-        .log-tag.warn { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
-        .log-tag.pure { background: rgba(16, 185, 129, 0.15); color: #34d399; }
-        .log-tag.err { background: rgba(244, 63, 94, 0.2); color: #f87171; }
+        .log-tag.info { background: rgba(0, 240, 255, 0.15); color: #38bdf8; border: 1px solid rgba(0, 240, 255, 0.3); }
+        .log-tag.work { background: rgba(99, 102, 241, 0.15); color: #a5b4fc; border: 1px solid rgba(99, 102, 241, 0.3); }
+        .log-tag.warn { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+        .log-tag.pure { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .log-tag.err { background: rgba(244, 63, 94, 0.2); color: #f87171; border: 1px solid rgba(244, 63, 94, 0.3); }
 
         .log-msg {
-            color: #e2e8f0;
+            color: #f1f5f9;
         }
 
         /* Detailed Leak Detections Table ("log hiện mấy chỗ leak") */
-        .detections-panel {
+        .detections-panel-3d {
             background: var(--bg-surface);
             border: 1px solid var(--border-subtle);
-            border-radius: 16px;
+            border-radius: 20px;
             overflow: hidden;
-            margin-bottom: 28px;
+            margin-bottom: 30px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(20px);
         }
 
         .detections-header {
-            padding: 16px 20px;
+            padding: 18px 24px;
             border-bottom: 1px solid var(--border-subtle);
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 16px;
             flex-wrap: wrap;
+            background: rgba(12, 17, 30, 0.9);
         }
 
         .detections-header h3 {
-            font-size: 16px;
+            font-size: 17px;
             font-weight: 800;
+            font-family: var(--font-display);
             color: #ffffff;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            letter-spacing: 0.5px;
         }
 
-        .table-search-input {
+        .table-search-input-3d {
             background: rgba(255, 255, 255, 0.04);
             border: 1px solid var(--border-subtle);
             color: var(--text-main);
-            padding: 6px 12px;
-            border-radius: 8px;
+            padding: 8px 14px;
+            border-radius: 10px;
             font-size: 12px;
-            min-width: 240px;
+            min-width: 260px;
             outline: none;
             font-family: var(--font-mono);
+            transition: all 0.2s;
         }
 
-        .table-search-input:focus {
-            border-color: var(--primary);
+        .table-search-input-3d:focus {
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
         }
 
         .table-wrap {
@@ -741,13 +921,14 @@
         }
 
         .clean-table th {
-            background: rgba(18, 22, 34, 0.95);
-            padding: 12px 16px;
+            background: rgba(14, 20, 34, 0.98);
+            padding: 14px 18px;
             font-size: 11px;
-            font-weight: 700;
-            color: var(--text-muted);
+            font-weight: 800;
+            color: var(--neon-cyan);
             text-transform: uppercase;
-            letter-spacing: 0.6px;
+            letter-spacing: 0.8px;
+            font-family: var(--font-display);
             border-bottom: 1px solid var(--border-subtle);
             position: sticky;
             top: 0;
@@ -755,14 +936,14 @@
         }
 
         .clean-table td {
-            padding: 12px 16px;
+            padding: 13px 18px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             color: var(--text-main);
             vertical-align: middle;
         }
 
         .clean-table tr:hover td {
-            background: rgba(255, 255, 255, 0.02);
+            background: rgba(0, 240, 255, 0.03);
         }
 
         .path-code {
@@ -775,28 +956,29 @@
         .snippet-code {
             font-family: var(--font-mono);
             font-size: 12px;
-            color: #f87171;
-            background: rgba(244, 63, 94, 0.1);
-            padding: 2px 6px;
-            border-radius: 4px;
+            color: #fb7185;
+            background: rgba(244, 63, 94, 0.12);
+            padding: 3px 8px;
+            border-radius: 6px;
             word-break: break-all;
+            border: 1px solid rgba(244, 63, 94, 0.25);
         }
 
         .action-tag {
             font-size: 11px;
-            font-weight: 600;
+            font-weight: 700;
             color: #34d399;
-            background: rgba(16, 185, 129, 0.1);
-            padding: 3px 8px;
-            border-radius: 6px;
-            border: 1px solid rgba(16, 185, 129, 0.25);
+            background: rgba(16, 185, 129, 0.12);
+            padding: 4px 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(16, 185, 129, 0.3);
             display: inline-block;
             white-space: nowrap;
         }
 
         .empty-row {
             text-align: center;
-            padding: 36px 16px;
+            padding: 40px 20px;
             color: var(--text-muted);
             font-size: 13px;
         }
@@ -809,25 +991,25 @@
             z-index: 9999;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
             pointer-events: none;
         }
 
         .toast {
-            background: rgba(18, 22, 34, 0.95);
-            backdrop-filter: blur(12px);
+            background: rgba(14, 20, 36, 0.95);
+            backdrop-filter: blur(16px);
             border: 1px solid var(--border-subtle);
-            border-left: 4px solid var(--primary);
+            border-left: 4px solid var(--neon-cyan);
             color: #ffffff;
-            padding: 12px 18px;
-            border-radius: 8px;
+            padding: 14px 20px;
+            border-radius: 12px;
             font-size: 13px;
-            font-weight: 600;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            font-weight: 700;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(0, 240, 255, 0.2);
             display: flex;
             align-items: center;
-            gap: 10px;
-            transition: all 0.3s ease;
+            gap: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             pointer-events: auto;
         }
 
@@ -836,13 +1018,19 @@
 </head>
 <body>
 
+    <!-- 3D WebGL Background Canvas -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Scanline & Vignette Overlay -->
+    <div class="cyber-overlay"></div>
+
     <!-- Header Navigation -->
     <header class="nav-header">
         <div class="nav-inner">
             <div class="brand-group">
                 <div class="brand-avatar">🛡️</div>
                 <div class="brand-text">
-                    <h1>NGUYENDZVN SUITE</h1>
+                    <h1>NGUYENDZVN SUITE 3D</h1>
                     <p>Minecraft Plugin Leak & Watermark Purger • Zero Corrupt</p>
                 </div>
             </div>
@@ -850,14 +1038,15 @@
             <div class="nav-tags">
                 <div class="tag-pill live">
                     <span class="dot-pulse"></span>
-                    <span>100% CLIENT-SIDE RAM (NO CLOUD)</span>
+                    <span>100% CLIENT-SIDE RAM</span>
                 </div>
                 <div class="tag-pill safe">
-                    <span>JVMS §4.4.7 MUTF-8 SAFE</span>
+                    <span>JVMS §4.4.7 MUTF-8</span>
                 </div>
-                <div class="tag-pill">
-                    <span>BLAZING FAST ~1-2S</span>
-                </div>
+                <button class="btn-sfx-toggle" id="btnSfxToggle" onclick="toggleAudioSFX()">
+                    <span id="sfxIcon">🔊</span>
+                    <span id="sfxText">SFX BẬT</span>
+                </button>
                 <a href="https://github.com/bb99kra/plugin-watermark-cleaner" target="_blank" class="github-link">
                     ⭐ GitHub
                 </a>
@@ -867,11 +1056,11 @@
 
     <div class="workspace">
 
-        <!-- Hero Notice Banner -->
-        <div class="hero-banner">
+        <!-- 3D Cyber HUD Hero Banner -->
+        <div class="cyber-hero-banner">
             <div class="hero-banner-text">
-                <h2>⚡ Chuyên Dụng Quét & Khử Sạch Dấu Vết Leak Plugin</h2>
-                <p>Khử triệt để toàn bộ comment nén, banner quảng cáo leaker, ID người mua và token định danh mà không làm hỏng cấu trúc bytecode chuẩn của plugin.</p>
+                <h2>⚡ HỆ THỐNG QUÉT & KHỬ SẠCH DẤU VẾT LEAK 3D</h2>
+                <p>Khử sạch triệt để mọi comment nén NulledVault, banner quảng cáo leaker, ID người mua và token định danh. 100% không làm hỏng cấu trúc bytecode chuẩn của plugin.</p>
             </div>
             <div class="hero-banner-badges">
                 <span class="leak-badge badge-nv">NulledVault</span>
@@ -882,16 +1071,21 @@
             </div>
         </div>
 
-        <!-- File Upload Dropzone -->
-        <div class="card-dropzone">
-            <div id="dropArea" class="drop-area" onclick="document.getElementById('fileInput').click()">
+        <!-- 3D Holographic Core & Dropzone -->
+        <div class="card-dropzone-3d">
+            <div id="dropArea" class="drop-area-3d" onclick="document.getElementById('fileInput').click()">
                 <input type="file" id="fileInput" accept=".jar" style="display: none;" onchange="handleFile(this.files[0])">
-                <div class="drop-icon">📦</div>
-                <div class="drop-title" id="dropTitle">Kéo thả file plugin .jar vào đây hoặc nhấp để tải lên</div>
-                <div class="drop-desc">Hỗ trợ tất cả plugin Minecraft Spigot, Paper, Folia, Purpur (Nexo, ItemsAdder, MythicMobs, CMI, AxSeries, GUIPlus...). Quét và xử lý 100% trong RAM trình duyệt, bảo mật tuyệt đối!</div>
+                
+                <!-- 3D Hologram Canvas -->
+                <div class="holo-canvas-wrapper">
+                    <canvas id="holo-core-canvas"></canvas>
+                </div>
+
+                <div class="drop-title-3d" id="dropTitle">KÉO THẢ FILE PLUGIN .JAR VÀO ĐÂY HOẶC NHẤP ĐỂ TẢI LÊN</div>
+                <div class="drop-desc-3d">Hỗ trợ tất cả plugin Minecraft Spigot, Paper, Folia, Purpur (Nexo, ItemsAdder, MythicMobs, CMI, AxSeries, GUIPlus...). Quét và xử lý 100% trong RAM trình duyệt, bảo mật tuyệt đối!</div>
             </div>
 
-            <div id="fileLoadedBar" class="file-loaded-bar hidden">
+            <div id="fileLoadedBar" class="file-loaded-bar-3d hidden">
                 <div class="file-info-group">
                     <h3 id="loadedFileName">Plugin.jar</h3>
                     <p id="loadedFileMeta">Dung lượng: 0 MB • 0 Classes đã phân tích</p>
@@ -900,32 +1094,36 @@
             </div>
         </div>
 
-        <!-- 4-Stat Metric Cards -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon icon-banner">📢</div>
-                <div class="stat-data">
+        <!-- 3D Tilt Metric Cards -->
+        <div class="stats-grid-3d">
+            <div class="stat-card-3d" data-tilt>
+                <div class="glare"></div>
+                <div class="stat-icon-3d icon-banner">📢</div>
+                <div class="stat-data-3d">
                     <h4 id="statBannersCount">0</h4>
                     <p>NulledVault & Banners</p>
                 </div>
             </div>
-            <div class="stat-card">
-                <div class="stat-icon icon-fingerprint">🏷️</div>
-                <div class="stat-data">
+            <div class="stat-card-3d" data-tilt>
+                <div class="glare"></div>
+                <div class="stat-icon-3d icon-fingerprint">🏷️</div>
+                <div class="stat-data-3d">
                     <h4 id="statFingerprintsCount">0</h4>
                     <p>Vân Tay & Buyer IDs</p>
                 </div>
             </div>
-            <div class="stat-card">
-                <div class="stat-icon icon-telemetry">🌐</div>
-                <div class="stat-data">
+            <div class="stat-card-3d" data-tilt>
+                <div class="glare"></div>
+                <div class="stat-icon-3d icon-telemetry">🌐</div>
+                <div class="stat-data-3d">
                     <h4 id="statTelemetryCount">0</h4>
                     <p>URLs Leak & Telemetry</p>
                 </div>
             </div>
-            <div class="stat-card">
-                <div class="stat-icon icon-junk">📁</div>
-                <div class="stat-data">
+            <div class="stat-card-3d" data-tilt>
+                <div class="glare"></div>
+                <div class="stat-icon-3d icon-junk">📁</div>
+                <div class="stat-data-3d">
                     <h4 id="statJunkFilesCount">0</h4>
                     <p>Tệp Rác & Chữ Ký Số</p>
                 </div>
@@ -933,37 +1131,37 @@
         </div>
 
         <!-- Main Action Control Bar -->
-        <div class="action-panel">
+        <div class="action-panel-3d">
             <div class="action-header">
                 <div class="action-title-group">
-                    <h3>🚀 Bộ Lệnh Khử Sạch Toàn Diện</h3>
+                    <h3>🚀 BỘ LỆNH KHỬ SẠCH TOÀN DIỆN</h3>
                     <p>Tập trung sức mạnh xử lý in-place trong bộ nhớ RAM, bảo toàn nguyên vẹn 100% bytecode và StackMapTable.</p>
                 </div>
             </div>
 
             <div class="action-button-group">
-                <button class="btn-purge-master" id="btnMasterPurge" onclick="runMasterPurge()" disabled>
+                <button class="btn-purge-master-3d" id="btnMasterPurge" onclick="runMasterPurge()" disabled>
                     <span>⚡</span> KHỬ SẠCH TOÀN BỘ VÂN TAY & DẤU VẾT LEAK
                 </button>
-                <button class="btn-rescan" id="btnRescan" onclick="reScanCurrentFile()" disabled>
+                <button class="btn-rescan-3d" id="btnRescan" onclick="reScanCurrentFile()" disabled>
                     <span>🔄</span> Quét Lại File
                 </button>
             </div>
 
-            <div class="safety-checklist">
-                <div class="check-item">
+            <div class="safety-checklist-3d">
+                <div class="check-item-3d">
                     <span class="icon-check">✓</span>
                     <span>Triệt tiêu Zip Comment (NulledVault, HoYeuEmBangMat...)</span>
                 </div>
-                <div class="check-item">
+                <div class="check-item-3d">
                     <span class="icon-check">✓</span>
                     <span>Thanh lọc MANIFEST.MF & plugin.yml</span>
                 </div>
-                <div class="check-item">
+                <div class="check-item-3d">
                     <span class="icon-check">✓</span>
                     <span>Zero-padding Constant Pool theo chuẩn JVMS §4.4.7</span>
                 </div>
-                <div class="check-item">
+                <div class="check-item-3d">
                     <span class="icon-check">✓</span>
                     <span>Xoá sạch chữ ký số (.SF, .RSA) & tệp tracker rác</span>
                 </div>
@@ -971,23 +1169,23 @@
         </div>
 
         <!-- Result & Download Card -->
-        <div class="card-result hidden" id="exportResultCard">
-            <h3 style="font-size: 18px; color: #34d399; margin-bottom: 6px;">🎉 Khử Sạch Hoàn Tất! Plugin Đã Sẵn Sàng Tải Về</h3>
-            <p id="exportResultDesc" style="font-size: 13px; color: var(--text-secondary);">Plugin đã được khử sạch toàn bộ dấu vết định danh, comment NulledVault, token Spigot và các URL leak. Cấu trúc bytecode được bảo toàn 100%.</p>
+        <div class="card-result-3d hidden" id="exportResultCard">
+            <h3 style="font-size: 20px; font-weight: 800; font-family: var(--font-display); color: #34d399; margin-bottom: 8px;">🎉 KHỬ SẠCH HOÀN TẤT! PLUGIN ĐÃ SẴN SÀNG TẢI VỀ</h3>
+            <p id="exportResultDesc" style="font-size: 13px; color: var(--text-secondary); line-height: 1.5;">Plugin đã được khử sạch toàn bộ dấu vết định danh, comment NulledVault, token Spigot và các URL leak. Cấu trúc bytecode được bảo toàn 100%.</p>
 
             <div class="result-hero">
                 <div class="result-meta">
                     <h4 id="exportFileName">Plugin-Clean.jar</h4>
                     <p id="exportFileStats">Dung lượng: 0 MB • 0 Classes đã vá • Thời gian: 0ms</p>
                 </div>
-                <a href="#" class="btn-download-direct" id="exportDownloadBtn" download>
+                <a href="#" class="btn-download-direct-3d" id="exportDownloadBtn" download>
                     <span>📥</span> Tải Về File .jar Sạch (.jar)
                 </a>
             </div>
         </div>
 
-        <!-- Live Terminal Console -->
-        <div class="terminal-panel" id="terminalPanel">
+        <!-- Live 3D Terminal Console -->
+        <div class="terminal-panel-3d" id="terminalPanel">
             <div class="terminal-header">
                 <div class="terminal-window-btns">
                     <div class="win-dot red"></div>
@@ -1010,19 +1208,19 @@
                 <div class="log-row">
                     <span class="log-time">[00:00:00]</span>
                     <span class="log-tag info">SYSTEM</span>
-                    <span class="log-msg">Hệ thống sẵn sàng. Vui lòng tải lên file plugin .jar để bắt đầu quét dấu vết leak.</span>
+                    <span class="log-msg">Hệ thống 3D sẵn sàng. Vui lòng tải lên file plugin .jar để bắt đầu quét dấu vết leak.</span>
                 </div>
             </div>
         </div>
 
         <!-- Detailed Leak Detections Table ("log hiện mấy chỗ leak") -->
-        <div class="detections-panel">
+        <div class="detections-panel-3d">
             <div class="detections-header">
                 <h3>
                     <span>🔍</span>
-                    <span>Chi Tiết Các Vị Trí Dấu Vết Leak Được Phát Hiện (<span id="detectionsTotalCount">0</span>)</span>
+                    <span>CHI TIẾT VỊ TRÍ DẤU VẾT LEAK PHÁT HIỆN (<span id="detectionsTotalCount">0</span>)</span>
                 </h3>
-                <input type="text" id="leakSearchInput" class="table-search-input" placeholder="Lọc vị trí (vd: NulledVault, class, MF)..." oninput="filterLeakTable()">
+                <input type="text" id="leakSearchInput" class="table-search-input-3d" placeholder="Lọc vị trí (vd: NulledVault, class, MF)..." oninput="filterLeakTable()">
             </div>
 
             <div class="table-wrap">
@@ -1050,12 +1248,361 @@
     <div id="toastContainer"></div>
 
     <script>
+        // ==========================================
+        // PROCEDURAL SCI-FI AUDIO SYNTHESIS (NO EXTERNAL AUDIO FILES)
+        // ==========================================
+        let audioCtx = null;
+        let sfxEnabled = true;
+
+        function initAudio() {
+            if (!audioCtx) {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (AudioContext) audioCtx = new AudioContext();
+            }
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function toggleAudioSFX() {
+            sfxEnabled = !sfxEnabled;
+            const icon = document.getElementById('sfxIcon');
+            const text = document.getElementById('sfxText');
+            if (sfxEnabled) {
+                icon.textContent = '🔊';
+                text.textContent = 'SFX BẬT';
+                playCyberBeep(880, 0.08);
+            } else {
+                icon.textContent = '🔇';
+                text.textContent = 'SFX TẮT';
+            }
+        }
+
+        function playCyberBeep(freq = 600, duration = 0.06, type = 'sine') {
+            if (!sfxEnabled) return;
+            try {
+                initAudio();
+                if (!audioCtx) return;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {}
+        }
+
+        function playScanSweep() {
+            if (!sfxEnabled) return;
+            try {
+                initAudio();
+                if (!audioCtx) return;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.35);
+                gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.35);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.35);
+            } catch (e) {}
+        }
+
+        function playSuccessChime() {
+            if (!sfxEnabled) return;
+            try {
+                initAudio();
+                if (!audioCtx) return;
+                const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+                notes.forEach((freq, idx) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, audioCtx.currentTime + idx * 0.08);
+                    gain.gain.setValueAtTime(0.1, audioCtx.currentTime + idx * 0.08);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + idx * 0.08 + 0.4);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(audioCtx.currentTime + idx * 0.08);
+                    osc.stop(audioCtx.currentTime + idx * 0.08 + 0.4);
+                });
+            } catch (e) {}
+        }
+
+        // ==========================================
+        // 3D WEBGL BACKGROUND SCENE (THREE.JS)
+        // ==========================================
+        let bgScene, bgCamera, bgRenderer, bgTerrain, bgParticles;
+        let mouseX = 0, mouseY = 0, targetX = 0, targetY = 0;
+
+        function init3dBackground() {
+            if (!window.THREE) return;
+            const canvas = document.getElementById('bg-canvas');
+            if (!canvas) return;
+
+            bgScene = new THREE.Scene();
+            bgScene.fog = new THREE.FogExp2(0x040508, 0.045);
+
+            bgCamera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+            bgCamera.position.set(0, 3.5, 11);
+
+            bgRenderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+            bgRenderer.setSize(window.innerWidth, window.innerHeight);
+            bgRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+
+            // Wireframe Cyber Terrain Grid
+            const gridGeo = new THREE.PlaneGeometry(36, 36, 32, 32);
+            const gridMat = new THREE.MeshBasicMaterial({
+                color: 0x00f0ff,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.18
+            });
+
+            bgTerrain = new THREE.Mesh(gridGeo, gridMat);
+            bgTerrain.rotation.x = -Math.PI / 2.15;
+            bgTerrain.position.y = -1.8;
+            bgScene.add(bgTerrain);
+
+            // Floating Cyber Data Particles
+            const pCount = 500;
+            const pGeo = new THREE.BufferGeometry();
+            const pPositions = new Float32Array(pCount * 3);
+            for (let i = 0; i < pCount * 3; i += 3) {
+                pPositions[i] = (Math.random() - 0.5) * 35;
+                pPositions[i + 1] = Math.random() * 14 - 3;
+                pPositions[i + 2] = (Math.random() - 0.5) * 35;
+            }
+            pGeo.setAttribute('position', new THREE.BufferAttribute(pPositions, 3));
+
+            const pMat = new THREE.PointsMaterial({
+                color: 0x10b981,
+                size: 0.07,
+                transparent: true,
+                opacity: 0.65
+            });
+
+            bgParticles = new THREE.Points(pGeo, pMat);
+            bgScene.add(bgParticles);
+
+            window.addEventListener('mousemove', e => {
+                mouseX = (e.clientX - window.innerWidth / 2) / (window.innerWidth / 2);
+                mouseY = (e.clientY - window.innerHeight / 2) / (window.innerHeight / 2);
+            });
+
+            window.addEventListener('resize', () => {
+                bgCamera.aspect = window.innerWidth / window.innerHeight;
+                bgCamera.updateProjectionMatrix();
+                bgRenderer.setSize(window.innerWidth, window.innerHeight);
+            });
+
+            const clock = new THREE.Clock();
+            function animateBg() {
+                const elapsed = clock.getElapsedTime();
+
+                targetX += (mouseX - targetX) * 0.05;
+                targetY += (mouseY - targetY) * 0.05;
+
+                bgCamera.position.x = targetX * 1.5;
+                bgCamera.position.y = 3.5 + (-targetY * 1.2);
+                bgCamera.lookAt(0, 0, 0);
+
+                // Wave movement in grid
+                const pos = gridGeo.attributes.position;
+                for (let i = 0; i < pos.count; i++) {
+                    const u = pos.getX(i);
+                    const v = pos.getY(i);
+                    const z = Math.sin(u * 0.4 + elapsed * 1.2) * Math.cos(v * 0.4 + elapsed * 1.2) * 0.45;
+                    pos.setZ(i, z);
+                }
+                pos.needsUpdate = true;
+
+                bgParticles.rotation.y = elapsed * 0.03;
+
+                bgRenderer.render(bgScene, bgCamera);
+                requestAnimationFrame(animateBg);
+            }
+            animateBg();
+        }
+
+        // ==========================================
+        // 3D HOLOGRAPHIC CORE SCANNER (THREE.JS)
+        // ==========================================
+        let holoScene, holoCamera, holoRenderer, holoJarMesh, holoRings = [], holoLaser, holoParticles;
+        let holoState = 'idle'; // idle | hover | scanning | purging | completed
+
+        function initHologramCore() {
+            if (!window.THREE) return;
+            const canvas = document.getElementById('holo-core-canvas');
+            if (!canvas) return;
+
+            holoScene = new THREE.Scene();
+            holoCamera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+            holoCamera.position.set(0, 0, 5.2);
+
+            holoRenderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+            holoRenderer.setSize(140, 140);
+            holoRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+            // Central JAR Core: Wireframe Box
+            const jarGeo = new THREE.BoxGeometry(1.5, 1.8, 1.5);
+            const jarMat = new THREE.MeshBasicMaterial({
+                color: 0x00f0ff,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.8
+            });
+            holoJarMesh = new THREE.Mesh(jarGeo, jarMat);
+            holoScene.add(holoJarMesh);
+
+            // Inner Glowing Cube
+            const innerGeo = new THREE.BoxGeometry(1.0, 1.3, 1.0);
+            const innerMat = new THREE.MeshBasicMaterial({
+                color: 0x10b981,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.4
+            });
+            const innerCube = new THREE.Mesh(innerGeo, innerMat);
+            holoJarMesh.add(innerCube);
+
+            // Orbital Concentric Rings
+            const ringRadii = [1.6, 1.9, 2.2];
+            const ringColors = [0x00f0ff, 0x10b981, 0xa855f7];
+            ringRadii.forEach((r, idx) => {
+                const ringGeo = new THREE.RingGeometry(r, r + 0.04, 32);
+                const ringMat = new THREE.MeshBasicMaterial({
+                    color: ringColors[idx],
+                    side: THREE.DoubleSide,
+                    transparent: true,
+                    opacity: 0.6
+                });
+                const ringMesh = new THREE.Mesh(ringGeo, ringMat);
+                ringMesh.rotation.x = Math.PI / 3 * (idx + 1);
+                ringMesh.rotation.y = Math.PI / 4 * (idx + 1);
+                holoRings.push(ringMesh);
+                holoScene.add(ringMesh);
+            });
+
+            // Scanning Laser Line
+            const laserGeo = new THREE.PlaneGeometry(2.4, 0.04);
+            const laserMat = new THREE.MeshBasicMaterial({
+                color: 0xff007f,
+                transparent: true,
+                opacity: 0.85,
+                side: THREE.DoubleSide
+            });
+            holoLaser = new THREE.Mesh(laserGeo, laserMat);
+            holoLaser.position.y = 0;
+            holoScene.add(holoLaser);
+
+            // Orbiting Sparks
+            const sparkCount = 60;
+            const sparkGeo = new THREE.BufferGeometry();
+            const sparkPos = new Float32Array(sparkCount * 3);
+            for (let i = 0; i < sparkCount * 3; i += 3) {
+                const theta = Math.random() * Math.PI * 2;
+                const rad = 1.3 + Math.random() * 0.9;
+                sparkPos[i] = Math.cos(theta) * rad;
+                sparkPos[i + 1] = (Math.random() - 0.5) * 2;
+                sparkPos[i + 2] = Math.sin(theta) * rad;
+            }
+            sparkGeo.setAttribute('position', new THREE.BufferAttribute(sparkPos, 3));
+            const sparkMat = new THREE.PointsMaterial({
+                color: 0x00f0ff,
+                size: 0.08,
+                transparent: true,
+                opacity: 0.8
+            });
+            holoParticles = new THREE.Points(sparkGeo, sparkMat);
+            holoScene.add(holoParticles);
+
+            const clock = new THREE.Clock();
+            function animateHolo() {
+                const t = clock.getElapsedTime();
+
+                // Rotate Jar Core
+                let speed = 0.8;
+                if (holoState === 'scanning' || holoState === 'purging') speed = 3.5;
+                else if (holoState === 'hover') speed = 1.6;
+
+                holoJarMesh.rotation.y += 0.015 * speed;
+                holoJarMesh.rotation.x = Math.sin(t * 1.5) * 0.15;
+
+                // Rotate Rings
+                holoRings.forEach((r, idx) => {
+                    r.rotation.z += 0.01 * (idx + 1) * speed;
+                    r.rotation.x += 0.008 * (idx + 1) * speed;
+                });
+
+                // Laser Scanline Movement
+                holoLaser.position.y = Math.sin(t * (holoState === 'scanning' ? 7 : 2.5)) * 1.1;
+
+                // Color shifts based on state
+                if (holoState === 'purging') {
+                    holoJarMesh.material.color.setHex(0xf59e0b);
+                    holoLaser.material.color.setHex(0xff007f);
+                } else if (holoState === 'completed') {
+                    holoJarMesh.material.color.setHex(0x10b981);
+                    holoLaser.material.color.setHex(0x00f0ff);
+                } else {
+                    holoJarMesh.material.color.setHex(0x00f0ff);
+                    holoLaser.material.color.setHex(0x10b981);
+                }
+
+                holoParticles.rotation.y = -t * 0.5 * speed;
+
+                holoRenderer.render(holoScene, holoCamera);
+                requestAnimationFrame(animateHolo);
+            }
+            animateHolo();
+        }
+
+        // ==========================================
+        // 3D TILT EFFECT INITIALIZER (VANILLA JS)
+        // ==========================================
+        function init3dTiltCards() {
+            const cards = document.querySelectorAll('[data-tilt]');
+            cards.forEach(card => {
+                card.addEventListener('mousemove', e => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const rotateX = ((y - centerY) / centerY) * -10;
+                    const rotateY = ((x - centerX) / centerX) * 10;
+
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-4px) scale(1.02)`;
+                    card.style.setProperty('--mouse-x', `${(x / rect.width * 100).toFixed(1)}%`);
+                    card.style.setProperty('--mouse-y', `${(y / rect.height * 100).toFixed(1)}%`);
+                });
+
+                card.addEventListener('mouseenter', () => {
+                    playCyberBeep(920, 0.03);
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0) scale(1)';
+                });
+            });
+        }
+
+        // ==========================================
+        // CORE SCAN & LEAK CLEANER STATE
+        // ==========================================
         let currentLoadedZip = null;
         let currentFileObj = null;
         let executionStartTime = 0;
         let timerInterval = null;
 
-        // Dữ liệu kiểm toán và danh sách vết rò rỉ chi tiết
         let auditData = {
             classesCount: 0,
             zipComment: null,
@@ -1069,9 +1616,8 @@
             watermarkedClasses: new Set()
         };
 
-        let detailedLeakList = []; // Danh sách hiển thị trực quan lên bảng log vết leak
+        let detailedLeakList = [];
 
-        // Danh mục từ khóa crack/leaker phổ biến trong cộng đồng Minecraft
         const CRACK_KEYWORDS = [
             'nulledvault',
             'blackspigot',
@@ -1087,7 +1633,6 @@
             'maskirovka'
         ];
 
-        // Toast thông báo
         function showToast(msg, type = 'info') {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
@@ -1159,6 +1704,7 @@
         }
 
         function copyConsoleLog() {
+            playCyberBeep(750, 0.05);
             const text = document.getElementById('executionLogBox').innerText;
             navigator.clipboard.writeText(text).then(() => {
                 showToast('Đã sao chép toàn bộ log xử lý!', 'success');
@@ -1166,19 +1712,28 @@
         }
 
         function clearConsoleLog() {
+            playCyberBeep(500, 0.05);
             document.getElementById('executionLogBox').innerHTML = '';
             setStatus('idle', 'IDLE');
             document.getElementById('consoleTimerBadge').textContent = '⏱ 0.0s';
             showToast('Đã dọn sạch log', 'info');
         }
 
-        // Setup Drag & Drop
+        // Setup Drag & Drop Handlers
         const dropArea = document.getElementById('dropArea');
         ['dragenter', 'dragover'].forEach(n => {
-            dropArea.addEventListener(n, e => { e.preventDefault(); dropArea.classList.add('dragover'); });
+            dropArea.addEventListener(n, e => {
+                e.preventDefault();
+                dropArea.classList.add('dragover');
+                holoState = 'hover';
+            });
         });
         ['dragleave', 'drop'].forEach(n => {
-            dropArea.addEventListener(n, e => { e.preventDefault(); dropArea.classList.remove('dragover'); });
+            dropArea.addEventListener(n, e => {
+                e.preventDefault();
+                dropArea.classList.remove('dragover');
+                holoState = currentLoadedZip ? 'completed' : 'idle';
+            });
         });
         dropArea.addEventListener('drop', e => {
             const f = e.dataTransfer.files[0];
@@ -1233,10 +1788,7 @@
             return new Uint8Array(out);
         }
 
-        // ==========================================
-        // IN-PLACE ZERO-PADDING BYTECODE PATCHER
-        // TUYỆT ĐỐI BẢO TOÀN CHIỀU DÀI BYTE (ZERO-CORRUPT)
-        // ==========================================
+        // In-place Zero-padding Bytecode Patcher
         function modifyClassConstantPool(arrayBuffer, replacements) {
             const rawBytes = new Uint8Array(arrayBuffer.slice(0));
             const view = new DataView(rawBytes.buffer);
@@ -1265,7 +1817,6 @@
                                 const targetBytes = encodeMutf8(target);
                                 let repBytes = encodeMutf8(rep);
 
-                                // Chuẩn hóa chiều dài byte: Giữ đúng độ dài mảng byte ban đầu của target
                                 if (repBytes.length < targetBytes.length) {
                                     const padChar = (target.startsWith('http') || target.includes('.')) ? '/' : '0';
                                     const paddedStr = rep + padChar.repeat(target.length - rep.length);
@@ -1282,7 +1833,6 @@
                                     repBytes = repBytes.slice(0, targetBytes.length);
                                 }
 
-                                // Thay thế chính xác trong chuỗi byte MUTF-8
                                 for (let b = 0; b <= len - targetBytes.length; b++) {
                                     let match = true;
                                     for (let tb = 0; tb < targetBytes.length; tb++) {
@@ -1331,6 +1881,9 @@
 
             appendLog(`📦 Đang tiếp nhận file: ${file.name} (${(file.size / (1024*1024)).toFixed(2)} MB)...`, 'info');
             showToast(`Đang quét dấu vết leak: ${file.name}...`, 'info');
+            playScanSweep();
+
+            holoState = 'scanning';
 
             try {
                 setStatus('scanning', 'QUÉT FILE');
@@ -1344,32 +1897,37 @@
                 stopTimer();
                 const scanTime = ((Date.now() - executionStartTime) / 1000).toFixed(1);
                 setStatus('idle', 'SẴN SÀNG');
+                holoState = 'idle';
 
                 document.getElementById('loadedFileMeta').textContent = `Dung lượng: ${(file.size / (1024*1024)).toFixed(2)} MB • ${auditData.classesCount} Classes • Quét xong trong ${scanTime}s`;
 
-                // Bật các nút hành động
                 document.getElementById('btnMasterPurge').removeAttribute('disabled');
                 document.getElementById('btnRescan').removeAttribute('disabled');
 
                 appendLog(`✅ Hoàn tất kiểm toán: Phát hiện ${detailedLeakList.length} dấu vết leak/watermark (${scanTime}s).`, 'pure');
                 showToast(`Quét xong! Phát hiện ${detailedLeakList.length} dấu vết cần khử.`, 'success');
+                playCyberBeep(980, 0.1);
             } catch (e) {
                 stopTimer();
                 setStatus('err', 'LỖI');
+                holoState = 'idle';
                 appendLog(`❌ Lỗi phân tích file: ${e.message}`, 'err');
                 showToast(`Lỗi: ${e.message}`, 'error');
             }
         }
 
         function reScanCurrentFile() {
+            playCyberBeep(650, 0.05);
             if (currentFileObj) {
                 handleFile(currentFileObj);
             }
         }
 
         function resetFile() {
+            playCyberBeep(550, 0.05);
             currentLoadedZip = null;
             currentFileObj = null;
+            holoState = 'idle';
             document.getElementById('fileInput').value = '';
             document.getElementById('fileLoadedBar').classList.add('hidden');
             document.getElementById('dropArea').classList.remove('hidden');
@@ -1378,7 +1936,6 @@
             document.getElementById('btnRescan').setAttribute('disabled', 'true');
             document.getElementById('exportResultCard').classList.add('hidden');
 
-            // Reset stats & table
             document.getElementById('statBannersCount').textContent = '0';
             document.getElementById('statFingerprintsCount').textContent = '0';
             document.getElementById('statTelemetryCount').textContent = '0';
@@ -1395,7 +1952,6 @@
             appendLog('🔄 Đã đặt lại phiên làm việc. Sẵn sàng nhận file mới.', 'info');
         }
 
-        // Quét chi tiết dấu vết leak
         async function auditZip(file, zip) {
             auditData = {
                 classesCount: 0,
@@ -1412,7 +1968,7 @@
 
             detailedLeakList = [];
 
-            // 1. Quét Zip Archive Comment (NulledVault, HoYeuEmBangMat, BlackSpigot...)
+            // 1. Quét Zip Comment
             if (auditData.zipComment) {
                 let leakSource = 'Archive Comment';
                 const lowComment = auditData.zipComment.toLowerCase();
@@ -1428,7 +1984,6 @@
                     action: 'Xoá sạch trường comment nén'
                 });
 
-                // Bóc tách User ID nếu có trong comment
                 const userMatch = auditData.zipComment.match(/user:\s*([^\r\n]+)/i);
                 if (userMatch) {
                     const rawUser = userMatch[1].trim();
@@ -1498,7 +2053,7 @@
                 }
             }
 
-            // 5. Duyệt toàn bộ cấu trúc file trong JAR
+            // 5. Duyệt toàn bộ cấu trúc file
             let scanCounter = 0;
             for (const [path, entry] of Object.entries(zip.files)) {
                 scanCounter++;
@@ -1509,7 +2064,6 @@
                 const low = path.toLowerCase();
                 const base = low.split('/').pop();
 
-                // Kiểm tra tệp rác / chữ ký số
                 if (base.endsWith('.sf') || base.endsWith('.rsa') || base.endsWith('.dsa') || base === '.spigot' || base === '.builtbybit' || base === '.ds_store' || path.startsWith('__MACOSX/')) {
                     auditData.suspiciousFiles.push(path);
                     detailedLeakList.push({
@@ -1520,7 +2074,6 @@
                     });
                 }
 
-                // GLeaks / Nexo Trap
                 if (path === 'com/nexomc/nexo/NexoPlugin.class') {
                     auditData.drmSignatures.push({ class: path, desc: 'GLeaks / Nexo AES Trap' });
                     auditData.watermarkedClasses.add(path);
@@ -1532,7 +2085,6 @@
                     });
                 }
 
-                // Kiểm tra Bytecode classes
                 if (path.endsWith('.class')) {
                     auditData.classesCount++;
                     const arrayBuf = await entry.async('arraybuffer');
@@ -1555,7 +2107,6 @@
                                     const s = decodeMutf8(rawBytes);
                                     const sLower = s.toLowerCase();
 
-                                    // Spigot / Polymart runtime tokens
                                     if (s.includes('%%__USER__%%') || s.includes('%%__RESOURCE__%%') || s.includes('%%__NONCE__%%') || s.includes('%%__USERNAME__%%') || s.includes('%%__POLYMART__%%')) {
                                         auditData.watermarkedClasses.add(path);
                                         detailedLeakList.push({
@@ -1566,7 +2117,6 @@
                                         });
                                     }
 
-                                    // Banners quảng cáo crack/leak
                                     if (CRACK_KEYWORDS.some(kw => sLower.includes(kw)) && s.length < 250) {
                                         auditData.crackBanners.push({ raw: s, isBase64: false });
                                         auditData.watermarkedClasses.add(path);
@@ -1578,7 +2128,6 @@
                                         });
                                     }
 
-                                    // Base64 crack banner
                                     if (s.length >= 20 && s.length <= 256 && /^[A-Za-z0-9+/=]+$/.test(s) && !s.endsWith('.class')) {
                                         try {
                                             const bDec = atob(s);
@@ -1595,7 +2144,6 @@
                                         } catch (e) {}
                                     }
 
-                                    // Token NV
                                     if (s.length === 44 && s.endsWith('MFiBc3gyeJo7/AqXBycJU=')) {
                                         auditData.nvTokens.add(s);
                                         auditData.watermarkedClasses.add(path);
@@ -1607,7 +2155,6 @@
                                         });
                                     }
 
-                                    // URLs gọi telemetry / license check ra bên ngoài
                                     if (s.startsWith('http://') || s.startsWith('https://')) {
                                         if (['api.spigotmc.org', 'pstats.', 'spigotmc.org/legacy', 'license', 'songoda.com/api', 'polymart.org/api', 'nulledvault.com', 'gleaks.pro'].some(dom => sLower.includes(dom))) {
                                             auditData.phoneHomeUrls.push(s);
@@ -1623,7 +2170,6 @@
                                         }
                                     }
 
-                                    // Khớp chính xác Buyer ID đã phát hiện
                                     if (auditData.detectedIds.size > 0 && auditData.detectedIds.has(s)) {
                                         auditData.watermarkedClasses.add(path);
                                         detailedLeakList.push({
@@ -1647,7 +2193,6 @@
                 }
             }
 
-            // Cập nhật giao diện thống kê
             updateStatsUI();
             renderLeakTable(detailedLeakList);
         }
@@ -1658,11 +2203,29 @@
 
             let fpCount = auditData.detectedIds.size + auditData.nvTokens.size;
 
-            document.getElementById('statBannersCount').textContent = bannerCount;
-            document.getElementById('statFingerprintsCount').textContent = fpCount;
-            document.getElementById('statTelemetryCount').textContent = auditData.phoneHomeUrls.length;
-            document.getElementById('statJunkFilesCount').textContent = auditData.suspiciousFiles.length;
-            document.getElementById('detectionsTotalCount').textContent = detailedLeakList.length;
+            animateCount('statBannersCount', bannerCount);
+            animateCount('statFingerprintsCount', fpCount);
+            animateCount('statTelemetryCount', auditData.phoneHomeUrls.length);
+            animateCount('statJunkFilesCount', auditData.suspiciousFiles.length);
+            animateCount('detectionsTotalCount', detailedLeakList.length);
+        }
+
+        function animateCount(id, target) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const current = parseInt(el.textContent, 10) || 0;
+            if (current === target) return;
+            let start = current;
+            const step = Math.ceil((target - start) / 12) || (target > start ? 1 : -1);
+            const timer = setInterval(() => {
+                start += step;
+                if ((step > 0 && start >= target) || (step < 0 && start <= target)) {
+                    el.textContent = target;
+                    clearInterval(timer);
+                } else {
+                    el.textContent = start;
+                }
+            }, 25);
         }
 
         function renderLeakTable(list) {
@@ -1716,6 +2279,9 @@
                 return;
             }
 
+            playCyberBeep(700, 0.1, 'sawtooth');
+            holoState = 'purging';
+
             document.getElementById('terminalPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
 
             setStatus('purging', 'ĐANG KHỬ');
@@ -1723,15 +2289,12 @@
 
             appendLog(`🚀 Bắt đầu giao thức khử sạch toàn bộ dấu vết leak cho ${currentFileObj.name}...`, 'work');
 
-            // Xây dựng từ điển thay thế hằng số bytecode
             const replacements = {};
 
-            // Khử banners
             auditData.crackBanners.forEach(b => {
                 replacements[b.raw] = b.isBase64 ? 'IA==' : ' '.repeat(b.raw.length);
             });
 
-            // Chuyển hướng các domain leak về dummy loopback nội bộ
             replacements['https://nulledvault.com'] = 'http://127.0.0.1:9999';
             replacements['http://nulledvault.com'] = 'http://127.0.0.1:9999';
             replacements['nulledvault.com'] = '127.0.0.1';
@@ -1742,7 +2305,6 @@
             replacements['gleaks.pro'] = '127.0.0.1';
             replacements['https://gleaks.pro'] = 'http://127.0.0.1:9999';
 
-            // Khử vân tay & Buyer IDs đã xác minh
             auditData.detectedIds.forEach(id => {
                 replacements[id] = '0'.repeat(id.length);
             });
@@ -1750,7 +2312,6 @@
                 replacements[t] = '0'.repeat(t.length);
             });
 
-            // Khử các token runtime Spigot / Polymart
             replacements['%%__USER__%%'] = '000000000000';
             replacements['%%__RESOURCE__%%'] = '0000000000000000';
             replacements['%%__NONCE__%%'] = '0000000000000';
@@ -1758,7 +2319,6 @@
             replacements['%%__POLYMART__%%'] = '0000000000000000';
             replacements['%%__NV_USER_ID__%%'] = '0000000000000000';
 
-            // Chuyển hướng telemetry phone-home
             replacements['https://api.spigotmc.org/simple/0.2/index.php'] = 'http://127.0.0.1:9999/dummy';
             replacements['https://api.spigotmc.org/legacy/premium.php'] = 'http://127.0.0.1:9999/dummy';
             replacements['http://api.spigotmc.org'] = 'http://127.0.0.1:9999';
@@ -1770,11 +2330,10 @@
             let filesStripped = 0;
 
             try {
-                // Tải trực tiếp ZIP đích để chỉnh sửa in-place (không decompress toàn bộ 12.000 file)
                 appendLog(`⚡ Khởi tạo cấu trúc in-place từ bộ nhớ RAM...`, 'work');
                 const targetZip = await (new JSZip()).loadAsync(currentFileObj);
 
-                // 1. Triệt tiêu Zip Archive Comment (NulledVault, HoYeuEmBangMat...)
+                // 1. Triệt tiêu Zip Archive Comment
                 if (targetZip.comment) {
                     targetZip.comment = null;
                     appendLog(`🗑️ [ZIP COMMENT] Đã triệt tiêu hoàn toàn comment nén của leaker`, 'pure');
@@ -1807,7 +2366,7 @@
                     appendLog(`📄 [MANIFEST] Đã thanh lọc các header theo dõi trong MANIFEST.MF`, 'pure');
                 }
 
-                // 4. Làm sạch plugin.yml / paper-plugin.yml
+                // 4. Làm sạch plugin.yml
                 for (const ymlName of ['plugin.yml', 'paper-plugin.yml']) {
                     const ymlEntry = targetZip.file(ymlName);
                     if (ymlEntry) {
@@ -1823,7 +2382,7 @@
                     }
                 }
 
-                // 5. Vá Bytecode in-place cho các class có dấu vết leak
+                // 5. Vá Bytecode in-place
                 const targetClasses = Array.from(auditData.watermarkedClasses);
                 if (targetClasses.length > 0) {
                     appendLog(`🎯 Đang xử lý bytecode cho ${targetClasses.length} class đích...`, 'work');
@@ -1845,7 +2404,7 @@
                     appendLog(`✨ Không phát hiện class nào chứa watermark cần can thiệp bytecode.`, 'pure');
                 }
 
-                // 6. Đóng gói lại cực nhanh (In-place DEFLATE)
+                // 6. Đóng gói lại cực nhanh
                 appendLog(`📦 Đang đóng gói lại file .jar sạch (Zero-Comment)...`, 'work');
 
                 const cleanBlob = await targetZip.generateAsync({
@@ -1860,12 +2419,12 @@
                 stopTimer();
                 const totalElapsed = ((Date.now() - executionStartTime) / 1000).toFixed(1);
                 setStatus('completed', 'XỬ LÝ XONG');
+                holoState = 'completed';
 
                 appendLog(`✅ Khử sạch hoàn tất! Đã thay thế ${stringsReplaced} token trong ${classesModified} classes, xóa ${filesStripped} tệp rác!`, 'pure');
                 appendLog(`🎉 File ${cleanName} (${(cleanBlob.size / (1024*1024)).toFixed(2)} MB) đã sẵn sàng trong ${totalElapsed}s!`, 'pure');
                 appendLog(`📥 Nhấn nút "Tải Về File .jar Sạch" bên dưới để lưu file.`, 'info');
 
-                // Cập nhật thẻ kết quả
                 document.getElementById('exportFileName').textContent = cleanName;
                 document.getElementById('exportFileStats').textContent = `Dung lượng: ${(cleanBlob.size / (1024*1024)).toFixed(2)} MB • ${classesModified} classes đã làm sạch • Thời gian: ${totalElapsed}s`;
                 document.getElementById('exportResultDesc').textContent = `Đã khử sạch toàn bộ dấu vết NulledVault, BlackSpigot, GLeaks, xóa Zip Comment và thanh lọc MANIFEST.MF. Bytecode an toàn 100% theo JVMS §4.4.7.`;
@@ -1877,13 +2436,24 @@
                 document.getElementById('exportResultCard').classList.remove('hidden');
 
                 showToast('Khử sạch dấu vết leak thành công! Bấm Tải Về bên dưới.', 'success');
+                playSuccessChime();
             } catch (err) {
                 stopTimer();
                 setStatus('err', 'LỖI');
+                holoState = 'idle';
                 appendLog(`❌ Lỗi khử watermark: ${err.message}`, 'err');
                 showToast(`Lỗi: ${err.message}`, 'error');
             }
         }
+
+        // ==========================================
+        // WINDOW INIT
+        // ==========================================
+        window.addEventListener('DOMContentLoaded', () => {
+            init3dBackground();
+            initHologramCore();
+            init3dTiltCards();
+        });
     </script>
 </body>
 </html>
